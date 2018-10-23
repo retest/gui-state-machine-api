@@ -6,7 +6,6 @@ The service hides the actual implementation and defines a fixed interface for ca
 Therefore, calling systems do not depend on the concrete implementation and it can be mocked easily for tests.
 
 ## Automatic Build with TravisCI
-https://github.com/retest/gui-state-machine-api
 [![Build Status](https://travis-ci.org/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.org/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
