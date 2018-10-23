@@ -98,6 +98,7 @@ Automatically, a transition to the unknown state.
 * <https://www.reddit.com/r/scala/comments/6izqac/akka_http_vs_play_ws_what_is_the_current_state/>
 * <https://slides.com/leonardoregnier/deck#/>
 * <https://nordicapis.com/8-frameworks-to-build-a-web-api-in-scala/>
+* Akk HTTP test examples: <https://github.com/akka/akka-http/tree/master/akka-http-tests/src/test/scala/akka/http/scaladsl/server/directives>
 * Replaced by Akka HTTP: <http://spray.io/>
 
 If REST is too slow, Scala can still be called directly via Java.
