@@ -13,7 +13,7 @@ import spray.json.DefaultJsonProtocol._
 import java.util.LinkedList
 
 // domain model
-// TODO Id should use Long and the REST paths as well. Use concurrent hash maps with the IDs and generate new IDs for new items.
+// TODO #1 Id should use Long and the REST paths as well. Use concurrent hash maps with the IDs and generate new IDs for new items.
 final case class Id(id: Int)
 final case class GuiApplication() {
   val testSuites = TestSuites()

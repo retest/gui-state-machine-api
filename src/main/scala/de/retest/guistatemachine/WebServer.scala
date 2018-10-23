@@ -1,11 +1,10 @@
 package de.retest.guistatemachine
 
+import scala.io.StdIn
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import scala.io.StdIn
 
 object WebServer extends App with RestService {
   implicit val system = ActorSystem("gui-state-machine-api-system")
