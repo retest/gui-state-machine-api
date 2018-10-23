@@ -3,8 +3,7 @@ scala:
    - 2.12.6
 
 script:
-   - sbt clean coverage test coverageReport scalastyle doc assembly run
-   - curl http://localhost:8080/hello
+   - sbt clean coverage test coverageReport scalastyle doc assembly
 
 after_success:
    - bash <(curl -s https://codecov.io/bash)

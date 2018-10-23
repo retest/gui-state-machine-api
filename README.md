@@ -12,14 +12,22 @@ Therefore, calling systems do not depend on the concrete implementation and it c
 ## Manual Build
 Use the command `sbt compile` to build the project manually.
 
+## Manual Run
+Use the command `sbt run` to start the REST service.
+
+## Standalone Distribution
+Use the command `sbt assembly` to create a standalone JAR which includes all dependencies including the Scala libraries.
+The standalone JAR is generated as `target/scala-<scalaversion>/gui-state-machine-api-assembly-<version>.jar`.
+
 ## Model Notation
 An [NFA](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton) represents the states of the GUI.
 The transitions are possible GUI actions.
-The model is based on the UI model from [Search-Based System Testing: High Coverage, No False Alarms][] (section "4.5 UI Model").
+The model is based on the UI model from [Search-Based System Testing: High Coverage, No False Alarms][http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf] (section "4.5 UI Model").
 Whenever an unknown state is replaced by a newly discovered state, the model is updated.
 
 Open questions:
 
+* How is the state machine represented in the current version of retest?
 * state machine != NFA != graph? It is definitely an NFA since multiple outoing transitions are allowed.
 * REST -> HTTP what about the performance? Alternatively use a direct API in Scala? Should be possible from Java: <https://lampwww.epfl.ch/~michelou/scala/using-scala-from-java.html>
 * What kind of analysises on the state machines are required except for the next possible actions?
