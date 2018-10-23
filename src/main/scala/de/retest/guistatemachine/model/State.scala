@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.model
 
-trait State {
+class State {
   private val windows = Set[GuiWindow]()
   /**
    * Actions which can be executed by the user in this state.

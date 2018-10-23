@@ -55,44 +55,21 @@ Each transition is a UI action.
 A state is defined by the set of all visible and interactable windows together with their enabled widgets.
 
 ## REST API
-Some suggestions on how the REST API could look like.
+Some suggestions on how the REST API could look like:
 
-state/create
-Parameter:
-List(windows):
-- window:
-- id
-- parent
-- List(InteractableComponent):
--- label
-
-action/create
-Parameter:
-- state from
-- state to
-There is a special ID for the unknown state.
-
-action/update
-- state to
-
-action/delete
-Infeasible actions must be deleted before their actual execution.
-
-Edges to the unknown state might lead to another state after some tests.
-
-Simplified REST API for automatic tests which discover new states and transitions:
-state/add
-Parameter:
-- State-Parameter
-- Source State
-
-Automatically, a transition to the unknown state.
+* `/applications` GET queries all registered GUI applications
+* `/create-application` POST registers a new GUI application
+* `/application/<long>` GET queries a registered GUI application
+* `/application/<long>/test-suites` GET queries all test suites for an existing GUI application
+* `/application/<long>/create-test-suite` POST registers a new test suite for an existing GUI application
+* `/application/<long>/test-suite/<long>` GET queries a registered test suite for an existing GUI application
 
 ## APIs suggested in the project proposal of Surili
 * [Selenium WebDriver](http://seleniumhq.org/docs/03_webdriver.jsp)
 * [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)
 
 ## REST Frameworks for Scala
+* Good example of a REST service with Akka: <https://github.com/ArchDev/akka-http-rest>
 * <https://doc.akka.io/docs/akka-http/current/>
 * <https://www.playframework.com/>
 * <https://www.reddit.com/r/scala/comments/6izqac/akka_http_vs_play_ws_what_is_the_current_state/>

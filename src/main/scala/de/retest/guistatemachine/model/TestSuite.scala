@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.model
 
-class TestSuite(app : GuiApplication) {
+class TestSuite {
   private val cases = Set[TestCase]()
 
   def size = cases.size
