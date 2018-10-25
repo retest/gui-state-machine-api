@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.model
+package de.retest.guistatemachine.furrermodel
 
 /**
  * A visible window which the user can interact with.

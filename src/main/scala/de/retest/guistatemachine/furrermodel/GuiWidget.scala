@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.model
+package de.retest.guistatemachine.furrermodel
 
 /**
  * A visible widget on a [[GuiWindow]].

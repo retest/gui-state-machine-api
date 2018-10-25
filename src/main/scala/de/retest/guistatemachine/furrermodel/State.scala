@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.model
+package de.retest.guistatemachine.furrermodel
 
 class State {
   private val windows = Set[GuiWindow]()

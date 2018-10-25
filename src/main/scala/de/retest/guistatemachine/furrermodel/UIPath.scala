@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.model
+package de.retest.guistatemachine.furrermodel
 
 import scala.annotation.tailrec
 

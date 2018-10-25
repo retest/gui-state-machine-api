@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.model
+package de.retest.guistatemachine.furrermodel
 
 class TestCase(initialState: State) {
   private val actions = Seq[UIAction]()

@@ -9,16 +9,32 @@ import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.model.ContentTypes
 import akka.http.scaladsl.model.HttpCharset
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import de.retest.guistatemachine.model.GuiApplications
+import de.retest.guistatemachine.model.Id
+import de.retest.guistatemachine.model.GuiApplication
+import de.retest.guistatemachine.model.TestSuites
+import de.retest.guistatemachine.persistence.Persistence
+import akka.http.scaladsl.model.MediaType
+import akka.http.scaladsl.model.MediaTypes
 
 class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService {
 
-  lazy val sut = route
+  val sut = getRoute(new Persistence)
 
   "The service" should {
+    "show the default text for the GET request with the path /" in {
+      Get("/") ~> sut ~> check {
+        val r = responseAs[String]
+        r shouldEqual "GUI State Machine API"
+      }
+    }
+
     "return an empty list for the GET request with the path /applications" in {
       Get("/applications") ~> sut ~> check {
+        handled shouldEqual true
+        mediaType shouldEqual MediaTypes.`application/json`
         val r = responseAs[GuiApplications]
-        r.applications.size shouldEqual 0
+        r.applications.values.size shouldEqual 0
       }
     }
 
@@ -28,33 +44,24 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       }
     }
 
-    /*
-    TODO #1 Somehow the current state of the REST service is not stored after creating one application.
     "return an empty application for the GET request with the path /application/0" in {
       Get("/applications/0") ~> sut ~> check {
+        // TODO Print response here
         val r = responseAs[GuiApplication]
-        r.testSuites.testSuites.size shouldEqual 0
+        r.testSuites.testSuites.values.size shouldEqual 0
       }
     }
 
     "return an empty list for the GET request with the path /application/0/test-suites" in {
       Get("/applications/0/test-suites") ~> sut ~> check {
         val r = responseAs[TestSuites]
-        r.testSuites.size shouldEqual 0
+        r.testSuites.values.size shouldEqual 0
       }
     }
-    */
 
     "allow POST for path /application/0/create-test-suite" in {
       Post("/application/0/create-test-suite") ~> sut ~> check {
         responseAs[Id] shouldEqual Id(0)
-      }
-    }
-
-    "not find any root path" in {
-      Get() ~> Route.seal(sut) ~> check {
-        status shouldEqual StatusCodes.NotFound
-        responseAs[String] shouldEqual "The requested resource could not be found."
       }
     }
   }
