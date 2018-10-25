@@ -26,6 +26,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
   "The service" should {
     "show the default text for the GET request with the path /" in {
       Get("/") ~> sut ~> check {
+        handled shouldEqual true
         val r = responseAs[String]
         r shouldEqual "GUI State Machine API"
       }
@@ -42,6 +43,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
 
     "allow POST for path /create-application" in {
       Post("/create-application") ~> sut ~> check {
+        handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)
       }
     }
@@ -57,6 +59,8 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
 
     "return an empty list for the GET request with the path /application/0/test-suites" in {
       Get("/application/0/test-suites") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.OK
         val r = responseAs[TestSuites]
         r.suites.values.size shouldEqual 0
       }
@@ -64,6 +68,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
 
     "allow POST for path /application/0/create-test-suite" in {
       Post("/application/0/create-test-suite") ~> sut ~> check {
+        handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)
       }
     }
@@ -79,6 +84,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
 
     "return status OK for the DELETE request with the path /application/0" in {
       Delete("/application/0") ~> sut ~> check {
+        handled shouldEqual true
         status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual "OK"
       }

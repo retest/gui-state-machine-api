@@ -23,7 +23,7 @@ class Persistence {
     val apps = guiApplications
     apps.synchronized {
       val id = apps.apps.generateId
-      apps.apps.values = apps.apps.values + (id -> new GuiApplication(TestSuites(Map(new HashMap[Id, TestSuite]))))
+      apps.apps.values = apps.apps.values + (id -> GuiApplication(TestSuites(Map(new HashMap[Id, TestSuite]))))
       id
     }
   }
