@@ -34,7 +34,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         handled shouldEqual true
         mediaType shouldEqual MediaTypes.`application/json`
         val r = responseAs[GuiApplications]
-        r.applications.values.size shouldEqual 0
+        r.values.size shouldEqual 0
       }
     }
 
@@ -47,15 +47,16 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
     "return an empty application for the GET request with the path /application/0" in {
       Get("/applications/0") ~> sut ~> check {
         // TODO Print response here
+        println("Response: " + responseAs[String])
         val r = responseAs[GuiApplication]
-        r.testSuites.testSuites.values.size shouldEqual 0
+        r.testSuites.values.size shouldEqual 0
       }
     }
 
     "return an empty list for the GET request with the path /application/0/test-suites" in {
       Get("/applications/0/test-suites") ~> sut ~> check {
         val r = responseAs[TestSuites]
-        r.testSuites.values.size shouldEqual 0
+        r.values.size shouldEqual 0
       }
     }
 
