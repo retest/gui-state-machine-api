@@ -44,7 +44,6 @@ trait RestService {
           complete(persistence.getApplications())
         } ~
         pathPrefix("application" / LongNumber) { id =>
-          println("Getting application with ID " + id)
           val app = persistence.getApplication(Id(id))
           app match {
             case Some(x) => complete(x)
@@ -77,5 +76,11 @@ trait RestService {
               complete(id)
             }
           }
+      } ~ delete {
+        pathPrefix("application" / LongNumber) { id =>
+          val r = persistence.deleteApplication(Id(id))
+          complete(StatusCodes.OK)
+        }
       }
+
 }

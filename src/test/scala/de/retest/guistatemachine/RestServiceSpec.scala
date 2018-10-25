@@ -16,6 +16,8 @@ import de.retest.guistatemachine.model.TestSuites
 import de.retest.guistatemachine.persistence.Persistence
 import akka.http.scaladsl.model.MediaType
 import akka.http.scaladsl.model.MediaTypes
+import de.retest.guistatemachine.model.TestSuite
+import akka.http.scaladsl.model.StatusCode
 
 class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService {
 
@@ -34,7 +36,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         handled shouldEqual true
         mediaType shouldEqual MediaTypes.`application/json`
         val r = responseAs[GuiApplications]
-        r.values.size shouldEqual 0
+        r.apps.values.size shouldEqual 0
       }
     }
 
@@ -45,24 +47,40 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
     }
 
     "return an empty application for the GET request with the path /application/0" in {
-      Get("/applications/0") ~> sut ~> check {
-        // TODO Print response here
-        println("Response: " + responseAs[String])
+      Get("/application/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.OK
         val r = responseAs[GuiApplication]
-        r.testSuites.values.size shouldEqual 0
+        r.testSuites.suites.values.size shouldEqual 0
       }
     }
 
     "return an empty list for the GET request with the path /application/0/test-suites" in {
-      Get("/applications/0/test-suites") ~> sut ~> check {
+      Get("/application/0/test-suites") ~> sut ~> check {
         val r = responseAs[TestSuites]
-        r.values.size shouldEqual 0
+        r.suites.values.size shouldEqual 0
       }
     }
 
     "allow POST for path /application/0/create-test-suite" in {
       Post("/application/0/create-test-suite") ~> sut ~> check {
         responseAs[Id] shouldEqual Id(0)
+      }
+    }
+
+    "return an empty test suite for the GET request with the path /application/0/test-suite/0" in {
+      Get("/application/0/test-suite/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.OK
+        val r = responseAs[TestSuite]
+        // TODO There is no content in a test suite at the moment
+      }
+    }
+
+    "return status OK for the DELETE request with the path /application/0" in {
+      Delete("/application/0") ~> sut ~> check {
+        status shouldEqual StatusCodes.OK
+        responseAs[String] shouldEqual "OK"
       }
     }
   }

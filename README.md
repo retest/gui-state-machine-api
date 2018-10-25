@@ -28,7 +28,7 @@ The directory [scripts](./scripts) contains a number of Bash scripts which use `
 A nondeterministic finite automaton represents the states of the GUI during the test.
 The actions executed by the user on the widgets are the transitions.
 If an action has not been executed, it leads to an unknown state.
-The NFA is based on the UI model from [Search-Based System Testing: High Coverage, No False Alarms][http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf] (section "4.5 UI Model").
+The NFA is based on the UI model from [Search-Based System Testing: High Coverage, No False Alarms](http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf) (section "4.5 UI Model").
 Whenever an unknown state is replaced by a newly discovered state, the NFA has to be updated.
 
 **At the moment, the following definitions are incomplete and must be adapted to the actual implementation which calls this service.**

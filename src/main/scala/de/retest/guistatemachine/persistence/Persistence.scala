@@ -15,22 +15,34 @@ import de.retest.guistatemachine.model.Map
  */
 class Persistence {
   // database
-  private val guiApplications = GuiApplications(new HashMap[Id, GuiApplication])
+  private val guiApplications = GuiApplications(Map(new HashMap[Id, GuiApplication]))
 
   def getApplications(): GuiApplications = guiApplications
 
   def addApplication(): Id = {
     val apps = guiApplications
     apps.synchronized {
-      val id = apps.generateId
-      apps.setValues(apps.getValues + (id -> new GuiApplication(TestSuites(new HashMap[Id, TestSuite]))))
+      val id = apps.apps.generateId
+      apps.apps.values = apps.apps.values + (id -> new GuiApplication(TestSuites(Map(new HashMap[Id, TestSuite]))))
       id
     }
   }
   def getApplication(id: Id): Option[GuiApplication] = {
     val apps = guiApplications
     apps.synchronized {
-      if (apps.values.contains(id)) Some(apps.values(id)) else { None }
+      if (apps.apps.values.contains(id)) Some(apps.apps.values(id)) else { None }
+    }
+  }
+
+  def deleteApplication(id: Id): Boolean = {
+    val apps = guiApplications
+    apps.synchronized {
+      if (apps.apps.values.contains(id)) {
+        apps.apps.values = apps.apps.values - id
+        true
+      } else {
+        false
+      }
     }
   }
 
@@ -48,8 +60,8 @@ class Persistence {
       case Some(x) => {
         val testSuites = x.testSuites
         testSuites.synchronized {
-          val id = testSuites.generateId
-          testSuites.setValues(testSuites.getValues + (id -> TestSuite()))
+          val id = testSuites.suites.generateId
+          testSuites.suites.values = testSuites.suites.values + (id -> TestSuite())
           Some(id)
         }
       }
@@ -62,7 +74,7 @@ class Persistence {
       case Some(x) => {
         val testSuites = x.testSuites
         testSuites.synchronized {
-          if (testSuites.values.contains(testSuiteId)) Some(testSuites.values(testSuiteId)) else None
+          if (testSuites.suites.values.contains(testSuiteId)) Some(testSuites.suites.values(testSuiteId)) else None
         }
       }
       case None => None
