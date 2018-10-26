@@ -34,6 +34,9 @@ trait RestService {
 
   /**
    * Creates the complete route for the REST service with all possible paths.
+   * Note that the order of path prefixes is important.
+   * For example, if "application/LongNumber" comes before "application/LongNumber/bla", the second path
+   * will always be ignored.
    */
   def getRoute(persistence: Persistence): Route =
     get {
@@ -42,13 +45,6 @@ trait RestService {
       } ~
         path("applications") {
           complete(persistence.getApplications())
-        } ~
-        pathPrefix("application" / LongNumber) { id =>
-          val app = persistence.getApplication(Id(id))
-          app match {
-            case Some(x) => complete(x)
-            case None => complete(StatusCodes.NotFound)
-          }
         } ~
         pathPrefix("application" / LongNumber / "test-suites") { id =>
           val testSuites = persistence.getTestSuites(Id(id))
@@ -60,6 +56,13 @@ trait RestService {
         pathPrefix("application" / LongNumber / "test-suite" / LongNumber) { (appId, suiteId) =>
           val suite = persistence.getTestSuite(Id(appId), Id(suiteId))
           suite match {
+            case Some(x) => complete(x)
+            case None => complete(StatusCodes.NotFound)
+          }
+        } ~
+        pathPrefix("application" / LongNumber) { id =>
+          val app = persistence.getApplication(Id(id))
+          app match {
             case Some(x) => complete(x)
             case None => complete(StatusCodes.NotFound)
           }

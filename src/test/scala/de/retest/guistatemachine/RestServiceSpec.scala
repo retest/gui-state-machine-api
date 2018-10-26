@@ -21,7 +21,8 @@ import akka.http.scaladsl.model.StatusCode
 
 class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService {
 
-  val sut = getRoute(new Persistence)
+  val persistence = new Persistence
+  val sut = getRoute(persistence)
 
   "The service" should {
     "show the default text for the GET request with the path /" in {

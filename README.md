@@ -8,18 +8,16 @@ Therefore, calling systems do not depend on the concrete implementation and it c
 [![Build Status](https://travis-ci.org/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.org/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
-## Manual Build
-Use the command `sbt compile` to build the project manually.
-
-## Manual Run
-Use the command `sbt run` to start the REST service.
-
-## Standalone Distribution
-Use the command `sbt assembly` to create a standalone JAR which includes all dependencies including the Scala libraries.
-The standalone JAR is generated as `target/scala-<scalaversion>/gui-state-machine-api-assembly-<version>.jar`.
-
-## Eclipse Support
-Use the command `sbt eclipse` to generate a project for Eclipse.
+## SBT Commands
+* `sbt compile` to build the project manually.
+* `sbt run` to start the REST service.
+* `sbt assembly` to create a standalone JAR which includes all dependencies including the Scala libraries. The standalone JAR is generated as `target/scala-<scalaversion>/gui-state-machine-api-assembly-<version>.jar`.
+* `sbt eclipse` to generate a project for Eclipse.
+* `sbt test` to execute all unit tests.
+* `sbt coverage` to generate coverage data.
+* `sbt coverageReport` to generate a HTML coverage report.
+* `sbt scalastyle` to make a check with ScalaStyle.
+* `sbt doc` to generate the scaladoc API documentation.
 
 ## Bash Scripts for REST Calls
 The directory [scripts](./scripts) contains a number of Bash scripts which use `curl` to send REST calls to a running server.
