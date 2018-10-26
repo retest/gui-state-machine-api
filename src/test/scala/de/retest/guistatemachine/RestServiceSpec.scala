@@ -42,6 +42,27 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       }
     }
 
+    "fail for the GET request with the path /application/0" in {
+      Get("/application/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.NotFound
+      }
+    }
+
+    "fail for the DELETE request with the path /application/0" in {
+      Delete("/application/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.NotFound
+      }
+    }
+
+    "fail for the GET request with the path /application/0/test-suites" in {
+      Get("/application/0/test-suites") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.NotFound
+      }
+    }
+
     "allow POST for path /create-application" in {
       Post("/create-application") ~> sut ~> check {
         handled shouldEqual true
@@ -65,6 +86,20 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         status shouldEqual StatusCodes.OK
         val r = responseAs[TestSuites]
         r.suites.values.size shouldEqual 0
+      }
+    }
+
+    "fail for the GET request with the path /application/0/test-suite/0" in {
+      Get("/application/0/test-suite/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.NotFound
+      }
+    }
+
+    "fail for the DELETE request with the path /application/0/test-suite/0" in {
+      Delete("/application/0/test-suite/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.NotFound
       }
     }
 
@@ -100,6 +135,15 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual "OK"
         persistence.getApplications().apps.values.size shouldEqual 0
+      }
+    }
+
+    "not handle the GET request with the path /applications/bla/hello/bla" in {
+      Get("/applications/bla/hello/bla") ~> sut ~> check {
+        handled shouldEqual false
+        //mediaType shouldEqual MediaTypes.`application/json`
+        //val r = responseAs[GuiApplications]
+        //r.apps.values.size shouldEqual 0
       }
     }
   }

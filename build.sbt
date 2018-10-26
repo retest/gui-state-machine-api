@@ -6,6 +6,7 @@ organization := "tdauth"
 
 scalaVersion := "2.12.7"
 
+libraryDependencies += "com.github.scopt" % "scopt_2.12" % "3.7.0"
 libraryDependencies += "io.spray" % "spray-json_2.12" % "1.3.4"
 libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5"
 libraryDependencies += "com.typesafe.akka" %% "akka-http-core" % "10.1.5"

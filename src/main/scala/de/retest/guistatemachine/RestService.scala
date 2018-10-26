@@ -82,13 +82,12 @@ trait RestService {
       } ~ delete {
         path("application" / LongNumber / "test-suite" / LongNumber) { (appId, suiteId) =>
           val r = persistence.deleteTestSuite(Id(appId), Id(suiteId))
-          complete(StatusCodes.OK)
+          complete(if (r) StatusCodes.OK else StatusCodes.NotFound)
         }
       } ~ delete {
         path("application" / LongNumber) { id =>
           val r = persistence.deleteApplication(Id(id))
-          complete(StatusCodes.OK)
+          complete(if (r) StatusCodes.OK else StatusCodes.NotFound)
         }
       }
-
 }
