@@ -80,4 +80,21 @@ class Persistence {
       case None => None
     }
   }
+
+  def deleteTestSuite(applicationId: Id, testSuiteId: Id): Boolean = {
+    val app = getApplication(applicationId)
+    app match {
+      case Some(x) => {
+        val testSuites = x.testSuites
+        testSuites.synchronized {
+          if (testSuites.suites.values.contains(testSuiteId)) {
+            testSuites.suites.values = testSuites.suites.values - testSuiteId
+            true
+          } else {
+            false
+          }
+        }
+      }
+    }
+  }
 }

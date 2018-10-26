@@ -46,6 +46,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       Post("/create-application") ~> sut ~> check {
         handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)
+        persistence.getApplications.apps.values.size shouldEqual 1
       }
     }
 
@@ -71,6 +72,7 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       Post("/application/0/create-test-suite") ~> sut ~> check {
         handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)
+        persistence.getTestSuites(Id(0)).get.suites.values.size shouldEqual 1
       }
     }
 
@@ -83,11 +85,21 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       }
     }
 
+    "return status OK for the DELETE request with the path /application/0/test-suite/0" in {
+      Delete("/application/0/test-suite/0") ~> sut ~> check {
+        handled shouldEqual true
+        status shouldEqual StatusCodes.OK
+        responseAs[String] shouldEqual "OK"
+        persistence.getTestSuites(Id(0)).get.suites.values.size shouldEqual 0
+      }
+    }
+
     "return status OK for the DELETE request with the path /application/0" in {
       Delete("/application/0") ~> sut ~> check {
         handled shouldEqual true
         status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual "OK"
+        persistence.getApplications().apps.values.size shouldEqual 0
       }
     }
   }

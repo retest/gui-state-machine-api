@@ -46,21 +46,21 @@ trait RestService {
         path("applications") {
           complete(persistence.getApplications())
         } ~
-        pathPrefix("application" / LongNumber / "test-suites") { id =>
+        path("application" / LongNumber / "test-suites") { id =>
           val testSuites = persistence.getTestSuites(Id(id))
           testSuites match {
             case Some(x) => complete(x)
             case None => complete(StatusCodes.NotFound)
           }
         } ~
-        pathPrefix("application" / LongNumber / "test-suite" / LongNumber) { (appId, suiteId) =>
+        path("application" / LongNumber / "test-suite" / LongNumber) { (appId, suiteId) =>
           val suite = persistence.getTestSuite(Id(appId), Id(suiteId))
           suite match {
             case Some(x) => complete(x)
             case None => complete(StatusCodes.NotFound)
           }
         } ~
-        pathPrefix("application" / LongNumber) { id =>
+        path("application" / LongNumber) { id =>
           val app = persistence.getApplication(Id(id))
           app match {
             case Some(x) => complete(x)
@@ -80,7 +80,12 @@ trait RestService {
             }
           }
       } ~ delete {
-        pathPrefix("application" / LongNumber) { id =>
+        path("application" / LongNumber / "test-suite" / LongNumber) { (appId, suiteId) =>
+          val r = persistence.deleteTestSuite(Id(appId), Id(suiteId))
+          complete(StatusCodes.OK)
+        }
+      } ~ delete {
+        path("application" / LongNumber) { id =>
           val r = persistence.deleteApplication(Id(id))
           complete(StatusCodes.OK)
         }
