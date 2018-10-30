@@ -32,27 +32,68 @@ Whenever an unknown state is replaced by a newly discovered state, the NFA has t
 **At the moment, the following definitions are incomplete and must be adapted to the actual implementation which calls this service.**
 
 ### Test Suite
-A test suite is a set of test cases.
+A set of test cases.
 
 ### Test Case
-A test case is a sequence of UI actions.
+A sequence of UI actions.
 
 ### UI Action
-A UI action is an action which can be triggert by the user via the GUI.
+An action which can be triggered by the user via the GUI.
 
 ### UI Path
-A UI path is a sequence of states with transitions from one state to another.
+A sequence of states with transitions from one state to another.
 Each transition is a UI action.
 
 ### State
 A state is defined by the set of all visible and interactable windows together with their enabled widgets.
 
-## REST API
-Some suggestions on how the REST API could look like:
+## DSL
+There is a DSL to construct an NFA with GUI actions manually.
+The package [dsl](./src/main/scala/de/retest/guistatemachine/dsl/).
 
-* `/applications` GET queries all registered GUI applications
-* `/create-application` POST registers a new GUI application
-* `/application/<long>` GET queries a registered GUI application
-* `/application/<long>/test-suites` GET queries all test suites for an existing GUI application
-* `/application/<long>/create-test-suite` POST registers a new test suite for an existing GUI application
-* `/application/<long>/test-suite/<long>` GET queries a registered test suite for an existing GUI application
+The following example shows how to construct an NFA in Scala:
+```scala
+case object Start extends InitialState
+case object S0 extends State
+case object S1 extends State
+case object End extends FinalState
+case object EnterText extends Action
+case object PressExitButton extends Action
+
+StateMachines {
+  StateMachine {
+    Start - EnterText - S0
+    Start - EnterText - S1
+    S0 - PressExitButton - End
+    S1 - PressExitButton - End
+  }
+}
+```
+
+## REST API
+Some suggestions how the REST API for the state machine could look like:
+* `/state-machines` GET queries all existing state machines.
+* `/create-state-machine` POST creates a new state machine.
+* `/state-machine/<long>` GET queries an existing state machine.
+* `/state-machine/<long>/states` GET queries all existing states of the state machine.
+* `/state-machine/<long>/state/<long>` GET queries a specific state of the state machine which contains transitions.
+* `/state-machine/<long>/state/<long>/transitions` GET queries all transitions of a specific state.
+* `/state-machine/<long>/state/<long>/transition/<long>` GET queries a specific transition of a specific state.
+* `/state-machine/<long>/execute` POST executes the passed action from the passed state which might lead to a new state and adds a transition to the state machine. The action must be part of all actions?
+
+Some suggestions on how the test representation REST API could look like (not necessarily required):
+
+* `/applications` GET queries all existing GUI applications.
+* `/create-application` POST creates a new GUI application.
+* `/application/<long>` GET queries an existing GUI application.
+* `/application/<long>` DELETE deletes an existing GUI application and all of its test suites etc.
+* `/application/<long>/test-suites` GET queries all test suites for an existing GUI application.
+* `/application/<long>/create-test-suite` POST creates a new test suite for an existing GUI application.
+* `/application/<long>/test-suite/<long>` GET queries an existing test suite for an existing GUI application.
+* `/application/<long>/test-suite/<long>` DELETE deletes an existing test suite for an existing GUI application.
+
+## NFA Frameworks
+This list contains frameworks for Scala which support the representation of an NFA:
+* Akka FSM (FSM for actors): <https://doc.akka.io/docs/akka/current/fsm.html>
+* Neo4J: <https://neo4j.com/>
+* Gremlin-Scala: <https://github.com/mpollmeier/gremlin-scala>

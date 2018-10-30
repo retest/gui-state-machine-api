@@ -8,6 +8,8 @@ import de.retest.guistatemachine.model.Id
 import de.retest.guistatemachine.model.TestSuite
 import de.retest.guistatemachine.model.TestSuites
 import de.retest.guistatemachine.model.Map
+import de.retest.guistatemachine.model.StateMachines
+import de.retest.guistatemachine.model.StateMachine
 
 /**
  * Allows concurrent access to the persistence of the resources.
@@ -15,7 +17,10 @@ import de.retest.guistatemachine.model.Map
  */
 class Persistence {
   // database
+  private val stateMachines = StateMachines(Map(new HashMap[Id, StateMachine]))
   private val guiApplications = GuiApplications(Map(new HashMap[Id, GuiApplication]))
+
+  def getStateMachines(): StateMachines = stateMachines
 
   def getApplications(): GuiApplications = guiApplications
 
@@ -95,6 +100,7 @@ class Persistence {
           }
         }
       }
+      case None => false
     }
   }
 }

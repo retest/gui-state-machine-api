@@ -18,6 +18,14 @@ import de.retest.guistatemachine.model.TestSuite
 import de.retest.guistatemachine.model.TestSuites
 import de.retest.guistatemachine.model.Id
 import de.retest.guistatemachine.persistence.Persistence
+import de.retest.guistatemachine.model.StateMachine
+import de.retest.guistatemachine.model.Transition
+import de.retest.guistatemachine.model.Transitions
+import de.retest.guistatemachine.model.Action
+import de.retest.guistatemachine.model.Actions
+import de.retest.guistatemachine.model.StateMachines
+import de.retest.guistatemachine.model.State
+import de.retest.guistatemachine.model.States
 
 trait RestService {
   implicit val system: ActorSystem
@@ -25,11 +33,25 @@ trait RestService {
 
   // formats for unmarshalling and marshalling
   implicit val idFormat = jsonFormat1(Id)
+
+  implicit val actionFormat = jsonFormat0(Action)
+  implicit val idMapFormatActions = new JsonFormatForIdMap[Action]
+  implicit val actionsFormat = jsonFormat1(Actions)
+  implicit val transitionFormat = jsonFormat2(Transition)
+  implicit val idMapFormatTransitions = new JsonFormatForIdMap[Transition]
+  implicit val transitionsFormat = jsonFormat1(Transitions)
+  implicit val stateFormat = jsonFormat1(State)
+  implicit val idMapFormatState = new JsonFormatForIdMap[State]
+  implicit val statesFormat = jsonFormat1(States)
+  implicit val stateMachineFormat = jsonFormat2(StateMachine)
+  implicit val idMapFormatStateMachines = new JsonFormatForIdMap[StateMachine]
+  implicit val stateMachinesFormat = jsonFormat1(StateMachines)
+
   implicit val testSuiteFormat = jsonFormat0(TestSuite)
-  implicit val hashMapFormatTestSuites = new JsonFormatForIdMap[TestSuite]
+  implicit val idMapFormatTestSuites = new JsonFormatForIdMap[TestSuite]
   implicit val testSuitesFormat = jsonFormat1(TestSuites)
   implicit val applicationFormat = jsonFormat1(GuiApplication)
-  implicit val hashMapFormatApplications = new JsonFormatForIdMap[GuiApplication]
+  implicit val idMapFormatApplications = new JsonFormatForIdMap[GuiApplication]
   implicit val applicationsFormat = jsonFormat1(GuiApplications)
 
   /**
@@ -43,6 +65,9 @@ trait RestService {
       pathSingleSlash {
         complete("GUI State Machine API")
       } ~
+        path("state-machines") {
+          complete(persistence.getStateMachines())
+        } ~
         path("applications") {
           complete(persistence.getApplications())
         } ~
