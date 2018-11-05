@@ -1,19 +1,32 @@
 package de.retest.guistatemachine.api
-import scala.collection.immutable.HashSet
 
 class DescriptorsSpec extends AbstractApiSpec {
 
+  val identifyingAttributesA = getIdentifyingAttributes("a")
+  val identifyingAttributesB = getIdentifyingAttributes("b")
+
+  val rootElementA = getRootElement("a")
+  val rootElementB = getRootElement("b")
+  val descriptorsA = Descriptors(Set(rootElementA))
+  val descriptorsB = Descriptors(Set(rootElementB))
+
   "Descriptor" should {
+    "make sure that identifying attributes with different IDs are not equal" in {
+      identifyingAttributesA shouldNot equal(identifyingAttributesB)
+      identifyingAttributesA.hashCode() shouldNot equal(identifyingAttributesB.hashCode())
+      rootElementA shouldNot equal(rootElementB)
+      rootElementA.hashCode() shouldNot equal(rootElementB.hashCode())
+    }
+
     "not equal" in {
-      val d0 = Descriptors(HashSet(getRootElement()))
-      val d1 = Descriptors(HashSet(getRootElement()))
-      d0.equals(d1) shouldEqual false
+      descriptorsA.rootElements.size shouldEqual 1
+      descriptorsB.rootElements.size shouldEqual 1
+      descriptorsA shouldNot equal(descriptorsB)
     }
 
     "equal" in {
-      val d0 = Descriptors(HashSet(getRootElement()))
-      val d1 = Descriptors(HashSet(getRootElement()))
-      d0.equals(d1) shouldEqual true
+      descriptorsA.equals(descriptorsA) shouldEqual true
+      descriptorsB.equals(descriptorsB) shouldEqual true
     }
   }
 }

@@ -18,7 +18,7 @@ class StateImpl(val descriptors: Descriptors, var neverExploredActions: Set[Acti
     if (!transitions.contains(a)) {
       transitions = transitions + (a -> HashSet(to))
       // TODO #4 This is not done in the legacy code:
-      neverExploredActions -= a
+      neverExploredActions = neverExploredActions - a
     } else {
       transitions = transitions + (a -> (transitions(a) + to))
     }
@@ -32,7 +32,7 @@ class StateImpl(val descriptors: Descriptors, var neverExploredActions: Set[Acti
   override def equals(obj: Any): Boolean = {
     if (obj.isInstanceOf[StateImpl]) {
       val other = obj.asInstanceOf[StateImpl]
-      this.descriptors eq other.descriptors
+      this.descriptors == other.descriptors
     } else {
       super.equals(obj)
     }

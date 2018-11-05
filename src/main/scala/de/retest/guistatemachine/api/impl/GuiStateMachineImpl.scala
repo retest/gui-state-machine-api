@@ -11,7 +11,7 @@ object GuiStateMachineImpl extends GuiStateMachine {
     if (states.contains(descriptors)) {
       states(descriptors)
     } else {
-      val s = new StateImpl(descriptors, neverExploredActions.to)
+      val s = new StateImpl(descriptors, neverExploredActions)
       states += (descriptors -> s)
       s
     }
