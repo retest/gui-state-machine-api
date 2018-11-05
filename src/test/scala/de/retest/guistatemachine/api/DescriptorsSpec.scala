@@ -25,8 +25,8 @@ class DescriptorsSpec extends AbstractApiSpec {
     }
 
     "equal" in {
-      descriptorsA.equals(descriptorsA) shouldEqual true
-      descriptorsB.equals(descriptorsB) shouldEqual true
+      descriptorsA shouldEqual descriptorsA
+      descriptorsB shouldEqual descriptorsB
     }
   }
 }
