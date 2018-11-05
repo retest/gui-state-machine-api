@@ -1,4 +1,4 @@
-package de.retest.guistatemachine
+package de.retest.guistatemachine.rest
 
 import org.scalatest.{ Matchers, WordSpec }
 import akka.http.scaladsl.model.StatusCodes

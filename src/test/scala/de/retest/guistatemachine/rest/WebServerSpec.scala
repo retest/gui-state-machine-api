@@ -1,7 +1,7 @@
-package de.retest.guistatemachine
+package de.retest.guistatemachine.rest
 
-import org.scalatest.WordSpec
 import org.scalatest.Matchers
+import org.scalatest.WordSpec
 
 class WebServerSpec extends WordSpec with Matchers {
 

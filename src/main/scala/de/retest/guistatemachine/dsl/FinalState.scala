@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.dsl
 
 /**
- * There can be more than one end state.
+ * NFAs can have more than one final state.
  */
-abstract class FinalState extends State
+trait FinalState extends State

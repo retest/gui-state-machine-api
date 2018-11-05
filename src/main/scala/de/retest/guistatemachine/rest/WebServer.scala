@@ -1,14 +1,13 @@
-package de.retest.guistatemachine
+package de.retest.guistatemachine.rest
 
 import scala.io.StdIn
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.RouteResult.route2HandlerFlow
 import akka.stream.ActorMaterializer
 import de.retest.guistatemachine.persistence.Persistence
 import scopt.OptionParser
-
-case class Config(maxtime: Long = -1)
 
 object WebServer extends App with RestService {
   final val HOST = "localhost"
@@ -18,6 +17,8 @@ object WebServer extends App with RestService {
   implicit val materializer = ActorMaterializer()
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext = system.dispatcher
+
+  case class Config(maxtime: Long = -1)
 
   val parser = new OptionParser[Config]("scopt") {
     head("gui-state-machine-api", "1.0")

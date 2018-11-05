@@ -8,7 +8,10 @@ import scala.collection.immutable.HashSet
  * TODO NFAs can have multiple initial states. Do we really need this?
  * TODO Make the constructor private.
  */
-final case class StateMachine(initial: InitialState, var previous: StateMachine) {
+case class StateMachine(initial: InitialState, var previous: StateMachine) {
+
+  def getInitial: InitialState = initial
+
   /**
    * Appends another state machine.
    */

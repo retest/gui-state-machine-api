@@ -1,4 +1,4 @@
-package de.retest.guistatemachine
+package de.retest.guistatemachine.rest
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http

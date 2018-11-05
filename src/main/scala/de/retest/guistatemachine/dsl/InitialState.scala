@@ -1,3 +1,6 @@
 package de.retest.guistatemachine.dsl
 
-abstract class InitialState extends State
+/**
+ * NFAs have only one initial state.
+ */
+trait InitialState extends State

@@ -1,4 +1,7 @@
-/bin/
-/target/
+/.classpath
+/.settings
+/.idea
+/bin
+/target
 /project/project
 /project/target

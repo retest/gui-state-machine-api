@@ -5,7 +5,7 @@ import scala.collection.immutable.HashMap
 object StateMachines {
   def apply(f: => StateMachine): Seq[StateMachine] = {
     def constructSeq(s: StateMachine, seq: Seq[StateMachine]): Seq[StateMachine] =
-      if (s.previous ne null) constructSeq(s.previous, seq ++ Seq(s)) else seq
+      if (s.previous ne null) constructSeq(s.previous, Seq(s) ++ seq) else Seq(s) ++ seq
 
     constructSeq(f, Seq())
   }

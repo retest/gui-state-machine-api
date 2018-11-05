@@ -1,6 +1,6 @@
 # GUI State Machine API
 
-REST service for the creation and modification of nondeterministic finite automaton of GUI tests based on a genetic algorithm.
+REST service for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
 The service hides the actual implementation and defines a fixed interface for calls.
 Therefore, calling systems do not depend on the concrete implementation and it can be mocked easily for tests.
 
@@ -18,16 +18,22 @@ Therefore, calling systems do not depend on the concrete implementation and it c
 * `sbt coverageReport` to generate a HTML coverage report.
 * `sbt scalastyle` to make a check with ScalaStyle.
 * `sbt doc` to generate the scaladoc API documentation.
+* `sbt scalafmt` to format the Scala source files with scalafmt.
 
 ## Bash Scripts for REST Calls
 The directory [scripts](./scripts) contains a number of Bash scripts which use `curl` to send REST calls to a running server.
 
 ## NFA for the Representation of Tests
 A nondeterministic finite automaton represents the states of the GUI during the test.
-The actions executed by the user on the widgets are the transitions.
-If an action has not been executed, it leads to an unknown state.
+The actions executed by the user on the widgets are represented by transitions.
+If an action has not been executed yet from a state, it leads to an unknown state.
+The unknown state is a special state from which all actions could be executed.
 The NFA is based on the UI model from [Search-Based System Testing: High Coverage, No False Alarms](http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf) (section "4.5 UI Model").
 Whenever an unknown state is replaced by a newly discovered state, the NFA has to be updated.
+
+The NFA is used to generate test cases (sequence of UI actions) with the help of a genetic algorithm.
+For example, whenever a random action is executed with the help of monkey testing, it adds a transition to the state machine.
+After running the genetic algorithm, the state machine is then used to create a test suite.
 
 **At the moment, the following definitions are incomplete and must be adapted to the actual implementation which calls this service.**
 
@@ -46,6 +52,9 @@ Each transition is a UI action.
 
 ### State
 A state is defined by the set of all visible and interactable windows together with their enabled widgets.
+
+## Scala API for GUI State Machines
+The package [api](./src/main/scala/de/retest/guistatemachine/api/) contains all types and methods for getting and modifying the GUI state machine.
 
 ## DSL
 There is a DSL to construct an NFA with GUI actions manually.
