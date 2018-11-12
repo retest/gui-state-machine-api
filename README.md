@@ -1,8 +1,6 @@
 # GUI State Machine API
 
-REST service for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
-The service hides the actual implementation and defines a fixed interface for calls.
-Therefore, calling systems do not depend on the concrete implementation and it can be mocked easily for tests.
+API for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
 Basically, it does only provide only the two calls `getState` and `executeAction`.
 
 ## Automatic Build with TravisCI
@@ -20,9 +18,6 @@ Basically, it does only provide only the two calls `getState` and `executeAction
 * `sbt scalastyle` to make a check with ScalaStyle.
 * `sbt doc` to generate the scaladoc API documentation.
 * `sbt scalafmt` to format the Scala source files with scalafmt.
-
-## Bash Scripts for REST Calls
-The directory [scripts](./scripts) contains a number of Bash scripts which use `curl` to send REST calls to a running server.
 
 ## NFA for the Representation of Tests
 A nondeterministic finite automaton represents the states of the GUI during the test.
@@ -58,6 +53,7 @@ A state is defined by the set of all visible and interactable windows together w
 The package [api](./src/main/scala/de/retest/guistatemachine/api/) contains all types and methods for getting and modifying the GUI state machine.
 
 ## REST API
+At the moment there is only an initial version of a REST API which has to be mapped to the Scala API.
 Some suggestions how the REST API for the state machine could look like:
 * `/state-machines` GET queries all existing state machines.
 * `/create-state-machine` POST creates a new state machine.
@@ -68,8 +64,5 @@ Some suggestions how the REST API for the state machine could look like:
 * `/state-machine/<long>/state/<long>/transition/<long>` GET queries a specific transition of a specific state.
 * `/state-machine/<long>/execute` POST executes the passed action from the passed state which might lead to a new state and adds a transition to the state machine. The action must be part of all actions?
 
-## Possible NFA Frameworks
-This list contains frameworks for Scala which support the representation of an NFA and could be used as backend to construct the state machine:
-* Akka FSM (FSM for actors): <https://doc.akka.io/docs/akka/current/fsm.html>
-* Neo4J: <https://neo4j.com/>
-* Gremlin-Scala: <https://github.com/mpollmeier/gremlin-scala>
+### Bash Scripts for REST Calls
+The directory [scripts](./scripts) contains a number of Bash scripts which use `curl` to send REST calls to a running server.
