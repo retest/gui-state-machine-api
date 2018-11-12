@@ -1,7 +1,7 @@
-package de.retest.guistatemachine.model
+package de.retest.guistatemachine.rest.model
 
-import org.scalatest.WordSpec
-import org.scalatest.Matchers
+import org.scalatest.{Matchers, WordSpec}
+
 import scala.collection.immutable.HashMap
 
 class MapSpec extends WordSpec with Matchers {

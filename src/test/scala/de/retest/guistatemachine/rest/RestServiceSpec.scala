@@ -1,23 +1,10 @@
 package de.retest.guistatemachine.rest
 
-import org.scalatest.{ Matchers, WordSpec }
-import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.testkit.ScalatestRouteTest
-import akka.http.scaladsl.server._
-import Directives._
-import akka.http.scaladsl.model.HttpEntity
-import akka.http.scaladsl.model.ContentTypes
-import akka.http.scaladsl.model.HttpCharset
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import de.retest.guistatemachine.model.GuiApplications
-import de.retest.guistatemachine.model.Id
-import de.retest.guistatemachine.model.GuiApplication
-import de.retest.guistatemachine.model.TestSuites
+import akka.http.scaladsl.model.{MediaTypes, StatusCodes}
+import akka.http.scaladsl.testkit.ScalatestRouteTest
 import de.retest.guistatemachine.persistence.Persistence
-import akka.http.scaladsl.model.MediaType
-import akka.http.scaladsl.model.MediaTypes
-import de.retest.guistatemachine.model.TestSuite
-import akka.http.scaladsl.model.StatusCode
+import org.scalatest.{Matchers, WordSpec}
 
 class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService {
 
@@ -33,113 +20,61 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       }
     }
 
-    "return an empty list for the GET request with the path /applications" in {
-      Get("/applications") ~> sut ~> check {
+    "return an empty list for the GET request with the path /state-machines" in {
+      Get("/state-machines") ~> sut ~> check {
+        import de.retest.guistatemachine.rest.model.StateMachines
         handled shouldEqual true
         mediaType shouldEqual MediaTypes.`application/json`
-        val r = responseAs[GuiApplications]
-        r.apps.values.size shouldEqual 0
+        val r = responseAs[StateMachines]
+        r.stateMachines.values.size shouldEqual 0
       }
     }
 
-    "fail for the GET request with the path /application/0" in {
-      Get("/application/0") ~> sut ~> check {
+    "fail for the GET request with the path /state-machine/0" in {
+      Get("/state-machine/0") ~> sut ~> check {
         handled shouldEqual true
         status shouldEqual StatusCodes.NotFound
       }
     }
 
-    "fail for the DELETE request with the path /application/0" in {
-      Delete("/application/0") ~> sut ~> check {
+    "fail for the DELETE request with the path /state-machine/0" in {
+      Delete("/state-machine/0") ~> sut ~> check {
         handled shouldEqual true
         status shouldEqual StatusCodes.NotFound
       }
     }
 
-    "fail for the GET request with the path /application/0/test-suites" in {
-      Get("/application/0/test-suites") ~> sut ~> check {
-        handled shouldEqual true
-        status shouldEqual StatusCodes.NotFound
-      }
-    }
-
-    "allow POST for path /create-application" in {
-      Post("/create-application") ~> sut ~> check {
+    "allow POST for path /create-state-machine" in {
+      Post("/create-state-machine") ~> sut ~> check {
+        import de.retest.guistatemachine.rest.model.Id
         handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)
-        persistence.getApplications.apps.values.size shouldEqual 1
+        persistence.getStateMachines().stateMachines.values.size shouldEqual 1
       }
     }
 
-    "return an empty application for the GET request with the path /application/0" in {
-      Get("/application/0") ~> sut ~> check {
+    "return an empty application for the GET request with the path /state-machine/0" in {
+      Get("/state-machine/0") ~> sut ~> check {
+        import de.retest.guistatemachine.rest.model.StateMachine
         handled shouldEqual true
         status shouldEqual StatusCodes.OK
-        val r = responseAs[GuiApplication]
-        r.testSuites.suites.values.size shouldEqual 0
+        val r = responseAs[StateMachine]
+        r.states.states.values.size shouldEqual 1
+        r.actions.actions.values.size shouldEqual 0
       }
     }
 
-    "return an empty list for the GET request with the path /application/0/test-suites" in {
-      Get("/application/0/test-suites") ~> sut ~> check {
-        handled shouldEqual true
-        status shouldEqual StatusCodes.OK
-        val r = responseAs[TestSuites]
-        r.suites.values.size shouldEqual 0
-      }
-    }
-
-    "fail for the GET request with the path /application/0/test-suite/0" in {
-      Get("/application/0/test-suite/0") ~> sut ~> check {
-        handled shouldEqual true
-        status shouldEqual StatusCodes.NotFound
-      }
-    }
-
-    "fail for the DELETE request with the path /application/0/test-suite/0" in {
-      Delete("/application/0/test-suite/0") ~> sut ~> check {
-        handled shouldEqual true
-        status shouldEqual StatusCodes.NotFound
-      }
-    }
-
-    "allow POST for path /application/0/create-test-suite" in {
-      Post("/application/0/create-test-suite") ~> sut ~> check {
-        handled shouldEqual true
-        responseAs[Id] shouldEqual Id(0)
-        persistence.getTestSuites(Id(0)).get.suites.values.size shouldEqual 1
-      }
-    }
-
-    "return an empty test suite for the GET request with the path /application/0/test-suite/0" in {
-      Get("/application/0/test-suite/0") ~> sut ~> check {
-        handled shouldEqual true
-        status shouldEqual StatusCodes.OK
-        val r = responseAs[TestSuite]
-        // TODO There is no content in a test suite at the moment
-      }
-    }
-
-    "return status OK for the DELETE request with the path /application/0/test-suite/0" in {
-      Delete("/application/0/test-suite/0") ~> sut ~> check {
+    "return status OK for the DELETE request with the path /state-machine/0" in {
+      Delete("/state-machine/0") ~> sut ~> check {
         handled shouldEqual true
         status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual "OK"
-        persistence.getTestSuites(Id(0)).get.suites.values.size shouldEqual 0
+        persistence.getStateMachines().stateMachines.values.size shouldEqual 0
       }
     }
 
-    "return status OK for the DELETE request with the path /application/0" in {
-      Delete("/application/0") ~> sut ~> check {
-        handled shouldEqual true
-        status shouldEqual StatusCodes.OK
-        responseAs[String] shouldEqual "OK"
-        persistence.getApplications().apps.values.size shouldEqual 0
-      }
-    }
-
-    "not handle the GET request with the path /applications/bla/hello/bla" in {
-      Get("/applications/bla/hello/bla") ~> sut ~> check {
+    "not handle the GET request with the path /state-machines/bla/hello/bla" in {
+      Get("/state-machines/bla/hello/bla") ~> sut ~> check {
         handled shouldEqual false
         //mediaType shouldEqual MediaTypes.`application/json`
         //val r = responseAs[GuiApplications]

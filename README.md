@@ -3,6 +3,7 @@
 REST service for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
 The service hides the actual implementation and defines a fixed interface for calls.
 Therefore, calling systems do not depend on the concrete implementation and it can be mocked easily for tests.
+Basically, it does only provide only the two calls `getState` and `executeAction`.
 
 ## Automatic Build with TravisCI
 [![Build Status](https://travis-ci.org/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.org/retest/gui-state-machine-api)
@@ -56,29 +57,6 @@ A state is defined by the set of all visible and interactable windows together w
 ## Scala API for GUI State Machines
 The package [api](./src/main/scala/de/retest/guistatemachine/api/) contains all types and methods for getting and modifying the GUI state machine.
 
-## DSL
-There is a DSL to construct an NFA with GUI actions manually.
-The package [dsl](./src/main/scala/de/retest/guistatemachine/dsl/).
-
-The following example shows how to construct an NFA in Scala:
-```scala
-case object Start extends InitialState
-case object S0 extends State
-case object S1 extends State
-case object End extends FinalState
-case object EnterText extends Action
-case object PressExitButton extends Action
-
-StateMachines {
-  StateMachine {
-    Start - EnterText - S0
-    Start - EnterText - S1
-    S0 - PressExitButton - End
-    S1 - PressExitButton - End
-  }
-}
-```
-
 ## REST API
 Some suggestions how the REST API for the state machine could look like:
 * `/state-machines` GET queries all existing state machines.
@@ -90,19 +68,8 @@ Some suggestions how the REST API for the state machine could look like:
 * `/state-machine/<long>/state/<long>/transition/<long>` GET queries a specific transition of a specific state.
 * `/state-machine/<long>/execute` POST executes the passed action from the passed state which might lead to a new state and adds a transition to the state machine. The action must be part of all actions?
 
-Some suggestions on how the test representation REST API could look like (not necessarily required):
-
-* `/applications` GET queries all existing GUI applications.
-* `/create-application` POST creates a new GUI application.
-* `/application/<long>` GET queries an existing GUI application.
-* `/application/<long>` DELETE deletes an existing GUI application and all of its test suites etc.
-* `/application/<long>/test-suites` GET queries all test suites for an existing GUI application.
-* `/application/<long>/create-test-suite` POST creates a new test suite for an existing GUI application.
-* `/application/<long>/test-suite/<long>` GET queries an existing test suite for an existing GUI application.
-* `/application/<long>/test-suite/<long>` DELETE deletes an existing test suite for an existing GUI application.
-
-## NFA Frameworks
-This list contains frameworks for Scala which support the representation of an NFA:
+## Possible NFA Frameworks
+This list contains frameworks for Scala which support the representation of an NFA and could be used as backend to construct the state machine:
 * Akka FSM (FSM for actors): <https://doc.akka.io/docs/akka/current/fsm.html>
 * Neo4J: <https://neo4j.com/>
 * Gremlin-Scala: <https://github.com/mpollmeier/gremlin-scala>

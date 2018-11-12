@@ -1,4 +1,5 @@
 package de.retest.guistatemachine.api.impl
+
 import de.retest.guistatemachine.api.{AbstractApiSpec, Action, Descriptors}
 
 import scala.collection.immutable.HashSet
@@ -15,12 +16,18 @@ class StateImplSpec extends AbstractApiSpec {
       val s0 = new StateImpl(descriptorsA, HashSet(Action(action0Mock)))
       val s1 = new StateImpl(descriptorsB, HashSet(Action(action1Mock)))
       s0.equals(s1) shouldEqual false
+      s0.equals(null) shouldEqual false
     }
 
     "equal" in {
       val s0 = new StateImpl(descriptorsA, HashSet(Action(action0Mock)))
       val s1 = new StateImpl(descriptorsA, HashSet(Action(action1Mock)))
       s0.equals(s1) shouldEqual true
+    }
+
+    "be converted into a string" in {
+      val s0 = new StateImpl(descriptorsA, HashSet(Action(action0Mock)))
+      s0.toString shouldEqual "descriptors=Descriptors(Set()),neverExploredActions=Set(Selenium Action),transitions=Map()"
     }
   }
 }

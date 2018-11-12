@@ -1,7 +1,5 @@
 package de.retest.guistatemachine.rest
 
-import scala.io.StdIn
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.RouteResult.route2HandlerFlow
@@ -9,9 +7,11 @@ import akka.stream.ActorMaterializer
 import de.retest.guistatemachine.persistence.Persistence
 import scopt.OptionParser
 
+import scala.io.StdIn
+
 object WebServer extends App with RestService {
-  final val HOST = "localhost"
-  final val PORT = 8888
+  final val Host = "localhost"
+  final val Port = 8888
 
   implicit val system = ActorSystem("gui-state-machine-api-system")
   implicit val materializer = ActorMaterializer()
@@ -34,9 +34,9 @@ object WebServer extends App with RestService {
     case Some(config) =>
       val persistence = new Persistence
 
-      val bindingFuture = Http().bindAndHandle(getRoute(persistence), HOST, PORT)
+      val bindingFuture = Http().bindAndHandle(getRoute(persistence), Host, Port)
 
-      println(s"Server online at http://${HOST}:${PORT}/")
+      println(s"Server online at http://${Host}:${Port}/")
 
       if (config.maxtime < 0) {
         println("Press RETURN to stop...")
@@ -48,6 +48,5 @@ object WebServer extends App with RestService {
       bindingFuture
         .flatMap(_.unbind()) // trigger unbinding from the port
         .onComplete(_ => system.terminate()) // and shutdown when done
-    case None =>
   }
 }

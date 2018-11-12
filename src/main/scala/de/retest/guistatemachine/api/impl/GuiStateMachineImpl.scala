@@ -4,7 +4,7 @@ import de.retest.guistatemachine.api.{Action, Descriptors, GuiStateMachine, Stat
 
 import scala.collection.mutable.HashMap
 
-object GuiStateMachineImpl extends GuiStateMachine {
+class GuiStateMachineImpl extends GuiStateMachine {
   val states = new HashMap[Descriptors, State]
 
   override def getState(descriptors: Descriptors, neverExploredActions: Set[Action]): State = {
@@ -19,7 +19,7 @@ object GuiStateMachineImpl extends GuiStateMachine {
 
   override def executeAction(from: State, a: Action, descriptors: Descriptors, neverExploredActions: Set[Action]): State = {
     val to = getState(descriptors, neverExploredActions)
-    from.asInstanceOf[StateImpl].addTransition(a, to)
+    from.addTransition(a, to)
     to
   }
 }
