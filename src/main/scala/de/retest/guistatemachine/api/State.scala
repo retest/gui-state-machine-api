@@ -1,5 +1,7 @@
 package de.retest.guistatemachine.api
 
+import scala.util.Random
+
 /**
   * A state should be identified by its corresponding [[Descriptors]].
   * It consists of actions which have not been explored yet and transitions to states which build up the state machine.
@@ -24,11 +26,29 @@ trait State {
   def getTransitions: Map[Action, Set[State]]
 
   /**
+    * This was used in the legacy code for Monkey testing.
+    * @return Returns a random action or an empty value if there are none left.
+    */
+  def getRandomAction(): Option[Action] = {
+    val r = getAllActions.toVector
+    if (r.isEmpty) { None } else {
+      val rnd = new Random()
+      Some(r(rnd.nextInt(r.size)))
+    }
+  }
+
+  /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].
     * @param a The action which represents the transition's consumed symbol.
     * @param to The state which the transition leads t o.
     */
   private[api] def addTransition(a: Action, to: State): Unit
+
+  /**
+    * This was named `getRandomActions` in the legacy code but actually returned all actions.
+    * @return All actions (explored + unexplored).
+    */
+  private def getAllActions(): Set[Action] = getNeverExploredActions ++ getTransitions.keySet
 
   /**
     * Overriding this method is required to allow the usage of a set of states.

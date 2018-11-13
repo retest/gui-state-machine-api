@@ -30,7 +30,7 @@ mainClass in (Compile, run) := Some("de.retest.guistatemachine.rest.WebServer")
 mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebServer")
 
 publishTo := {
-  val nexus = "https://my.artifact.repo.net/"
+  val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else

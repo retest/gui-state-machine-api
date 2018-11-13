@@ -26,4 +26,16 @@ trait GuiStateMachine {
     * @return The current state which the transition of a leads to.
     */
   def executeAction(from: State, a: Action, descriptors: Descriptors, neverExploredActions: Set[Action]): State
+
+  /**
+    * Can be used by the GA to generate new test cases.
+    * @return All actions which have not been explored yet.
+    */
+  def getAllNeverExploredActions: scala.collection.mutable.Set[Action]
+
+  /**
+    * In the legacy code this was only used to show the number of actions which have been explored by Monkey Testing.
+    * @return All actions which have been explored and therefore have a corresponding transition.
+    */
+  def getAllExploredActions: scala.collection.mutable.Set[Action]
 }
