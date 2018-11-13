@@ -12,7 +12,7 @@ class Persistence {
 
   def getStateMachine(id: Id): Option[StateMachine] = if (stateMachines.stateMachines.hasElement(id)) Some(stateMachines.stateMachines.getElement(id)) else None
 
-  // TODO #4 Pass all unexplored actions for the initial state!
+  // TODO #1 Pass all unexplored actions for the initial state!
   def createStateMachine(): Id = stateMachines.stateMachines.addNewElement(StateMachine())
 
   def deleteStateMachine(id: Id): Boolean = stateMachines.stateMachines.removeElement(id)

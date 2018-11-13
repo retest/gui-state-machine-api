@@ -8,6 +8,7 @@ class StateImpl(val descriptors: Descriptors, var neverExploredActions: Set[Acti
 
   /**
     * TODO #4 Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
+    * The legacy code used `AmbigueState` here which was more complicated than just a multi map.
     */
   var transitions = new HashMap[Action, Set[State]]
 

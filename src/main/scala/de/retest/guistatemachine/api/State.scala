@@ -2,16 +2,24 @@ package de.retest.guistatemachine.api
 
 /**
   * A state should be identified by its corresponding [[Descriptors]].
-  * It consists of actions which have not been explored yet and transitions which build up the state machine.
+  * It consists of actions which have not been explored yet and transitions to states which build up the state machine.
   */
 trait State {
+
+  /**
+    * @return The descriptors which identify this state.
+    */
   def getDescriptors: Descriptors
 
+  /**
+    * @return All actions which have not already been explored/executed from this state.
+    */
   def getNeverExploredActions: Set[Action]
 
   /**
     * NFA states can lead to different states by consuming the same symbol.
     * Hence, we have a set of states per action.
+    * In the legacy code there was a type called `AmbigueState` but a multimap simplifies the implementation.
     */
   def getTransitions: Map[Action, Set[State]]
 

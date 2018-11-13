@@ -48,5 +48,6 @@ object WebServer extends App with RestService {
       bindingFuture
         .flatMap(_.unbind()) // trigger unbinding from the port
         .onComplete(_ => system.terminate()) // and shutdown when done
+    case None => println("Missing config.")
   }
 }
