@@ -7,15 +7,23 @@ trait GuiStateMachineApi {
     *
     * @return The new GUI state machine.
     */
-  def createStateMachine: GuiStateMachine
+  def createStateMachine(): Id
 
   /**
     * Removes an existing [[GuiStateMachine]].
     *
-    * @param stateMachine The persisted GUI state machine.
+    * @param id The ID of the GUI state machine.
     * @return True if it existed and was removed by this call. Otherwise, false.
     */
-  def removeStateMachine(stateMachine: GuiStateMachine): Boolean
+  def removeStateMachine(id: Id): Boolean
+
+  /**
+    * Gets an existing [[GuiStateMachine]].
+    *
+    * @param id The ID of the GUI state machine.
+    * @return The existing GUI state machine or nothing.
+    */
+  def getStateMachine(id: Id): Option[GuiStateMachine]
 
   /**
     * Stores all state machines on the disk.

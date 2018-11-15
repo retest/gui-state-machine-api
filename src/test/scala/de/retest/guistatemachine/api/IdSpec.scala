@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.rest.model
+package de.retest.guistatemachine.api
 
 import org.scalatest.{Matchers, WordSpec}
 

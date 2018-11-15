@@ -3,13 +3,15 @@ package de.retest.guistatemachine.rest
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.{MediaTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import de.retest.guistatemachine.persistence.Persistence
+import de.retest.guistatemachine.rest.json.DefaultJsonFormats
 import org.scalatest.{Matchers, WordSpec}
+import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
+import de.retest.guistatemachine.api.GuiStateMachine
+import de.retest.guistatemachine.api.Id
 
 class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService with DefaultJsonFormats {
 
-  val persistence = new Persistence
-  val sut = getRoute(persistence)
+  val sut = getRoute(GuiStateMachineApiImpl)
 
   "The service" should {
     "show the default text for the GET request with the path /" in {
@@ -17,16 +19,6 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         handled shouldEqual true
         val r = responseAs[String]
         r shouldEqual "GUI State Machine API"
-      }
-    }
-
-    "return an empty list for the GET request with the path /state-machines" in {
-      Get("/state-machines") ~> sut ~> check {
-        import de.retest.guistatemachine.rest.model.StateMachines
-        handled shouldEqual true
-        mediaType shouldEqual MediaTypes.`application/json`
-        val r = responseAs[StateMachines]
-        r.stateMachines.values.size shouldEqual 0
       }
     }
 
@@ -46,21 +38,20 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
 
     "allow POST for path /state-machine" in {
       Post("/state-machine") ~> sut ~> check {
-        import de.retest.guistatemachine.rest.model.Id
         handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)
-        persistence.getStateMachines().stateMachines.values.size shouldEqual 1
+        GuiStateMachineApiImpl.getStateMachine(Id(0)).isDefined shouldEqual true
       }
     }
 
     "return an empty application for the GET request with the path /state-machine/0" in {
       Get("/state-machine/0") ~> sut ~> check {
-        import de.retest.guistatemachine.rest.model.StateMachine
         handled shouldEqual true
         status shouldEqual StatusCodes.OK
-        val r = responseAs[StateMachine]
-        r.states.states.values.size shouldEqual 1
-        r.actions.actions.values.size shouldEqual 0
+        val r = responseAs[GuiStateMachine]
+        r.getAllNeverExploredActions.size shouldEqual 0
+        r.getAllExploredActions.size shouldEqual 0
+        r.getActionExecutionTimes.size shouldEqual 0
       }
     }
 
@@ -69,17 +60,16 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         handled shouldEqual true
         status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual "OK"
-        persistence.getStateMachines().stateMachines.values.size shouldEqual 0
+        GuiStateMachineApiImpl.getStateMachine(Id(0)).isEmpty shouldEqual true
       }
     }
 
-    "not handle the GET request with the path /state-machines/bla/hello/bla" in {
-      Get("/state-machines/bla/hello/bla") ~> sut ~> check {
+    "not handle the GET request with the path /state-machine/bla/hello/bla" in {
+      Get("/state-machine/bla/hello/bla") ~> sut ~> check {
         handled shouldEqual false
-        //mediaType shouldEqual MediaTypes.`application/json`
-        //val r = responseAs[GuiApplications]
-        //r.apps.values.size shouldEqual 0
       }
     }
+
+    // TODO #1 Test getting states and executing actions
   }
 }

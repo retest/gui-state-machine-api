@@ -32,42 +32,18 @@ The NFA is used to generate test cases (sequence of UI actions) with the help of
 For example, whenever a random action is executed with the help of monkey testing, it adds a transition to the state machine.
 After running the genetic algorithm, the state machine is then used to create a test suite.
 
-**At the moment, the following definitions are incomplete and must be adapted to the actual implementation which calls this service.**
-
-### Test Suite
-A set of test cases.
-
-### Test Case
-A sequence of UI actions.
-
-### UI Action
-An action which can be triggered by the user via the GUI.
-
-### UI Path
-A sequence of states with transitions from one state to another.
-Each transition is a UI action.
-
-### State
-A state is defined by the set of all visible and interactable windows together with their enabled widgets.
-
 ## Scala API for GUI State Machines
 The package [api](./src/main/scala/de/retest/guistatemachine/api/) contains all types and methods for getting and modifying the GUI state machine.
 
 ## REST API
 At the moment there is only an initial version of a REST API which has to be mapped to the Scala API.
-Some suggestions how the REST API for the state machine could look like:
-* `/state-machines` GET queries all existing state machines.
-* `/create-state-machine` POST creates a new state machine.
-* `/state-machine/<long>` GET queries an existing state machine.
-* `/state-machine/<long>/states` GET queries all existing states of the state machine.
-* `/state-machine/<long>/state/<long>` GET queries a specific state of the state machine which contains transitions.
-* `/state-machine/<long>/state/<long>/transitions` GET queries all transitions of a specific state.
-* `/state-machine/<long>/state/<long>/transition/<long>` GET queries a specific transition of a specific state.
-* `/state-machine/<long>/execute` POST executes the passed action from the passed state which might lead to a new state and adds a transition to the state machine. The action must be part of all actions?
+The REST service can be started with `sbt run`.
+It has the address `http://localhost:8888/`.
+The REST API can be tested manually with `curl`:
+```bash
+curl -H "Content-Type: application/json" -X POST http://localhost:8888/state-machine
+```
 
-## Swagger Support
+### Swagger Support
 The Swagger support is based on [swagger-akka-http](https://github.com/swagger-akka-http/swagger-akka-http).
 The URL `http://localhost:8888/api-docs/swagger.json` should show create Swagger JSON output which can be rendered by Swagger UI.
-
-### Bash Scripts for REST Calls
-The directory [scripts](./scripts) contains a number of Bash scripts which use `curl` to send REST calls to a running server.

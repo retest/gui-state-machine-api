@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.RouteResult.route2HandlerFlow
 import akka.stream.ActorMaterializer
-import de.retest.guistatemachine.persistence.Persistence
+import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
 import scopt.OptionParser
 
 import scala.io.StdIn
@@ -32,9 +32,7 @@ object WebServer extends App with RestService {
   // parser.parse returns Option[C]
   parser.parse(args, Config()) match {
     case Some(config) =>
-      val persistence = new Persistence
-
-      val bindingFuture = Http().bindAndHandle(getRoute(persistence), Host, Port)
+      val bindingFuture = Http().bindAndHandle(getRoute(GuiStateMachineApiImpl), Host, Port)
 
       println(s"Server online at http://${Host}:${Port}/")
 

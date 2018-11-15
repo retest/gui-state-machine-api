@@ -2,7 +2,6 @@ package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{Action, Descriptors, GuiStateMachine, State}
 import scala.collection.immutable.{HashMap, HashSet}
-
 class GuiStateMachineImpl extends GuiStateMachine {
   var states = new HashMap[Descriptors, State]
 

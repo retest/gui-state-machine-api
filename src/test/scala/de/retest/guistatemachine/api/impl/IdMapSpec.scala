@@ -1,15 +1,16 @@
-package de.retest.guistatemachine.rest.model
+package de.retest.guistatemachine.api.impl
 
+import de.retest.guistatemachine.api.Id
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.immutable.HashMap
 
-class MapSpec extends WordSpec with Matchers {
+class IdMapSpec extends WordSpec with Matchers {
 
-  "Map" should {
+  "IdMapSpec" should {
     "generate new IDs" in {
       val hashMap = new HashMap[Id, Int]
-      val map = Map(hashMap)
+      val map = IdMap(hashMap)
       val id0 = map.generateId
       map.values = hashMap + (id0 -> 1)
       val id1 = map.generateId

@@ -1,13 +1,14 @@
-package de.retest.guistatemachine.rest.model
+package de.retest.guistatemachine.api.impl
+
+import de.retest.guistatemachine.api.Id
 
 import scala.collection.immutable.HashMap
 
 /**
   * This custom type allows storing values using [[Id]] as key.
-  * [[de.retest.guistatemachine.rest.JsonFormatForIdMap]] implements marshalling and unmarshalling for JSON for this type.
   * We cannot extend immutable maps in Scala, so we have to keep it as field.
   */
-case class Map[T](var values: scala.collection.immutable.Map[Id, T] = new HashMap[Id, T]) {
+case class IdMap[T](var values: scala.collection.immutable.Map[Id, T] = new HashMap[Id, T]) {
 
   /**
     * Generates a new ID based on the existing entries.
@@ -28,14 +29,14 @@ case class Map[T](var values: scala.collection.immutable.Map[Id, T] = new HashMa
       false
     }
 
-  def getElement(id: Id): T = values(id)
+  def getElement(id: Id): Option[T] = values.get(id)
 
   def hasElement(id: Id): Boolean = values.contains(id)
 }
 
-object Map {
-  def fromValues[T](v: T*): Map[T] = {
-    val r = Map[T]()
+object IdMap {
+  def fromValues[T](v: T*): IdMap[T] = {
+    val r = IdMap[T]()
     for (e <- v) r.addNewElement(e)
     r
   }

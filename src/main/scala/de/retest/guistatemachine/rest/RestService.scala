@@ -2,18 +2,17 @@ package de.retest.guistatemachine.rest
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import de.retest.guistatemachine.persistence.Persistence
+import de.retest.guistatemachine.api.GuiStateMachineApi
 
 trait RestService {
-  def getRoute(persistence: Persistence): Route = {
-    val stateMachinesService = new StateMachinesService(persistence)
-    val stateMachineService = new StateMachineService(persistence)
+
+  def getRoute(guiStateMachineApi: GuiStateMachineApi): Route = {
+    val guiStateMachineService = new GuiStateMachineService(guiStateMachineApi)
 
     get {
       pathSingleSlash {
         complete("GUI State Machine API")
       }
-    } ~ stateMachinesService.getRoute() ~ stateMachineService.getRoute() ~ getFromResourceDirectory("swagger") ~ SwaggerDocService.routes
+    } ~ guiStateMachineService.getRoute() ~ SwaggerDocService.routes
   }
-  // TODO #1 Add static Swagger UI files to ~ path("swagger") { getFromResource("swagger/index.html") }
 }

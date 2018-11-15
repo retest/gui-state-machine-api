@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.rest.model
+package de.retest.guistatemachine.api
 
 final case class Id(val id: Long) extends Ordered[Id] {
 
