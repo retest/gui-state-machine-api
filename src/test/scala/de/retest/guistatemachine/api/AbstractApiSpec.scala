@@ -7,10 +7,11 @@ import de.retest.ui.image.Screenshot
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{Matchers, WordSpec}
 
-abstract class AbstractApiSpec extends WordSpec with Matchers with MockFactory {
+abstract trait AbstractApiSpec extends WordSpec with Matchers with MockFactory {
 
   /**
     * Creates a new identifying attributes collection which should only match other identifying attributes with the same ID.
+    *
     * @param id The ID is used as value for different attributes.
     * @return The identifying attributes.
     */
@@ -19,6 +20,7 @@ abstract class AbstractApiSpec extends WordSpec with Matchers with MockFactory {
 
   /**
     * The identifying attributes and the contained components specify the equality.
+    *
     * @param id If the ID is equal the returned root element will be equal.
     * @return A new root element which is equal to itself but not to any other root element.
     */

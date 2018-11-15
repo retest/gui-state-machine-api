@@ -6,7 +6,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import de.retest.guistatemachine.persistence.Persistence
 import org.scalatest.{Matchers, WordSpec}
 
-class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService {
+class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService with DefaultJsonFormats {
 
   val persistence = new Persistence
   val sut = getRoute(persistence)
@@ -44,8 +44,8 @@ class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       }
     }
 
-    "allow POST for path /create-state-machine" in {
-      Post("/create-state-machine") ~> sut ~> check {
+    "allow POST for path /state-machine" in {
+      Post("/state-machine") ~> sut ~> check {
         import de.retest.guistatemachine.rest.model.Id
         handled shouldEqual true
         responseAs[Id] shouldEqual Id(0)

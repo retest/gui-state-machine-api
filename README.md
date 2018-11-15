@@ -65,5 +65,9 @@ Some suggestions how the REST API for the state machine could look like:
 * `/state-machine/<long>/state/<long>/transition/<long>` GET queries a specific transition of a specific state.
 * `/state-machine/<long>/execute` POST executes the passed action from the passed state which might lead to a new state and adds a transition to the state machine. The action must be part of all actions?
 
+## Swagger Support
+The Swagger support is based on [swagger-akka-http](https://github.com/swagger-akka-http/swagger-akka-http).
+The URL `http://localhost:8888/api-docs/swagger.json` should show create Swagger JSON output which can be rendered by Swagger UI.
+
 ### Bash Scripts for REST Calls
 The directory [scripts](./scripts) contains a number of Bash scripts which use `curl` to send REST calls to a running server.

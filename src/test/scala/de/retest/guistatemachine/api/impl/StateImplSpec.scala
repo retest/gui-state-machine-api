@@ -15,12 +15,14 @@ class StateImplSpec extends AbstractApiSpec {
       val s1 = new StateImpl(descriptorsB, Set(Action(action1Mock)))
       s0.equals(s1) shouldEqual false
       s0.equals(null) shouldEqual false
+      s0.hashCode() should not equal s1.hashCode()
     }
 
     "equal" in {
       val s0 = new StateImpl(descriptorsA, Set(Action(action0Mock)))
       val s1 = new StateImpl(descriptorsA, Set(Action(action1Mock)))
       s0.equals(s1) shouldEqual true
+      s0.hashCode() shouldEqual s1.hashCode()
     }
 
     "be converted into a string" in {

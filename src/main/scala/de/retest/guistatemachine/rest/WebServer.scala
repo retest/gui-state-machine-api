@@ -20,7 +20,7 @@ object WebServer extends App with RestService {
 
   case class Config(maxtime: Long = -1)
 
-  val parser = new OptionParser[Config]("scopt") {
+  val parser = new OptionParser[Config]("gui-state-machine") {
     head("gui-state-machine-api", "1.0")
 
     opt[Long]('t', "maxtime") action { (x, c) =>

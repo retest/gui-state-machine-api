@@ -1,44 +1,55 @@
 package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{Action, Descriptors, GuiStateMachine, State}
-
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.HashSet
+import scala.collection.immutable.{HashMap, HashSet}
 
 class GuiStateMachineImpl extends GuiStateMachine {
-  val states = new HashMap[Descriptors, State]
+  var states = new HashMap[Descriptors, State]
 
   /**
     * In the legacy code we had `getAllNeverExploredActions` which had to collect them from all states and make sure they were never executed.
     * Storing them directly in a set improves efficiency.
     */
-  val allNeverExploredActions = new HashSet[Action]
+  var allNeverExploredActions = new HashSet[Action]
 
   /**
     * The legacy code stored execution counters for every action.
     */
-  val allExploredActions = new HashSet[Action]
+  var allExploredActions = new HashSet[Action]
+
+  /**
+    * `actionExecutionCounter` from the legacy code.
+    * Stores the total number of executions per action.
+    */
+  var actionExecutionTimes = new HashMap[Action, Int]
 
   override def getState(descriptors: Descriptors, neverExploredActions: Set[Action]): State = {
     if (states.contains(descriptors)) {
       states(descriptors)
     } else {
-      allNeverExploredActions ++= (neverExploredActions -- allExploredActions)
+      allNeverExploredActions = allNeverExploredActions ++ (neverExploredActions -- allExploredActions)
       val s = new StateImpl(descriptors, neverExploredActions)
-      states += (descriptors -> s)
+      states = states + (descriptors -> s)
       s
     }
   }
 
   override def executeAction(from: State, a: Action, descriptors: Descriptors, neverExploredActions: Set[Action]): State = {
     val to = getState(descriptors, neverExploredActions)
-    allExploredActions += a
-    allNeverExploredActions -= a
+    allExploredActions = allExploredActions + a
+    allNeverExploredActions = allNeverExploredActions - a
+    val old = actionExecutionTimes.get(a)
+    old match {
+      case Some(o) => actionExecutionTimes = actionExecutionTimes + (a -> (o + 1))
+      case None    => actionExecutionTimes = actionExecutionTimes + (a -> 1)
+    }
     from.addTransition(a, to)
     to
   }
 
-  override def getAllNeverExploredActions: scala.collection.mutable.Set[Action] = allNeverExploredActions
+  override def getAllNeverExploredActions: Set[Action] = allNeverExploredActions
 
-  override def getAllExploredActions: scala.collection.mutable.Set[Action] = allExploredActions
+  override def getAllExploredActions: Set[Action] = allExploredActions
+
+  override def getActionExecutionTimes: Map[Action, Int] = actionExecutionTimes
 }

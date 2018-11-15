@@ -15,4 +15,12 @@ object GuiStateMachineApiImpl extends GuiStateMachineApi {
   }
 
   override def removeStateMachine(stateMachine: GuiStateMachine): Boolean = stateMachines.remove(stateMachine)
+
+  override def persist(): Unit = {
+    // TODO #9 store on the disk
+  }
+
+  override def load(): Unit = {
+    // TODO #9 Load from the disk
+  }
 }

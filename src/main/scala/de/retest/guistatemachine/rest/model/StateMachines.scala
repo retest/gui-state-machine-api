@@ -1,3 +1,10 @@
 package de.retest.guistatemachine.rest.model
 
-final case class StateMachines(stateMachines: Map[StateMachine])
+import io.swagger.annotations.{ApiModel, ApiModelProperty}
+
+import scala.annotation.meta.field
+
+@ApiModel(description = "A map of state machines")
+final case class StateMachines(
+    @(ApiModelProperty @field)(value = "A map of state machines")
+    stateMachines: Map[StateMachine])
