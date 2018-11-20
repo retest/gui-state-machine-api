@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.api.impl
 
-import de.retest.guistatemachine.api.{AbstractApiSpec, Action, Descriptors}
+import de.retest.guistatemachine.api.{AbstractApiSpec, Action, Descriptors, Id}
 
 class GuiStateMachineImplSpec extends AbstractApiSpec {
 
@@ -8,8 +8,8 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
   val rootElementA = getRootElement("a")
   val rootElementB = getRootElement("b")
   val rootElementC = getRootElement("c")
-  val action0Mock = getAction()
-  val action1Mock = getAction()
+  val action0 = Action(Id(0))
+  val action1 = Action(Id(1))
 
   "GuiStateMachine" should {
     "add two transitions to two new states for the same action and one transition to another state for another action" in {
@@ -21,45 +21,45 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
 
       // execute action0Mock for the first time
       val s0Descriptors = Descriptors(Set(rootElementA))
-      val s0 = sut.executeAction(initial, Action(action0Mock), s0Descriptors, getNeverExploredActions)
+      val s0 = sut.executeAction(initial, action0, s0Descriptors, getNeverExploredActions)
       initial.getNeverExploredActions.size shouldEqual 1
       initial.getTransitions.size shouldEqual 1
-      initial.getTransitions(Action(action0Mock)).to.size shouldEqual 1
-      initial.getTransitions(Action(action0Mock)).executionCounter shouldEqual 1
+      initial.getTransitions(action0).to.size shouldEqual 1
+      initial.getTransitions(action0).executionCounter shouldEqual 1
       s0.getNeverExploredActions.size shouldEqual 2
       s0.getTransitions.size shouldEqual 0
       sut.getAllExploredActions.size shouldEqual 1
       sut.getAllNeverExploredActions.size shouldEqual 1
-      sut.getActionExecutionTimes.get(Action(action0Mock)).isDefined shouldEqual true
-      sut.getActionExecutionTimes.get(Action(action0Mock)).get shouldEqual 1
+      sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
+      sut.getActionExecutionTimes.get(action0).get shouldEqual 1
 
       // execute action0Mock for the second time
       val s1Descriptors = Descriptors(Set(rootElementB))
-      val s1 = sut.executeAction(initial, Action(action0Mock), s1Descriptors, getNeverExploredActions)
+      val s1 = sut.executeAction(initial, action0, s1Descriptors, getNeverExploredActions)
       initial.getNeverExploredActions.size shouldEqual 1
       initial.getTransitions.size shouldEqual 1
-      initial.getTransitions(Action(action0Mock)).to.size shouldEqual 2
-      initial.getTransitions(Action(action0Mock)).executionCounter shouldEqual 2
+      initial.getTransitions(action0).to.size shouldEqual 2
+      initial.getTransitions(action0).executionCounter shouldEqual 2
       s1.getNeverExploredActions.size shouldEqual 2
       s1.getTransitions.size shouldEqual 0
       sut.getAllExploredActions.size shouldEqual 1
       sut.getAllNeverExploredActions.size shouldEqual 1
-      sut.getActionExecutionTimes.get(Action(action0Mock)).isDefined shouldEqual true
-      sut.getActionExecutionTimes.get(Action(action0Mock)).get shouldEqual 2
+      sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
+      sut.getActionExecutionTimes.get(action0).get shouldEqual 2
 
       // execute action1Mock for the first time
       val s2Descriptors = Descriptors(Set(rootElementC))
-      val s2 = sut.executeAction(initial, Action(action1Mock), s2Descriptors, getNeverExploredActions)
+      val s2 = sut.executeAction(initial, action1, s2Descriptors, getNeverExploredActions)
       initial.getNeverExploredActions.size shouldEqual 0
       initial.getTransitions.size shouldEqual 2
-      initial.getTransitions(Action(action1Mock)).to.size shouldEqual 1
-      initial.getTransitions(Action(action1Mock)).executionCounter shouldEqual 1
+      initial.getTransitions(action1).to.size shouldEqual 1
+      initial.getTransitions(action1).executionCounter shouldEqual 1
       s2.getNeverExploredActions.size shouldEqual 2
       s2.getTransitions.size shouldEqual 0
       sut.getAllExploredActions.size shouldEqual 2
       sut.getAllNeverExploredActions.size shouldEqual 0
-      sut.getActionExecutionTimes.get(Action(action1Mock)).isDefined shouldEqual true
-      sut.getActionExecutionTimes.get(Action(action1Mock)).get shouldEqual 1
+      sut.getActionExecutionTimes.get(action1).isDefined shouldEqual true
+      sut.getActionExecutionTimes.get(action1).get shouldEqual 1
     }
 
     "store a state for the second access" in {
@@ -71,5 +71,5 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
   }
 
   def getDescriptors: Descriptors = Descriptors(Set(rootElementA, rootElementB, rootElementC))
-  def getNeverExploredActions: Set[Action] = Set(Action(action0Mock), Action(action1Mock))
+  def getNeverExploredActions: Set[Action] = Set(action0, action1)
 }

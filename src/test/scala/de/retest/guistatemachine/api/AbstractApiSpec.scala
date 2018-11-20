@@ -4,10 +4,9 @@ import java.util.{Arrays, Collections}
 
 import de.retest.ui.descriptors._
 import de.retest.ui.image.Screenshot
-import org.scalamock.scalatest.MockFactory
 import org.scalatest.{Matchers, WordSpec}
 
-abstract trait AbstractApiSpec extends WordSpec with Matchers with MockFactory {
+abstract trait AbstractApiSpec extends WordSpec with Matchers {
 
   /**
     * Creates a new identifying attributes collection which should only match other identifying attributes with the same ID.
@@ -34,6 +33,4 @@ abstract trait AbstractApiSpec extends WordSpec with Matchers with MockFactory {
     0,
     "My Window"
   )
-
-  def getAction(): org.openqa.selenium.interactions.Action = mock[org.openqa.selenium.interactions.Action]
 }

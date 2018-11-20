@@ -1,9 +1,13 @@
 package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{Action, Descriptors, GuiStateMachine, State}
+
 import scala.collection.immutable.{HashMap, HashSet}
-class GuiStateMachineImpl extends GuiStateMachine {
-  var states = new HashMap[Descriptors, State]
+
+@SerialVersionUID(1L)
+class GuiStateMachineImpl extends GuiStateMachine with Serializable {
+  // Make it accessable from the impl package for unit tests.
+  private[impl] var states = new HashMap[Descriptors, State]
 
   /**
     * In the legacy code we had `getAllNeverExploredActions` which had to collect them from all states and make sure they were never executed.
@@ -51,4 +55,11 @@ class GuiStateMachineImpl extends GuiStateMachine {
   override def getAllExploredActions: Set[Action] = allExploredActions
 
   override def getActionExecutionTimes: Map[Action, Int] = actionExecutionTimes
+
+  override def clear(): Unit = {
+    states = HashMap[Descriptors, State]()
+    allNeverExploredActions = HashSet[Action]()
+    allExploredActions = HashSet[Action]()
+    actionExecutionTimes = HashMap[Action, Int]()
+  }
 }

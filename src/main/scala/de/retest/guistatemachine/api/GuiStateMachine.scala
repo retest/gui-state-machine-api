@@ -48,7 +48,12 @@ trait GuiStateMachine {
     * In the legacy code this was only used to calculate [[getAllNeverExploredActions]].
     * It could be used for the visualization of the NFA to see how often actions are executed.
     *
-    * @return The number of times every explored action has been executed in the NFA.
+    * @return The number of times every explored action has been executed in the NFA. Never explored actions are not part of it.
     */
   def getActionExecutionTimes: Map[Action, Int]
+
+  /**
+    * Clears all states, transitions and never explored actions etc.
+    */
+  def clear(): Unit
 }

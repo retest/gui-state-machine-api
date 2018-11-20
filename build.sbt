@@ -8,7 +8,6 @@ scalaVersion := "2.12.7"
 
 // Dependencies to represent the input of states and actions:
 libraryDependencies += "de.retest" % "retest-model" % "5.0.0" withSources () withJavadoc ()
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.35.0" withSources () withJavadoc ()
 
 // Dependencies to provide a REST service:
 libraryDependencies += "com.github.scopt" % "scopt_2.12" % "3.7.0"
@@ -26,7 +25,6 @@ libraryDependencies += "com.github.swagger-akka-http" %% "swagger-akka-http" % "
 
 // Test frameworks:
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
-libraryDependencies += "org.scalamock" %% "scalamock" % "4.1.0" % "test"
 
 // set the main class for 'sbt run'
 mainClass in (Compile, run) := Some("de.retest.guistatemachine.rest.WebServer")

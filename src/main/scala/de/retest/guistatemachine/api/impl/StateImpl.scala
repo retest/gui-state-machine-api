@@ -4,7 +4,8 @@ import de.retest.guistatemachine.api.{Action, ActionTransitions, Descriptors, St
 
 import scala.collection.immutable.HashMap
 
-class StateImpl(descriptors: Descriptors, var neverExploredActions: Set[Action]) extends State {
+@SerialVersionUID(1L)
+class StateImpl(descriptors: Descriptors, var neverExploredActions: Set[Action]) extends State with Serializable {
 
   /**
     * TODO #4 Currently, there is no MultiMap trait for immutable maps in the Scala standard library.

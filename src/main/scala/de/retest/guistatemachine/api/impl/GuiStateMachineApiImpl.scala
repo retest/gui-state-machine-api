@@ -1,11 +1,11 @@
 package de.retest.guistatemachine.api.impl
 
+import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
+
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi, Id}
 
-import scala.collection.immutable.HashMap
-
 object GuiStateMachineApiImpl extends GuiStateMachineApi {
-  val stateMachines = IdMap(new HashMap[Id, GuiStateMachine])
+  var stateMachines = IdMap[GuiStateMachine]
 
   override def createStateMachine(): Id = stateMachines.addNewElement(new GuiStateMachineImpl)
 
@@ -13,11 +13,19 @@ object GuiStateMachineApiImpl extends GuiStateMachineApi {
 
   override def getStateMachine(id: Id): Option[GuiStateMachine] = stateMachines.getElement(id)
 
-  override def persist(): Unit = {
-    // TODO #9 store on the disk
+  override def clear(): Unit = stateMachines.clear()
+
+  override def save(filePath: String): Unit = {
+    val oos = new ObjectOutputStream(new FileOutputStream(filePath))
+    oos.writeObject(stateMachines)
+    oos.close
   }
 
-  override def load(): Unit = {
-    // TODO #9 Load from the disk
+  override def load(filePath: String): Unit = {
+    clear()
+    val ois = new ObjectInputStream(new FileInputStream(filePath))
+    val readStateMachines = ois.readObject.asInstanceOf[IdMap[GuiStateMachine]]
+    ois.close
+    stateMachines = readStateMachines
   }
 }
