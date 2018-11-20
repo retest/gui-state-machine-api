@@ -33,7 +33,7 @@ For example, whenever a random action is executed with the help of monkey testin
 After running the genetic algorithm, the state machine is then used to create a test suite.
 
 ## Scala API for GUI State Machines
-The package [api](./src/main/scala/de/retest/guistatemachine/api/) contains all types and methods for getting and modifying the GUI state machine.
+The package [api](./src/main/scala/de/retest/guistatemachine/api) contains all types and methods for getting and modifying the GUI state machine.
 
 ## REST API
 At the moment there is only an initial version of a REST API which has to be mapped to the Scala API.
@@ -46,4 +46,4 @@ curl -H "Content-Type: application/json" -X POST http://localhost:8888/state-mac
 
 ### Swagger Support
 The Swagger support is based on [swagger-akka-http](https://github.com/swagger-akka-http/swagger-akka-http).
-The URL `http://localhost:8888/api-docs/swagger.json` should show create Swagger JSON output which can be rendered by Swagger UI.
+The URL `http://localhost:8888/api-docs/swagger.json` should produce Swagger JSON output which can be rendered by [Swagger UI](https://swagger.io/tools/swagger-ui/).
