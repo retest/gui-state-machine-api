@@ -68,6 +68,14 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
       val initialFromAccess1 = sut.getState(initialDescriptors, getNeverExploredActions)
       initialFromAccess0 shouldEqual initialFromAccess1
     }
+
+    "clear the state machine" in {
+      sut.clear()
+      sut.getAllNeverExploredActions.isEmpty shouldEqual true
+      sut.getAllExploredActions.isEmpty shouldEqual true
+      sut.actionExecutionTimes.isEmpty shouldEqual true
+      sut.states.isEmpty shouldEqual true
+    }
   }
 
   def getDescriptors: Descriptors = Descriptors(Set(rootElementA, rootElementB, rootElementC))

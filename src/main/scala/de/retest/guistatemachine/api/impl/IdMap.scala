@@ -38,8 +38,6 @@ case class IdMap[T]() extends Serializable {
   def hasElement(id: Id): Boolean = values.contains(id)
 
   def clear(): Unit = values = new HashMap[Id, T]
-
-  override def toString = s"values: $values"
 }
 
 object IdMap {
