@@ -10,7 +10,9 @@ import scala.collection.immutable.HashMap
   */
 @SerialVersionUID(1L)
 case class IdMap[T]() extends Serializable {
-  var values = new HashMap[Id, T]
+  type HashMapType = HashMap[Id, T]
+
+  var values = new HashMapType
 
   /**
     * Generates a new ID based on the existing entries.
@@ -36,13 +38,13 @@ case class IdMap[T]() extends Serializable {
   def hasElement(id: Id): Boolean = values.contains(id)
 
   def clear(): Unit = values = new HashMap[Id, T]
+
+  override def toString = s"values: $values"
 }
 
 object IdMap {
-  def apply[T](): IdMap[T] = new IdMap[T]
-
-  def fromValues[T](v: T*): IdMap[T] = {
-    val r = IdMap[T]()
+  def apply[T](v: T*): IdMap[T] = {
+    val r = new IdMap[T]()
     for (e <- v) r.addNewElement(e)
     r
   }

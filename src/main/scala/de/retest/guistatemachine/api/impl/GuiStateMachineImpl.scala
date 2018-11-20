@@ -6,7 +6,7 @@ import scala.collection.immutable.{HashMap, HashSet}
 
 @SerialVersionUID(1L)
 class GuiStateMachineImpl extends GuiStateMachine with Serializable {
-  // Make it accessable from the impl package for unit tests.
+  // Make it accessible from the impl package for unit tests.
   private[impl] var states = new HashMap[Descriptors, State]
 
   /**

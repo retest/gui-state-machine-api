@@ -6,4 +6,5 @@ package de.retest.guistatemachine.api
   * Selenium action types like `org.openqa.selenium.interactions.Action` should not be used since we require an `equals`
   * and `hashCode` method here to use the action as a key for transitions.
   */
-case class Action(id: Id)
+@SerialVersionUID(1L)
+case class Action(id: Id) extends Serializable

@@ -8,4 +8,5 @@ package de.retest.guistatemachine.api
   * @param executionCounter The number of times all transitions for the action have been executed from the corresponding state.
   *                         It does not matter to which state. In the legacy code this was stored as `StateGraph.executionCounter`.
   */
-case class ActionTransitions(to: Set[State], executionCounter: Int)
+@SerialVersionUID(1L)
+case class ActionTransitions(to: Set[State], executionCounter: Int) extends Serializable

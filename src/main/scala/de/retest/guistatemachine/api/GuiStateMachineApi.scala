@@ -3,9 +3,9 @@ package de.retest.guistatemachine.api
 /**
   * This API allows the creation, modification and deletion of state machines ([[GuiStateMachine]]) which are created
   * during test generations with the help of Genetic Algorithms.
-  * To store the state machines permantly, you have to call [[GuiStateMachineApi.save()]] manually.
+  * To store the state machines permanently, you have to call [[GuiStateMachineApi.save]] manually.
   * Otherwise, they will only be stored in the memory.
-  * [[GuiStateMachineApi.load()]] allows loading state machines from a file.
+  * [[GuiStateMachineApi.load]] allows loading state machines from a file.
   */
 trait GuiStateMachineApi {
 

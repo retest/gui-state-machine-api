@@ -14,7 +14,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
   "GuiStateMachine" should {
     "add two transitions to two new states for the same action and one transition to another state for another action" in {
       val initialDescriptors = getDescriptors
-      val initial = sut.getState(getDescriptors, getNeverExploredActions)
+      val initial = sut.getState(initialDescriptors, getNeverExploredActions)
       sut.getAllExploredActions.size shouldEqual 0
       sut.getAllNeverExploredActions.size shouldEqual 2
       sut.getActionExecutionTimes.size shouldEqual 0
@@ -64,8 +64,8 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
 
     "store a state for the second access" in {
       val initialDescriptors = getDescriptors
-      val initialFromAccess0 = sut.getState(getDescriptors, getNeverExploredActions)
-      val initialFromAccess1 = sut.getState(getDescriptors, getNeverExploredActions)
+      val initialFromAccess0 = sut.getState(initialDescriptors, getNeverExploredActions)
+      val initialFromAccess1 = sut.getState(initialDescriptors, getNeverExploredActions)
       initialFromAccess0 shouldEqual initialFromAccess1
     }
   }

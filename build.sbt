@@ -6,6 +6,9 @@ organization := "retest"
 
 scalaVersion := "2.12.7"
 
+// Fixes serialization issues:
+fork := true
+
 // Dependencies to represent the input of states and actions:
 libraryDependencies += "de.retest" % "retest-model" % "5.0.0" withSources () withJavadoc ()
 

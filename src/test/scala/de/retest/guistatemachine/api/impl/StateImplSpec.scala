@@ -16,7 +16,7 @@ class StateImplSpec extends AbstractApiSpec {
       val s0 = new StateImpl(descriptorsA, Set(action0))
       val s1 = new StateImpl(descriptorsB, Set(action1))
       s0.equals(s1) shouldEqual false
-      s0.equals(null) shouldEqual false
+      s0.equals(10) shouldEqual false
       s0.hashCode() should not equal s1.hashCode()
     }
 

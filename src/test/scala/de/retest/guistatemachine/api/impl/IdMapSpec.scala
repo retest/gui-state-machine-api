@@ -1,12 +1,14 @@
 package de.retest.guistatemachine.api.impl
 
+import java.io.{File, FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
+
 import org.scalatest.{Matchers, WordSpec}
 
 class IdMapSpec extends WordSpec with Matchers {
 
   "IdMapSpec" should {
     "generate new IDs" in {
-      val map = IdMap[Int]
+      val map = IdMap[Int]()
       val id0 = map.generateId
       map.values = map.values + (id0 -> 1)
       val id1 = map.generateId

@@ -1,17 +1,20 @@
 package de.retest.guistatemachine.rest
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.http.scaladsl.model.{MediaTypes, StatusCodes}
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import de.retest.guistatemachine.rest.json.DefaultJsonFormats
-import org.scalatest.{Matchers, WordSpec}
 import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
-import de.retest.guistatemachine.api.GuiStateMachine
-import de.retest.guistatemachine.api.Id
+import de.retest.guistatemachine.api.{GuiStateMachine, Id}
+import de.retest.guistatemachine.rest.json.DefaultJsonFormats
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
-class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService with DefaultJsonFormats {
+class RestServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with RestService with DefaultJsonFormats with BeforeAndAfterAll {
 
   val sut = getRoute(GuiStateMachineApiImpl)
+
+  override def beforeAll = GuiStateMachineApiImpl.clear()
+
+  override def afterAll = GuiStateMachineApiImpl.clear()
 
   "The service" should {
     "show the default text for the GET request with the path /" in {
