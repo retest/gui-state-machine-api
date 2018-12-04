@@ -35,7 +35,7 @@ mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebSe
 // format the code
 scalafmtOnCompile := true
 
-publishTo := Some("Retest Nexus" at "https://nexus.retest.org/repository/all/")
+publishTo := Some("ReTest Nexus" at "https://nexus.retest.org/repository/all/")
 
 /*
 publishTo := {
