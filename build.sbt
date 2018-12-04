@@ -4,6 +4,9 @@ organization := "de.retest"
 
 scalaVersion := "2.12.7"
 
+// Disable using the Scala version in output paths and artifacts:
+crossPaths := false
+
 // Fixes serialization issues:
 fork := true
 
@@ -35,7 +38,7 @@ mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebSe
 // format the code
 scalafmtOnCompile := true
 
-// https://nexus.retest.org/repository/all/
+// ReTest's Nexus:
 publishTo := {
   val nexus = "https://nexus.retest.org/repository/"
   if (isSnapshot.value)
@@ -43,15 +46,5 @@ publishTo := {
   else
     Some("releases" at nexus + "retest")
 }
-
-/*
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
- */
 
 credentials += Credentials(Path.userHome / ".sbt" / ".credentials")

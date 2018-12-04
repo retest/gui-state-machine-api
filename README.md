@@ -19,6 +19,7 @@ Basically, it does only provide only the two calls `getState` and `executeAction
 * `sbt doc` to generate the scaladoc API documentation.
 * `sbt scalafmt` to format the Scala source files with scalafmt.
 * `sbt release with-defaults` to create a release with a new version number which is published to a repository.
+* `sbt publish` publishes the artifact in ReTest's Nexus. Requires a `$HOME/.sbt/.credentials` file.
 
 ## NFA for the Representation of Tests
 A nondeterministic finite automaton represents the states of the GUI during the test.
