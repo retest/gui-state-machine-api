@@ -1,7 +1,5 @@
 name := "gui-state-machine-api"
 
-version := "0.1.0"
-
 organization := "retest"
 
 scalaVersion := "2.12.7"
@@ -36,3 +34,13 @@ mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebSe
 
 // format the code
 scalafmtOnCompile := true
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
