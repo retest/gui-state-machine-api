@@ -37,7 +37,7 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
     }
 
     "save and load" in {
-      val filePath = "./test_state_machines"
+      val filePath = "./target/test_state_machines"
       val oldFile = new File(filePath)
 
       if (oldFile.exists()) oldFile.delete() shouldEqual true
