@@ -23,8 +23,7 @@ object WebServer extends App with RestService {
   val parser = new OptionParser[Config]("gui-state-machine") {
     head("gui-state-machine-api", "1.0")
 
-    opt[Long]('t', "maxtime") action { (x, c) =>
-      c.copy(maxtime = x)
+    opt[Long]('t', "maxtime") action { (x, c) => c.copy(maxtime = x)
     } text ("maxtime specifies the maximum up time for the HTTP server in ms. This option can be helpful to run tests over a specific period of time.")
 
     help("help").text("prints this usage text")

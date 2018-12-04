@@ -35,7 +35,14 @@ mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebSe
 // format the code
 scalafmtOnCompile := true
 
-publishTo := Some("ReTest Nexus" at "https://nexus.retest.org/repository/all/")
+// https://nexus.retest.org/repository/all/
+publishTo := {
+  val nexus = "https://nexus.retest.org/repository/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "retest-snapshot")
+  else
+    Some("releases" at nexus + "retest")
+}
 
 /*
 publishTo := {

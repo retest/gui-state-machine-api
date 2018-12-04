@@ -64,8 +64,7 @@ class GuiStateMachineService(api: GuiStateMachineApi) extends Directives with De
       val app = api.getStateMachine(Id(id))
       app match {
         case Some(x) =>
-          entity(as[GetStateBody]) { body =>
-            complete(x.getState(body.descriptors, body.neverExploredActions))
+          entity(as[GetStateBody]) { body => complete(x.getState(body.descriptors, body.neverExploredActions))
           }
         case None => complete(StatusCodes.NotFound)
       }
@@ -87,8 +86,7 @@ class GuiStateMachineService(api: GuiStateMachineApi) extends Directives with De
       val app = api.getStateMachine(Id(id))
       app match {
         case Some(x) =>
-          entity(as[ExecuteActionBody]) { body =>
-            complete(x.executeAction(body.from, body.a, body.descriptors, body.neverExploredActions))
+          entity(as[ExecuteActionBody]) { body => complete(x.executeAction(body.from, body.a, body.descriptors, body.neverExploredActions))
           }
         case None => complete(StatusCodes.NotFound)
       }
