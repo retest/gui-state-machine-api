@@ -18,7 +18,7 @@ Basically, it does only provide only the two calls `getState` and `executeAction
 * `sbt scalastyle` to make a check with ScalaStyle.
 * `sbt doc` to generate the scaladoc API documentation.
 * `sbt scalafmt` to format the Scala source files with scalafmt.
-* `sbt release with-defaults` to create a release with a new version number which is added as tag. This command does also publish the artifacts.
+* `sbt 'release cross with-defaults'` to create a release with a new version number which is added as tag. This command does also publish the artifacts.
 * `sbt publish` publishes the artifacts in ReTest's Nexus. Requires a `$HOME/.sbt/.credentials` file with the correct credentials.
 
 ## NFA for the Representation of Tests
