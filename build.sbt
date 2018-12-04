@@ -35,6 +35,9 @@ mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebSe
 // format the code
 scalafmtOnCompile := true
 
+publishTo := Some("Retest Nexus" at "https://nexus.retest.org/repository/all/")
+
+/*
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
@@ -42,5 +45,6 @@ publishTo := {
   else
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
+ */
 
 credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
