@@ -1,6 +1,6 @@
 name := "gui-state-machine-api"
 
-organization := "retest"
+organization := "de.retest"
 
 scalaVersion := "2.12.7"
 
