@@ -1,8 +1,11 @@
 package de.retest.guistatemachine.api.impl
 
 import java.io.File
+import java.util.Arrays
 
-import de.retest.guistatemachine.api.{AbstractApiSpec, Action, Descriptors, Id}
+import de.retest.guistatemachine.api.{AbstractApiSpec, Descriptors, Id}
+import de.retest.surili.model.{Action, NavigateToAction}
+import de.retest.ui.descriptors.SutState
 import org.scalatest.BeforeAndAfterAll
 
 class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll {
@@ -45,13 +48,13 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
       val rootElementA = getRootElement("a")
       val rootElementB = getRootElement("b")
       val rootElementC = getRootElement("c")
-      val action0 = Action(Id(0))
-      val action1 = Action(Id(1))
+      val action0 = new NavigateToAction("http://google.com")
+      val action1 = new NavigateToAction("http://wikipedia.org")
 
-      val initialDescriptors = Descriptors(Set(rootElementA, rootElementB, rootElementC))
-      val initialNeverExploredActions = Set(action0, action1)
-      val finalDescriptors = Descriptors(Set(rootElementC))
-      val finalNeverExploredActions = Set(action0, action1)
+      val initialDescriptors = Descriptors(new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC)))
+      val initialNeverExploredActions = Set[Action](action0, action1)
+      val finalDescriptors = Descriptors(new SutState(Arrays.asList(rootElementC)))
+      val finalNeverExploredActions = Set[Action](action0, action1)
 
       // Create the whole state machine:
       GuiStateMachineApiImpl.clear()

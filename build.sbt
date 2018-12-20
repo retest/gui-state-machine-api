@@ -4,14 +4,21 @@ organization := "de.retest"
 
 scalaVersion := "2.12.7"
 
+/*
+ * retest-sut-api provides a package and an object with the name a etc.
+ * We have to resolve the conflict.
+ */
+scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-Yresolve-term-conflict:package")
+
 // Disable using the Scala version in output paths and artifacts:
 crossPaths := false
 
 // Fixes serialization issues:
 fork := true
 
-// Dependencies to represent the input of states and actions:
-libraryDependencies += "de.retest" % "retest-model" % "5.0.0" withSources () withJavadoc ()
+// Dependencies to represent states and actions:
+libraryDependencies += "de.retest" % "surili-model" % "0.1.0-SNAPSHOT" withSources () withJavadoc ()
+libraryDependencies += "de.retest" % "retest-sut-api" % "3.2.0" withSources () withJavadoc ()
 
 // Dependencies to provide a REST service:
 libraryDependencies += "com.github.scopt" % "scopt_2.12" % "3.7.0"

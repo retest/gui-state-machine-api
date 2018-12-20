@@ -1,5 +1,7 @@
 package de.retest.guistatemachine.api
 
+import de.retest.surili.model.Action
+
 /**
   * API to create a NFA which represents the current state machine of an automatic GUI test generation with the help of a genetic algorithm.
   * Simulated actions by the user are mapped to transitions in the state machine.

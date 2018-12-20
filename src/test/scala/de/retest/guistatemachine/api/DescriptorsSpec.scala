@@ -1,14 +1,17 @@
 package de.retest.guistatemachine.api
 
-class DescriptorsSpec extends AbstractApiSpec {
+import java.util.Arrays
 
+import de.retest.ui.descriptors.SutState
+
+class DescriptorsSpec extends AbstractApiSpec {
   val identifyingAttributesA = getIdentifyingAttributes("a")
   val identifyingAttributesB = getIdentifyingAttributes("b")
 
   val rootElementA = getRootElement("a")
   val rootElementB = getRootElement("b")
-  val descriptorsA = Descriptors(Set(rootElementA))
-  val descriptorsB = Descriptors(Set(rootElementB))
+  val descriptorsA = Descriptors(new SutState(Arrays.asList(rootElementA)))
+  val descriptorsB = Descriptors(new SutState(Arrays.asList(rootElementB)))
 
   "Descriptor" should {
     "make sure that identifying attributes with different IDs are not equal" in {
@@ -19,8 +22,8 @@ class DescriptorsSpec extends AbstractApiSpec {
     }
 
     "not equal" in {
-      descriptorsA.rootElements.size shouldEqual 1
-      descriptorsB.rootElements.size shouldEqual 1
+      descriptorsA.sutState.getRootElements().size shouldEqual 1
+      descriptorsB.sutState.getRootElements().size shouldEqual 1
       descriptorsA shouldNot equal(descriptorsB)
     }
 

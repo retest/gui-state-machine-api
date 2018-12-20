@@ -1,15 +1,18 @@
 package de.retest.guistatemachine.api.impl
 
-import de.retest.guistatemachine.api.{AbstractApiSpec, Action, Descriptors, Id}
+import java.util.Arrays
+
+import de.retest.guistatemachine.api.{AbstractApiSpec, Descriptors}
+import de.retest.surili.model.{Action, NavigateToAction}
+import de.retest.ui.descriptors.SutState
 
 class GuiStateMachineImplSpec extends AbstractApiSpec {
-
   val sut = new GuiStateMachineImpl
   val rootElementA = getRootElement("a")
   val rootElementB = getRootElement("b")
   val rootElementC = getRootElement("c")
-  val action0 = Action(Id(0))
-  val action1 = Action(Id(1))
+  val action0 = new NavigateToAction("http://google.com")
+  val action1 = new NavigateToAction("http://wikipedia.org")
 
   "GuiStateMachine" should {
     "add two transitions to two new states for the same action and one transition to another state for another action" in {
@@ -19,8 +22,8 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
       sut.getAllNeverExploredActions.size shouldEqual 2
       sut.getActionExecutionTimes.size shouldEqual 0
 
-      // execute action0Mock for the first time
-      val s0Descriptors = Descriptors(Set(rootElementA))
+      // execute action0 for the first time
+      val s0Descriptors = Descriptors(new SutState(Arrays.asList(rootElementA)))
       val s0 = sut.executeAction(initial, action0, s0Descriptors, getNeverExploredActions)
       initial.getNeverExploredActions.size shouldEqual 1
       initial.getTransitions.size shouldEqual 1
@@ -33,8 +36,8 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
       sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
       sut.getActionExecutionTimes.get(action0).get shouldEqual 1
 
-      // execute action0Mock for the second time
-      val s1Descriptors = Descriptors(Set(rootElementB))
+      // execute action0 for the second time
+      val s1Descriptors = Descriptors(new SutState(Arrays.asList((rootElementB))))
       val s1 = sut.executeAction(initial, action0, s1Descriptors, getNeverExploredActions)
       initial.getNeverExploredActions.size shouldEqual 1
       initial.getTransitions.size shouldEqual 1
@@ -47,8 +50,8 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
       sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
       sut.getActionExecutionTimes.get(action0).get shouldEqual 2
 
-      // execute action1Mock for the first time
-      val s2Descriptors = Descriptors(Set(rootElementC))
+      // execute action1 for the first time
+      val s2Descriptors = Descriptors(new SutState(Arrays.asList(rootElementC)))
       val s2 = sut.executeAction(initial, action1, s2Descriptors, getNeverExploredActions)
       initial.getNeverExploredActions.size shouldEqual 0
       initial.getTransitions.size shouldEqual 2
@@ -78,6 +81,6 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
     }
   }
 
-  def getDescriptors: Descriptors = Descriptors(Set(rootElementA, rootElementB, rootElementC))
-  def getNeverExploredActions: Set[Action] = Set(action0, action1)
+  def getDescriptors = Descriptors(new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC)))
+  def getNeverExploredActions = Set[Action](action0, action1)
 }

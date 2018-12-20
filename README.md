@@ -7,6 +7,19 @@ Basically, it does only provide only the two calls `getState` and `executeAction
 [![Build Status](https://travis-ci.org/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.org/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
+## Dependencies
+
+Make sure to have configured the ReTest Repositories in `~/.sbt/repositories`:
+```
+[repositories]
+  local
+  maven-central
+  nexus-retest-maven-all: https://nexus.retest.org/repository/all/
+  nexus-retest-maven-surili-snapshot: https://nexus.retest.org/repository/surili-snapshot/
+```
+
+Define the credentials `export SBT_CREDENTIALS="$HOME/.sbt/.credentials"` when building.
+
 ## SBT Commands
 * `sbt compile` to build the project manually.
 * `sbt run` to start the REST service.

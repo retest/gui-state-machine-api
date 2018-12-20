@@ -1,7 +1,7 @@
 package de.retest.guistatemachine.api
 
 /**
-  * Represents transitions for one single symbol which is represented by an [[Action]] to a number of states.
+  * Represents transitions for one single symbol which is represented by an `de.retest.surili.model.Action` to a number of states.
   * The corresponding symbol is not stored in this class but in the [[State]] from which the transitions are started.
   *
   * @param to The states which the transitions lead to. Since it is a NFA, there can be multiple states for the same symbol.

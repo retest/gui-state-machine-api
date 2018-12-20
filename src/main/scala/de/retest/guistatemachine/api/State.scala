@@ -2,6 +2,8 @@ package de.retest.guistatemachine.api
 
 import scala.util.Random
 
+import de.retest.surili.model.Action
+
 /**
   * A state should be identified by its corresponding [[Descriptors]].
   * It consists of actions which have not been explored yet and transitions to states which build up the state machine.

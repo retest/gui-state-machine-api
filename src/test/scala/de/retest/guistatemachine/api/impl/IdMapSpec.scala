@@ -1,8 +1,7 @@
 package de.retest.guistatemachine.api.impl
 
-import org.scalatest.{Matchers, WordSpec}
-
 import de.retest.guistatemachine.api.Id
+import org.scalatest.{Matchers, WordSpec}
 
 class IdMapSpec extends WordSpec with Matchers {
 
