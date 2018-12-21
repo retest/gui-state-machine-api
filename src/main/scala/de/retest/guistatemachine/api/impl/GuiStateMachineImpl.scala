@@ -1,14 +1,19 @@
 package de.retest.guistatemachine.api.impl
 
-import de.retest.guistatemachine.api.{Descriptors, GuiStateMachine, State}
+import java.io.{BufferedWriter, File, FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream, OutputStreamWriter}
+
+import com.github.systemdir.gml.YedGmlWriter
+import de.retest.guistatemachine.api.{GuiStateMachine, State}
 import de.retest.surili.model.Action
+import de.retest.ui.descriptors.SutState
+import org.jgrapht.graph.DirectedPseudograph
 
 import scala.collection.immutable.{HashMap, HashSet}
 
 @SerialVersionUID(1L)
 class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   // Make it accessible from the impl package for unit tests.
-  private[impl] var states = new HashMap[Descriptors, State]
+  private[impl] var states = new HashMap[SutState, State]
 
   /**
     * In the legacy code we had `getAllNeverExploredActions` which had to collect them from all states and make sure they were never executed.
@@ -27,19 +32,18 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     */
   var actionExecutionTimes = new HashMap[Action, Int]
 
-  override def getState(descriptors: Descriptors, neverExploredActions: Set[Action]): State = {
-    if (states.contains(descriptors)) {
-      states(descriptors)
+  override def getState(sutState: SutState, neverExploredActions: Set[Action]): State = {
+    if (states.contains(sutState)) {
+      states(sutState)
     } else {
       allNeverExploredActions = allNeverExploredActions ++ (neverExploredActions -- allExploredActions)
-      val s = new StateImpl(descriptors, neverExploredActions)
-      states = states + (descriptors -> s)
+      val s = new StateImpl(sutState, neverExploredActions)
+      states = states + (sutState -> s)
       s
     }
   }
 
-  override def executeAction(from: State, a: Action, descriptors: Descriptors, neverExploredActions: Set[Action]): State = {
-    val to = getState(descriptors, neverExploredActions)
+  override def executeAction(from: State, a: Action, to: State): State = {
     allExploredActions = allExploredActions + a
     allNeverExploredActions = allNeverExploredActions - a
     val old = actionExecutionTimes.get(a)
@@ -51,6 +55,8 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     to
   }
 
+  override def getAllStates: Map[SutState, State] = states
+
   override def getAllNeverExploredActions: Set[Action] = allNeverExploredActions
 
   override def getAllExploredActions: Set[Action] = allExploredActions
@@ -58,9 +64,75 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   override def getActionExecutionTimes: Map[Action, Int] = actionExecutionTimes
 
   override def clear(): Unit = {
-    states = HashMap[Descriptors, State]()
+    states = HashMap[SutState, State]()
     allNeverExploredActions = HashSet[Action]()
     allExploredActions = HashSet[Action]()
     actionExecutionTimes = HashMap[Action, Int]()
+  }
+
+  override def save(filePath: String): Unit = {
+    val oos = new ObjectOutputStream(new FileOutputStream(filePath))
+    oos.writeObject(this)
+    oos.close()
+  }
+
+  override def load(filePath: String): Unit = {
+    clear()
+    val ois = new ObjectInputStream(new FileInputStream(filePath))
+    val readStateMachine = ois.readObject.asInstanceOf[GuiStateMachineImpl]
+    ois.close()
+    // TODO Improve performance and code by not assigning all fields, don't depend on GuiStateMachineImpl.
+    this.states = readStateMachine.states
+    this.allNeverExploredActions = readStateMachine.allNeverExploredActions
+    this.allExploredActions = readStateMachine.allExploredActions
+    this.actionExecutionTimes = readStateMachine.actionExecutionTimes
+  }
+
+  type GraphType = DirectedPseudograph[SutState, GraphActionEdge]
+
+  override def saveGML(filePath: String): Unit = {
+    // get graph from user
+    val toDraw = getGraph()
+
+    // define the look and feel of the graph
+    val graphicsProvider = new GraphicsProvider
+
+    // get the gml writer
+    val writer =
+      new YedGmlWriter.Builder[SutState, GraphActionEdge, AnyRef](graphicsProvider, YedGmlWriter.PRINT_LABELS: _*)
+        .setEdgeLabelProvider(_.toString)
+        .setVertexLabelProvider(_.toString)
+        .build
+
+    // write to file
+    val outputFile = new File(filePath)
+    val output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"))
+    try writer.export(output, toDraw)
+    finally if (output != null) output.close()
+
+  }
+
+  private def getGraph(): GraphType = {
+    val graph = new GraphType(classOf[GraphActionEdge])
+    getAllStates.foreach { x =>
+      val vertex = x._1
+      if (!graph.addVertex(vertex)) throw new RuntimeException(s"Failed to add vertex $vertex")
+    }
+
+    getAllStates.foreach { x =>
+      val fromVertex = x._1
+
+      x._2.getTransitions foreach { transition =>
+        val actionTransitions = transition._2
+        val action = transition._1
+        actionTransitions.to.foreach { toState =>
+          val toVertex = toState.getSutState
+          val edge = GraphActionEdge(fromVertex, toVertex, action)
+          if (!graph.addEdge(fromVertex, toVertex, edge)) throw new RuntimeException(s"Failed to add edge $edge")
+        }
+
+      }
+    }
+    graph
   }
 }

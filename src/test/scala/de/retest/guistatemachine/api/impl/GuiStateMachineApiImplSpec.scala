@@ -3,40 +3,41 @@ package de.retest.guistatemachine.api.impl
 import java.io.File
 import java.util.Arrays
 
-import de.retest.guistatemachine.api.{AbstractApiSpec, Descriptors, Id}
+import de.retest.guistatemachine.api.{AbstractApiSpec, Id}
 import de.retest.surili.model.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
 import org.scalatest.BeforeAndAfterAll
 
 class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll {
 
+  val sut = new GuiStateMachineApiImpl
   var stateMachineId = Id(-1)
 
-  override def beforeAll = GuiStateMachineApiImpl.clear()
+  override def beforeAll = sut.clear()
 
-  override def afterAll = GuiStateMachineApiImpl.clear()
+  override def afterAll = sut.clear()
 
   "GuiStateMachineApi" should {
     "create, get and remove a new state machine" in {
-      stateMachineId = GuiStateMachineApiImpl.createStateMachine()
+      stateMachineId = sut.createStateMachine()
       stateMachineId shouldEqual Id(0)
 
-      val stateMachine = GuiStateMachineApiImpl.getStateMachine(stateMachineId)
+      val stateMachine = sut.getStateMachine(stateMachineId)
       stateMachine.isDefined shouldBe true
       val fsm = stateMachine.get
       fsm.getActionExecutionTimes.size shouldEqual 0
       fsm.getAllExploredActions.size shouldEqual 0
       fsm.getAllNeverExploredActions.size shouldEqual 0
 
-      GuiStateMachineApiImpl.removeStateMachine(stateMachineId) shouldBe true
+      sut.removeStateMachine(stateMachineId) shouldBe true
     }
 
     "clear all state machines" in {
-      GuiStateMachineApiImpl.createStateMachine shouldEqual Id(0)
-      GuiStateMachineApiImpl.createStateMachine shouldEqual Id(1)
-      GuiStateMachineApiImpl.createStateMachine shouldEqual Id(2)
-      GuiStateMachineApiImpl.clear()
-      GuiStateMachineApiImpl.getStateMachine(Id(2)).isEmpty shouldEqual true
+      sut.createStateMachine shouldEqual Id(0)
+      sut.createStateMachine shouldEqual Id(1)
+      sut.createStateMachine shouldEqual Id(2)
+      sut.clear()
+      sut.getStateMachine(Id(2)).isEmpty shouldEqual true
     }
 
     "save and load" in {
@@ -51,30 +52,31 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
       val action0 = new NavigateToAction("http://google.com")
       val action1 = new NavigateToAction("http://wikipedia.org")
 
-      val initialDescriptors = Descriptors(new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC)))
+      val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
       val initialNeverExploredActions = Set[Action](action0, action1)
-      val finalDescriptors = Descriptors(new SutState(Arrays.asList(rootElementC)))
+      val finalSutState = new SutState(Arrays.asList(rootElementC))
       val finalNeverExploredActions = Set[Action](action0, action1)
 
       // Create the whole state machine:
-      GuiStateMachineApiImpl.clear()
-      stateMachineId = GuiStateMachineApiImpl.createStateMachine()
-      val stateMachine = GuiStateMachineApiImpl.getStateMachine(stateMachineId).get
-      val initialState = stateMachine.getState(initialDescriptors, initialNeverExploredActions)
-      val finalState = stateMachine.executeAction(initialState, action0, finalDescriptors, finalNeverExploredActions)
+      sut.clear()
+      stateMachineId = sut.createStateMachine()
+      val stateMachine = sut.getStateMachine(stateMachineId).get
+      val initialState = stateMachine.getState(initialSutState, initialNeverExploredActions)
+      val finalState = stateMachine.getState(finalSutState, finalNeverExploredActions)
+      stateMachine.executeAction(initialState, action0, finalState)
 
       // Save all state machines:
-      GuiStateMachineApiImpl.save(filePath)
+      sut.save(filePath)
       val f = new File(filePath)
       f.exists() shouldEqual true
       f.isDirectory shouldEqual false
 
       // Load all state machines:
-      GuiStateMachineApiImpl.clear()
-      GuiStateMachineApiImpl.load(filePath)
+      sut.clear()
+      sut.load(filePath)
 
       // Verify all loaded state machines:
-      val loadedStateMachineOp = GuiStateMachineApiImpl.getStateMachine(stateMachineId)
+      val loadedStateMachineOp = sut.getStateMachine(stateMachineId)
       loadedStateMachineOp.isDefined shouldEqual true
       val loadedStateMachine = loadedStateMachineOp.get.asInstanceOf[GuiStateMachineImpl]
 
@@ -83,9 +85,9 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
       loadedStateMachine.getActionExecutionTimes(action0) shouldEqual 1
       loadedStateMachine.getActionExecutionTimes.contains(action1) shouldEqual false
       loadedStateMachine.states.size shouldEqual 2
-      val loadedInitialState = loadedStateMachine.states(initialDescriptors)
-      val loadedFinalState = loadedStateMachine.states(finalDescriptors)
-      loadedInitialState.getDescriptors shouldEqual initialDescriptors
+      val loadedInitialState = loadedStateMachine.states(initialSutState)
+      val loadedFinalState = loadedStateMachine.states(finalSutState)
+      loadedInitialState.getSutState shouldEqual initialSutState
       loadedInitialState.getTransitions.size shouldEqual 1
       loadedInitialState.getTransitions.contains(action0) shouldEqual true
       loadedInitialState.getNeverExploredActions.size shouldEqual 1
@@ -93,7 +95,7 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
       loadedTransition.executionCounter shouldEqual 1
       loadedTransition.to.size shouldEqual 1
       loadedTransition.to.head shouldEqual loadedFinalState
-      loadedFinalState.getDescriptors shouldEqual finalDescriptors
+      loadedFinalState.getSutState shouldEqual finalSutState
       loadedFinalState.getTransitions.isEmpty shouldEqual true
       loadedFinalState.getNeverExploredActions shouldEqual finalNeverExploredActions
     }

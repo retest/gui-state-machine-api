@@ -1,12 +1,13 @@
 package de.retest.guistatemachine.api.impl
 
-import de.retest.guistatemachine.api.{ActionTransitions, Descriptors, State}
+import de.retest.guistatemachine.api.{ActionTransitions, State}
 import de.retest.surili.model.Action
 
 import scala.collection.immutable.HashMap
+import de.retest.ui.descriptors.SutState
 
 @SerialVersionUID(1L)
-class StateImpl(descriptors: Descriptors, var neverExploredActions: Set[Action]) extends State with Serializable {
+class StateImpl(sutState: SutState, var neverExploredActions: Set[Action]) extends State with Serializable {
 
   /**
     * TODO #4 Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
@@ -14,7 +15,7 @@ class StateImpl(descriptors: Descriptors, var neverExploredActions: Set[Action])
     */
   var transitions = new HashMap[Action, ActionTransitions]
 
-  override def getDescriptors: Descriptors = descriptors
+  override def getSutState: SutState = sutState
   override def getNeverExploredActions: Set[Action] = neverExploredActions
   override def getTransitions: Map[Action, ActionTransitions] = transitions
 

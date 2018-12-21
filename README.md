@@ -15,7 +15,6 @@ Make sure to have configured the ReTest Repositories in `~/.sbt/repositories`:
   local
   maven-central
   nexus-retest-maven-all: https://nexus.retest.org/repository/all/
-  nexus-retest-maven-surili-snapshot: https://nexus.retest.org/repository/surili-snapshot/
 ```
 
 Define the credentials `export SBT_CREDENTIALS="$HOME/.sbt/.credentials"` when building.
@@ -49,15 +48,5 @@ After running the genetic algorithm, the state machine is then used to create a 
 ## Scala API for GUI State Machines
 The package [api](./src/main/scala/de/retest/guistatemachine/api) contains all types and methods for getting and modifying the GUI state machine.
 
-## REST API
-At the moment there is only an initial version of a REST API which has to be mapped to the Scala API.
-The REST service can be started with `sbt run`.
-It has the address `http://localhost:8888/`.
-The REST API can be tested manually with `curl`:
-```bash
-curl -H "Content-Type: application/json" -X POST http://localhost:8888/state-machine
-```
-
-### Swagger Support
-The Swagger support is based on [swagger-akka-http](https://github.com/swagger-akka-http/swagger-akka-http).
-The URL `http://localhost:8888/api-docs/swagger.json` should produce Swagger JSON output which can be rendered by [Swagger UI](https://swagger.io/tools/swagger-ui/).
+The state machines can be serialized and deserialized.
+They can also be written as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) which can be read by editors like [yEd](https://www.yworks.com/products/yed).

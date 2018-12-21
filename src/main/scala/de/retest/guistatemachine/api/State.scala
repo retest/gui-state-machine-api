@@ -1,19 +1,20 @@
 package de.retest.guistatemachine.api
 
+import de.retest.surili.model.Action
+import de.retest.ui.descriptors.SutState
+
 import scala.util.Random
 
-import de.retest.surili.model.Action
-
 /**
-  * A state should be identified by its corresponding [[Descriptors]].
+  * A state should be identified by its corresponding `de.retest.ui.descriptors.SutState`.
   * It consists of actions which have not been explored yet and transitions to states which build up the state machine.
   */
 trait State {
 
   /**
-    * @return The descriptors which identify this state.
+    * @return The SutState which identifies this state.
     */
-  def getDescriptors: Descriptors
+  def getSutState: SutState
 
   /**
     * @return All actions which have not already been explored/executed from this state.
@@ -48,15 +49,15 @@ trait State {
   override def equals(obj: Any): Boolean = {
     if (obj.isInstanceOf[State]) {
       val other = obj.asInstanceOf[State]
-      this.getDescriptors == other.getDescriptors
+      this.getSutState == other.getSutState
     } else {
       super.equals(obj)
     }
   }
 
-  override def hashCode(): Int = this.getDescriptors.hashCode()
+  override def hashCode(): Int = this.getSutState.hashCode()
 
-  override def toString: String = s"descriptors=${getDescriptors},neverExploredActions=${getNeverExploredActions},transitions=${getTransitions}"
+  override def toString: String = s"sutState=${getSutState},neverExploredActions=${getNeverExploredActions},transitions=${getTransitions}"
 
   /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].
