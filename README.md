@@ -1,7 +1,20 @@
 # GUI State Machine API
 
 API for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
-Basically, it does only provide only the two calls `getState` and `executeAction`.
+This is a small code example of creating a new state machine and adding two states connected with a transition:
+```scala
+import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
+import de.retest.ui.descriptors.SutState
+import de.retest.surili.model.actions.NavigateToAction
+
+val guiStateMachineApi = new GuiStateMachineApiImpl
+val stateMachineId = guiStateMachineApi.createStateMachine()
+val stateMachine = guiStateMachineApi.getStateMachine(stateMachineId).get
+val currentState = new SutState(currentDescriptors)
+val action = new NavigateToAction("http://google.com")
+val nextState = new SutState(nextDescriptors)
+stateMachine.executeAction(currentState, action, nextState)
+```
 
 ## Automatic Build with TravisCI
 [![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
