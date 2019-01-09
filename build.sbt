@@ -16,6 +16,8 @@ crossPaths := false
 // Fixes serialization issues:
 fork := true
 
+resolvers += "nexus-retest-maven-all" at " https://nexus.retest.org/repository/all/"
+
 // Dependencies to represent states and actions:
 libraryDependencies += "de.retest" % "surili-model" % "0.1.0-SNAPSHOT" withSources () withJavadoc ()
 libraryDependencies += "de.retest" % "retest-sut-api" % "3.2.0" withSources () withJavadoc ()
@@ -48,9 +50,9 @@ publishTo := {
   }
 }
 
-(sys.env.get("TRAVIS_NEXUS_USER"), sys.env.get("TRAVIS_NEXUS_PW")) match {
-  case (Some(username), Some(password)) =>
-    credentials += Credentials("ReTest Nexus", "nexus.retest.org", username, password)
+sys.env.get("TRAVIS_NEXUS_PW") match {
+  case Some(password) =>
+    credentials += Credentials("ReTest Nexus", "nexus.retest.org", "retest", password)
   case _ =>
     throw new IllegalStateException("USERNAME and/or PASSWORD is missing!")
 }
