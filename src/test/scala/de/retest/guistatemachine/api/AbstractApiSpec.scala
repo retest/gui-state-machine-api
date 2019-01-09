@@ -20,15 +20,20 @@ abstract trait AbstractApiSpec extends WordSpec with Matchers {
   /**
     * The identifying attributes and the contained components specify the equality.
     *
-    * @param id If the ID is equal the returned root element will be equal.
+    * @param id  This value is a criteria for equality of the returned element.
+    * @param numberOfContainedComponents This value is a criteria for equality of the returned element.
     * @return A new root element which is equal to itself but not to any other root element.
     */
-  def getRootElement(id: String): RootElement = new RootElement(
+  def getRootElement(id: String, numberOfContainedComponents: Int): RootElement = new RootElement(
     "retestId",
     getIdentifyingAttributes(id),
     new Attributes(),
     new Screenshot("prefix", Array(1, 2, 3), Screenshot.ImageType.PNG),
-    Collections.emptyList(),
+    if (numberOfContainedComponents <= 0) { Collections.emptyList() } else {
+      scala.collection.JavaConverters.seqAsJavaList(0 to numberOfContainedComponents map { _ =>
+        getRootElement("x", 0)
+      })
+    },
     "screen0",
     0,
     "My Window"

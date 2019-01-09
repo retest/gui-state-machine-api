@@ -6,16 +6,39 @@ import java.util.Arrays
 import de.retest.guistatemachine.api.AbstractApiSpec
 import de.retest.surili.model.actions.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
+import org.scalatest.BeforeAndAfterEach
 
-class GuiStateMachineImplSpec extends AbstractApiSpec {
+class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
   private val sut = new GuiStateMachineImpl
-  private val rootElementA = getRootElement("a")
-  private val rootElementB = getRootElement("b")
-  private val rootElementC = getRootElement("c")
+  private val rootElementA = getRootElement("a", 0)
+  private val rootElementB = getRootElement("b", 0)
+  private val rootElementC = getRootElement("c", 0)
   private val action0 = new NavigateToAction("http://google.com")
   private val action1 = new NavigateToAction("http://wikipedia.org")
 
+  override def beforeEach() {
+    sut.clear()
+  }
+
   "GuiStateMachine" should {
+    "not create a new state when using the same root elements" in {
+      val s0 = new SutState(Arrays.asList(getRootElement("a", 1)))
+      val s0Equal = new SutState(Arrays.asList(getRootElement("a", 1)))
+      val differentState = new SutState(Arrays.asList(getRootElement("a", 2)))
+      s0.equals(s0Equal) shouldBe true
+      s0.hashCode() shouldEqual s0Equal.hashCode()
+      differentState.equals(s0) shouldBe false
+      // TODO There is a bug in the current retest-model. The hashCode is not calculated considering the contained components.
+      differentState.hashCode() should not equal s0.hashCode()
+      sut.getAllStates.size shouldEqual 0
+      sut.getState(s0)
+      sut.getAllStates.size shouldEqual 1
+      sut.getState(s0Equal)
+      sut.getAllStates.size shouldEqual 1
+      sut.getState(differentState)
+      sut.getAllStates.size shouldEqual 2
+    }
+
     "add two transitions to two new states for the same action and one transition to another state for another action" in {
       val initialSutState = getSutState
       val initial = sut.getState(initialSutState, getNeverExploredActions)
@@ -81,13 +104,13 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
       sut.getAllNeverExploredActions.isEmpty shouldEqual true
       sut.getAllExploredActions.isEmpty shouldEqual true
       sut.actionExecutionTimes.isEmpty shouldEqual true
-      sut.states.isEmpty shouldEqual true
+      sut.getAllStates.isEmpty shouldEqual true
     }
 
     "save GML " in {
-      val rootElementA = getRootElement("a")
-      val rootElementB = getRootElement("b")
-      val rootElementC = getRootElement("c")
+      val rootElementA = getRootElement("a", 0)
+      val rootElementB = getRootElement("b", 0)
+      val rootElementC = getRootElement("c", 0)
       val action0 = new NavigateToAction("http://google.com")
       val action1 = new NavigateToAction("http://wikipedia.org")
 

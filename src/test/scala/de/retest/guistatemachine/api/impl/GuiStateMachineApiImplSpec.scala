@@ -6,16 +6,10 @@ import java.util.Arrays
 import de.retest.guistatemachine.api.{AbstractApiSpec, Id}
 import de.retest.surili.model.actions.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
-import org.scalatest.BeforeAndAfterAll
 
-class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll {
-
+class GuiStateMachineApiImplSpec extends AbstractApiSpec {
   val sut = new GuiStateMachineApiImpl
   var stateMachineId = Id(-1)
-
-  override def beforeAll { sut.clear() }
-
-  override def afterAll { sut.clear() }
 
   "GuiStateMachineApi" should {
     "create, get and remove a new state machine" in {
@@ -46,9 +40,9 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
 
       if (oldFile.exists()) oldFile.delete() shouldEqual true
 
-      val rootElementA = getRootElement("a")
-      val rootElementB = getRootElement("b")
-      val rootElementC = getRootElement("c")
+      val rootElementA = getRootElement("a", 0)
+      val rootElementB = getRootElement("b", 0)
+      val rootElementC = getRootElement("c", 0)
       val action0 = new NavigateToAction("http://google.com")
       val action1 = new NavigateToAction("http://wikipedia.org")
 
@@ -84,9 +78,9 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
       loadedStateMachine.getAllNeverExploredActions.size shouldEqual 1
       loadedStateMachine.getActionExecutionTimes(action0) shouldEqual 1
       loadedStateMachine.getActionExecutionTimes.contains(action1) shouldEqual false
-      loadedStateMachine.states.size shouldEqual 2
-      val loadedInitialState = loadedStateMachine.states(initialSutState)
-      val loadedFinalState = loadedStateMachine.states(finalSutState)
+      loadedStateMachine.getAllStates.size shouldEqual 2
+      val loadedInitialState = loadedStateMachine.getAllStates(initialSutState)
+      val loadedFinalState = loadedStateMachine.getAllStates(finalSutState)
       loadedInitialState.getSutState shouldEqual initialSutState
       loadedInitialState.getTransitions.size shouldEqual 1
       loadedInitialState.getTransitions.contains(action0) shouldEqual true
