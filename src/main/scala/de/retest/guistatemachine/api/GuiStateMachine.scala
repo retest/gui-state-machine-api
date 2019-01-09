@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.api
 
-import de.retest.surili.model.Action
+import de.retest.surili.model.actions.Action
 import de.retest.ui.descriptors.SutState
 
 /**

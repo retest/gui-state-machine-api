@@ -3,14 +3,14 @@ package de.retest.guistatemachine.api.impl
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.AbstractApiSpec
-import de.retest.surili.model.{Action, NavigateToAction}
+import de.retest.surili.model.actions.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
 
 class StateImplSpec extends AbstractApiSpec {
   val rootElementA = getRootElement("a")
   val rootElementB = getRootElement("b")
-  val sutStateA = new SutState(Arrays.asList((rootElementA)))
-  val sutStateB = new SutState(Arrays.asList((rootElementB)))
+  val sutStateA = new SutState(Arrays.asList(rootElementA))
+  val sutStateB = new SutState(Arrays.asList(rootElementB))
   val action0 = new NavigateToAction("http://google.com")
   val action1 = new NavigateToAction("http://wikipedia.org")
 

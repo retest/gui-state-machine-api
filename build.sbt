@@ -2,7 +2,7 @@ name := "gui-state-machine-api"
 
 organization := "de.retest"
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.12.8"
 
 /*
  * retest-sut-api provides a package and an object with the name a etc.
@@ -38,10 +38,11 @@ scalafmtOnCompile := true
 // ReTest's Nexus:
 publishTo := {
   val nexus = "https://nexus.retest.org/repository/"
-  if (isSnapshot.value)
+  if (isSnapshot.value) {
     Some("snapshots" at nexus + "surili-snapshot")
-  else
+  } else {
     Some("releases" at nexus + "surili")
+  }
 }
 
 credentials += Credentials(Path.userHome / ".sbt" / ".credentials")

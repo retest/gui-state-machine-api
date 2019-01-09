@@ -1,19 +1,19 @@
 package de.retest.guistatemachine.api.impl
 
+import java.io.File
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.AbstractApiSpec
-import de.retest.surili.model.{Action, NavigateToAction}
+import de.retest.surili.model.actions.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
-import java.io.File
 
 class GuiStateMachineImplSpec extends AbstractApiSpec {
-  val sut = new GuiStateMachineImpl
-  val rootElementA = getRootElement("a")
-  val rootElementB = getRootElement("b")
-  val rootElementC = getRootElement("c")
-  val action0 = new NavigateToAction("http://google.com")
-  val action1 = new NavigateToAction("http://wikipedia.org")
+  private val sut = new GuiStateMachineImpl
+  private val rootElementA = getRootElement("a")
+  private val rootElementB = getRootElement("b")
+  private val rootElementC = getRootElement("c")
+  private val action0 = new NavigateToAction("http://google.com")
+  private val action1 = new NavigateToAction("http://wikipedia.org")
 
   "GuiStateMachine" should {
     "add two transitions to two new states for the same action and one transition to another state for another action" in {
@@ -39,7 +39,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
       sut.getActionExecutionTimes.get(action0).get shouldEqual 1
 
       // execute action0 for the second time
-      val s1SutState = new SutState(Arrays.asList((rootElementB)))
+      val s1SutState = new SutState(Arrays.asList(rootElementB))
       val s1 = sut.getState(s1SutState, getNeverExploredActions)
       sut.executeAction(initial, action0, s1)
       initial.getNeverExploredActions.size shouldEqual 1
@@ -123,6 +123,6 @@ class GuiStateMachineImplSpec extends AbstractApiSpec {
     }
   }
 
-  def getSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-  def getNeverExploredActions = Set[Action](action0, action1)
+  def getSutState: SutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
+  def getNeverExploredActions: Set[Action] = Set[Action](action0, action1)
 }

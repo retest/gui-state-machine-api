@@ -18,6 +18,13 @@ Make sure to have configured the ReTest Repositories in `~/.sbt/repositories`:
 ```
 
 Define the credentials `export SBT_CREDENTIALS="$HOME/.sbt/.credentials"` when building.
+The credential file must look like this:
+```
+realm=ReTest Nexus
+host=nexus.retest.org
+user=username
+password=password
+```
 
 ## SBT Commands
 * `sbt compile` to build the project manually.

@@ -5,7 +5,7 @@ import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutp
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi, Id}
 
 class GuiStateMachineApiImpl extends GuiStateMachineApi {
-  val stateMachines = IdMap[GuiStateMachine]()
+  private val stateMachines = IdMap[GuiStateMachine]()
 
   override def createStateMachine(): Id = stateMachines.addNewElement(new GuiStateMachineImpl)
 

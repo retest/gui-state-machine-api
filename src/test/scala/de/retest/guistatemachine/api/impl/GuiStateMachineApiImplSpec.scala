@@ -4,7 +4,7 @@ import java.io.File
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.{AbstractApiSpec, Id}
-import de.retest.surili.model.{Action, NavigateToAction}
+import de.retest.surili.model.actions.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
 import org.scalatest.BeforeAndAfterAll
 
@@ -13,9 +13,9 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec with BeforeAndAfterAll 
   val sut = new GuiStateMachineApiImpl
   var stateMachineId = Id(-1)
 
-  override def beforeAll = sut.clear()
+  override def beforeAll { sut.clear() }
 
-  override def afterAll = sut.clear()
+  override def afterAll { sut.clear() }
 
   "GuiStateMachineApi" should {
     "create, get and remove a new state machine" in {

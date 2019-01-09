@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.api
 
-import de.retest.surili.model.Action
+import de.retest.surili.model.actions.Action
 import de.retest.ui.descriptors.SutState
 
 import scala.util.Random
@@ -47,17 +47,17 @@ trait State {
     * for each root element.
     */
   override def equals(obj: Any): Boolean = {
-    if (obj.isInstanceOf[State]) {
-      val other = obj.asInstanceOf[State]
-      this.getSutState == other.getSutState
-    } else {
-      super.equals(obj)
+    obj match {
+      case other: State =>
+        this.getSutState == other.getSutState
+      case _ =>
+        super.equals(obj)
     }
   }
 
   override def hashCode(): Int = this.getSutState.hashCode()
 
-  override def toString: String = s"sutState=${getSutState},neverExploredActions=${getNeverExploredActions},transitions=${getTransitions}"
+  override def toString: String = s"sutState=$getSutState,neverExploredActions=$getNeverExploredActions,transitions=$getTransitions"
 
   /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].

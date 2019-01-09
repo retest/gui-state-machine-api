@@ -1,10 +1,10 @@
 package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{ActionTransitions, State}
-import de.retest.surili.model.Action
+import de.retest.surili.model.actions.Action
+import de.retest.ui.descriptors.SutState
 
 import scala.collection.immutable.HashMap
-import de.retest.ui.descriptors.SutState
 
 @SerialVersionUID(1L)
 class StateImpl(sutState: SutState, var neverExploredActions: Set[Action]) extends State with Serializable {
@@ -22,18 +22,16 @@ class StateImpl(sutState: SutState, var neverExploredActions: Set[Action]) exten
   private[api] override def addTransition(a: Action, to: State): Int = {
     val old = transitions.get(a)
     old match {
-      case Some(o) => {
+      case Some(o) =>
         val updated = ActionTransitions(o.to + to, o.executionCounter + 1)
         transitions = transitions + (a -> updated)
         updated.executionCounter
-      }
 
-      case None => {
+      case None =>
         transitions += (a -> ActionTransitions(Set(to), 1))
         // In the legacy code this is done in `increaseTimesExecuted`.
         neverExploredActions = neverExploredActions - a
         1
-      }
     }
   }
 }

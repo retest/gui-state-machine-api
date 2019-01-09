@@ -1,10 +1,10 @@
 package de.retest.guistatemachine.api.impl
 
-import java.io.{BufferedWriter, File, FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream, OutputStreamWriter}
+import java.io._
 
 import com.github.systemdir.gml.YedGmlWriter
 import de.retest.guistatemachine.api.{GuiStateMachine, State}
-import de.retest.surili.model.Action
+import de.retest.surili.model.actions.Action
 import de.retest.ui.descriptors.SutState
 import org.jgrapht.graph.DirectedPseudograph
 
