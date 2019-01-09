@@ -7,15 +7,7 @@ Basically, it does only provide only the two calls `getState` and `executeAction
 [![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
-## Dependencies
-
-Make sure to have configured the ReTest Repositories in `~/.sbt/repositories`:
-```
-[repositories]
-  local
-  maven-central
-  nexus-retest-maven-all: https://nexus.retest.org/repository/all/
-```
+## Credentials
 
 Define the credentials in the environment variables `TRAVIS_NEXUS_USER` and `TRAVIS_NEXUS_PW`.
 Otherwise, the build will fail!
