@@ -4,7 +4,7 @@ API for the creation and modification of nondeterministic finite automaton for t
 Basically, it does only provide only the two calls `getState` and `executeAction`.
 
 ## Automatic Build with TravisCI
-[![Build Status](https://travis-ci.org/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.org/retest/gui-state-machine-api)
+[![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
 ## Dependencies
