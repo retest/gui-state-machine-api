@@ -20,9 +20,9 @@ stateMachine.executeAction(currentState, action, nextState)
 [![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
-## Credentials
+## Build Credentials
 
-Define the credentials in the environment variables `TRAVIS_NEXUS_USER` and `TRAVIS_NEXUS_PW`.
+Define the Nexus password in the environment variable `TRAVIS_NEXUS_PW`.
 Otherwise, the build will fail!
 
 ## SBT Commands
