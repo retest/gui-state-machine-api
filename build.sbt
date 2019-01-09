@@ -19,8 +19,8 @@ fork := true
 resolvers += "nexus-retest-maven-all" at " https://nexus.retest.org/repository/all/"
 
 // Dependencies to represent states and actions:
-libraryDependencies += "de.retest" % "surili-model" % "0.1.0-SNAPSHOT" withSources () withJavadoc ()
-libraryDependencies += "de.retest" % "retest-sut-api" % "3.2.0" withSources () withJavadoc ()
+libraryDependencies += "de.retest" % "surili-model" % "0.1.0-SNAPSHOT" % "provided" withSources () withJavadoc ()
+libraryDependencies += "de.retest" % "retest-sut-api" % "3.2.0" % "provided" withSources () withJavadoc ()
 
 // Dependencies to write GraphML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
