@@ -3,6 +3,7 @@ package de.retest.guistatemachine.api.impl
 import java.io._
 
 import com.github.systemdir.gml.YedGmlWriter
+import com.typesafe.scalalogging.Logger
 import de.retest.guistatemachine.api.{GuiStateMachine, State}
 import de.retest.surili.model.actions.Action
 import de.retest.ui.descriptors.SutState
@@ -12,6 +13,7 @@ import scala.collection.immutable.{HashMap, HashSet}
 
 @SerialVersionUID(1L)
 class GuiStateMachineImpl extends GuiStateMachine with Serializable {
+  private val logger = Logger[GuiStateMachineApiImpl]
   // Make it accessible from the impl package for unit tests.
   private[impl] var states = new HashMap[SutState, State]
 
@@ -37,6 +39,7 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
       states(sutState)
     } else {
       allNeverExploredActions = allNeverExploredActions ++ (neverExploredActions -- allExploredActions)
+      logger.info(s"Create new state from SUT state with hash code ${sutState.hashCode()}")
       val s = new StateImpl(sutState, neverExploredActions)
       states = states + (sutState -> s)
       s

@@ -24,6 +24,9 @@ libraryDependencies += "de.retest" % "retest-sut-api" % "3.2.0" withSources () w
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
 libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.0.1"
 
+// Logging:
+libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
+
 // Test frameworks:
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
