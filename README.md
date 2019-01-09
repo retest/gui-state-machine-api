@@ -17,14 +17,8 @@ Make sure to have configured the ReTest Repositories in `~/.sbt/repositories`:
   nexus-retest-maven-all: https://nexus.retest.org/repository/all/
 ```
 
-Define the credentials `export SBT_CREDENTIALS="$HOME/.sbt/.credentials"` when building.
-The credential file must look like this:
-```
-realm=ReTest Nexus
-host=nexus.retest.org
-user=username
-password=password
-```
+Define the credentials in the environment variables `TRAVIS_NEXUS_USER` and `TRAVIS_NEXUS_PW`.
+Otherwise, the build will fail!
 
 ## SBT Commands
 * `sbt compile` to build the project manually.

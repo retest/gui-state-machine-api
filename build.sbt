@@ -48,4 +48,9 @@ publishTo := {
   }
 }
 
-credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
+(sys.env.get("TRAVIS_NEXUS_USER"), sys.env.get("TRAVIS_NEXUS_PW")) match {
+  case (Some(username), Some(password)) =>
+    credentials += Credentials("ReTest Nexus", "nexus.retest.org", username, password)
+  case _ =>
+    throw new IllegalStateException("USERNAME and/or PASSWORD is missing!")
+}
