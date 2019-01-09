@@ -15,7 +15,7 @@ import scala.collection.immutable.{HashMap, HashSet}
 class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   private val logger = Logger[GuiStateMachineApiImpl]
   // Make it accessible from the impl package for unit tests.
-  private[impl] var states = new HashMap[SutState, State]
+  private var states = new HashMap[SutState, State]
 
   /**
     * In the legacy code we had `getAllNeverExploredActions` which had to collect them from all states and make sure they were never executed.
@@ -104,7 +104,7 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     val writer =
       new YedGmlWriter.Builder[SutState, GraphActionEdge, AnyRef](graphicsProvider, YedGmlWriter.PRINT_LABELS: _*)
         .setEdgeLabelProvider(_.toString)
-        .setVertexLabelProvider(_.toString)
+        .setVertexLabelProvider(sutState => "%s - hash code: %d".format(sutState.toString, sutState.hashCode()))
         .build
 
     // write to file
