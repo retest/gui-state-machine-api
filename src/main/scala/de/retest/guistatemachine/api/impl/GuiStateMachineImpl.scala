@@ -84,7 +84,6 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     val ois = new ObjectInputStream(new FileInputStream(filePath))
     val readStateMachine = ois.readObject.asInstanceOf[GuiStateMachineImpl]
     ois.close()
-    // TODO Improve performance and code by not assigning all fields, don't depend on GuiStateMachineImpl.
     this.states = readStateMachine.states
     this.allNeverExploredActions = readStateMachine.allNeverExploredActions
     this.allExploredActions = readStateMachine.allExploredActions
