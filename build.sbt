@@ -32,11 +32,6 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 // Test frameworks:
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
-// set the main class for 'sbt run'
-mainClass in (Compile, run) := Some("de.retest.guistatemachine.rest.WebServer")
-// set the main class for packaging the main jar
-mainClass in (Compile, packageBin) := Some("de.retest.guistatemachine.rest.WebServer")
-
 // format the code
 scalafmtOnCompile := true
 
