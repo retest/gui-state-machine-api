@@ -14,7 +14,11 @@ val currentState = new SutState(currentDescriptors)
 val action = new NavigateToAction("http://google.com")
 val nextState = new SutState(nextDescriptors)
 stateMachine.executeAction(currentState, action, nextState)
+stateMachine.saveGML("mystatemachine.gml")
+stateMachine.save("mystatemachine.ser")
 ```
+
+The state machine can be saved as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) file which can be visualized by editors like [yEd](https://www.yworks.com/products/yed).
 
 ## Automatic Build with TravisCI
 [![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
@@ -27,7 +31,6 @@ Otherwise, the build will fail!
 
 ## SBT Commands
 * `sbt compile` to build the project manually.
-* `sbt run` to start the REST service.
 * `sbt assembly` to create a standalone JAR which includes all dependencies including the Scala libraries. The standalone JAR is generated as `target/scala-<scalaversion>/gui-state-machine-api-assembly-<version>.jar`.
 * `sbt eclipse` to generate a project for Eclipse.
 * `sbt test` to execute all unit tests.
@@ -50,9 +53,3 @@ Whenever an unknown state is replaced by a newly discovered state, the NFA has t
 The NFA is used to generate test cases (sequence of UI actions) with the help of a genetic algorithm.
 For example, whenever a random action is executed with the help of monkey testing, it adds a transition to the state machine.
 After running the genetic algorithm, the state machine is then used to create a test suite.
-
-## Scala API for GUI State Machines
-The package [api](./src/main/scala/de/retest/guistatemachine/api) contains all types and methods for getting and modifying the GUI state machine.
-
-The state machines can be serialized and deserialized.
-They can also be written as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) which can be read by editors like [yEd](https://www.yworks.com/products/yed).
