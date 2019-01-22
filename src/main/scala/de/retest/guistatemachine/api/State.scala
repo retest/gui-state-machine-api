@@ -17,29 +17,11 @@ trait State {
   def getSutState: SutState
 
   /**
-    * @return All actions which have not already been explored/executed from this state.
-    */
-  def getNeverExploredActions: Set[Action]
-
-  /**
     * NFA states can lead to different states by consuming the same symbol.
     * Hence, we have a set of states per action.
     * In the legacy code there was a type called `AmbigueState` but a multimap simplifies the implementation.
     */
   def getTransitions: Map[Action, ActionTransitions]
-
-  /**
-    * This was used in the legacy code for Monkey testing.
-    *
-    * @return Returns a random action or an empty value if there are none left.
-    */
-  def getRandomAction(): Option[Action] = {
-    val r = getAllActions().toVector
-    if (r.isEmpty) { None } else {
-      val rnd = new Random()
-      Some(r(rnd.nextInt(r.size)))
-    }
-  }
 
   /**
     * Overriding this method is required to allow the usage of a set of states.
@@ -57,7 +39,7 @@ trait State {
 
   override def hashCode(): Int = this.getSutState.hashCode()
 
-  override def toString: String = s"sutState=$getSutState,neverExploredActions=$getNeverExploredActions,transitions=$getTransitions"
+  override def toString: String = s"sutState=$getSutState,transitions=$getTransitions"
 
   /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].
@@ -67,11 +49,4 @@ trait State {
     * @return The number of times the action has been executed from this state. The target state does not matter for this number.
     */
   private[api] def addTransition(a: Action, to: State): Int
-
-  /**
-    * This was named `getRandomActions` in the legacy code but actually returned all actions.
-    *
-    * @return All actions (explored + unexplored).
-    */
-  private def getAllActions(): Set[Action] = getNeverExploredActions ++ getTransitions.keySet
 }

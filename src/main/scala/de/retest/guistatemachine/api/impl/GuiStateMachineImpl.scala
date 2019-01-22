@@ -18,12 +18,6 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   private var states = new HashMap[SutState, State]
 
   /**
-    * In the legacy code we had `getAllNeverExploredActions` which had to collect them from all states and make sure they were never executed.
-    * Storing them directly in a set improves efficiency.
-    */
-  var allNeverExploredActions = new HashSet[Action]
-
-  /**
     * The legacy code stored execution counters for every action.
     */
   var allExploredActions = new HashSet[Action]
@@ -34,13 +28,12 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     */
   var actionExecutionTimes = new HashMap[Action, Int]
 
-  override def getState(sutState: SutState, neverExploredActions: Set[Action]): State = {
+  override def getState(sutState: SutState): State = {
     if (states.contains(sutState)) {
       states(sutState)
     } else {
-      allNeverExploredActions = allNeverExploredActions ++ (neverExploredActions -- allExploredActions)
       logger.info(s"Create new state from SUT state with hash code ${sutState.hashCode()}")
-      val s = new StateImpl(sutState, neverExploredActions)
+      val s = new StateImpl(sutState)
       states = states + (sutState -> s)
       s
     }
@@ -48,7 +41,6 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
 
   override def executeAction(from: State, a: Action, to: State): State = {
     allExploredActions = allExploredActions + a
-    allNeverExploredActions = allNeverExploredActions - a
     val old = actionExecutionTimes.get(a)
     old match {
       case Some(o) => actionExecutionTimes = actionExecutionTimes + (a -> (o + 1))
@@ -60,15 +52,12 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
 
   override def getAllStates: Map[SutState, State] = states
 
-  override def getAllNeverExploredActions: Set[Action] = allNeverExploredActions
-
   override def getAllExploredActions: Set[Action] = allExploredActions
 
   override def getActionExecutionTimes: Map[Action, Int] = actionExecutionTimes
 
   override def clear(): Unit = {
     states = HashMap[SutState, State]()
-    allNeverExploredActions = HashSet[Action]()
     allExploredActions = HashSet[Action]()
     actionExecutionTimes = HashMap[Action, Int]()
   }
@@ -85,7 +74,6 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     val readStateMachine = ois.readObject.asInstanceOf[GuiStateMachineImpl]
     ois.close()
     this.states = readStateMachine.states
-    this.allNeverExploredActions = readStateMachine.allNeverExploredActions
     this.allExploredActions = readStateMachine.allExploredActions
     this.actionExecutionTimes = readStateMachine.actionExecutionTimes
   }

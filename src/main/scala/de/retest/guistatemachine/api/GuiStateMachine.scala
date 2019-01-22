@@ -14,14 +14,12 @@ import de.retest.ui.descriptors.SutState
 trait GuiStateMachine {
 
   /**
-    * Gets a state identified by descriptors and with its initial never explored actions.
+    * Gets a state identified by the corresponding SUT state.
     *
     * @param sutState The SUT state which identifies the state.
-    * @param neverExploredActions All actions which have never been explored from the state.
     * @return The state identified by the descriptors. If there has not been any state yet, it will be added.
     */
-  def getState(sutState: SutState, neverExploredActions: Set[Action]): State
-  def getState(sutState: SutState): State = getState(sutState, Set())
+  def getState(sutState: SutState): State
 
   /**
     * Executes an action from a state leading to the current state described by descriptors.
@@ -32,24 +30,10 @@ trait GuiStateMachine {
     * @return The current state which the transition of a leads to.
     */
   def executeAction(from: State, a: Action, to: State): State
-  def executeAction(fromSutState: SutState,
-                    fromNeverExploredActions: Set[Action],
-                    a: Action,
-                    toSutState: SutState,
-                    toNeverExploredActions: Set[Action]): State =
-    executeAction(getState(fromSutState, fromNeverExploredActions), a, getState(toSutState, toNeverExploredActions))
-
   def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State =
-    executeAction(fromSutState, Set(), a, toSutState, Set())
+    executeAction(fromSutState, a, toSutState)
 
   def getAllStates: Map[SutState, State]
-
-  /**
-    * Can be used by the GA to generate new test cases.
-    *
-    * @return All actions which have not been explored yet.
-    */
-  def getAllNeverExploredActions: Set[Action]
 
   /**
     * In the legacy code this was only used to show the number of actions which have been explored by Monkey Testing.
@@ -59,7 +43,7 @@ trait GuiStateMachine {
   def getAllExploredActions: Set[Action]
 
   /**
-    * In the legacy code this was only used to calculate [[getAllNeverExploredActions]].
+    * In the legacy code this was only used to calculate all never explored actions.
     * It could be used for the visualization of the NFA to see how often actions are executed.
     *
     * @return The number of times every explored action has been executed in the NFA. Never explored actions are not part of it.

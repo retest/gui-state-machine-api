@@ -40,67 +40,56 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
 
     "add two transitions to two new states for the same action and one transition to another state for another action" in {
       val initialSutState = getSutState
-      val initial = sut.getState(initialSutState, getNeverExploredActions)
+      val initial = sut.getState(initialSutState)
       sut.getAllExploredActions.size shouldEqual 0
-      sut.getAllNeverExploredActions.size shouldEqual 2
       sut.getActionExecutionTimes.size shouldEqual 0
 
       // execute action0 for the first time
       val s0SutState = new SutState(Arrays.asList(rootElementA))
-      val s0 = sut.getState(s0SutState, getNeverExploredActions)
+      val s0 = sut.getState(s0SutState)
       sut.executeAction(initial, action0, s0)
-      initial.getNeverExploredActions.size shouldEqual 1
       initial.getTransitions.size shouldEqual 1
       initial.getTransitions(action0).to.size shouldEqual 1
       initial.getTransitions(action0).executionCounter shouldEqual 1
-      s0.getNeverExploredActions.size shouldEqual 2
       s0.getTransitions.size shouldEqual 0
       sut.getAllExploredActions.size shouldEqual 1
-      sut.getAllNeverExploredActions.size shouldEqual 1
       sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
       sut.getActionExecutionTimes(action0) shouldEqual 1
 
       // execute action0 for the second time
       val s1SutState = new SutState(Arrays.asList(rootElementB))
-      val s1 = sut.getState(s1SutState, getNeverExploredActions)
+      val s1 = sut.getState(s1SutState)
       sut.executeAction(initial, action0, s1)
-      initial.getNeverExploredActions.size shouldEqual 1
       initial.getTransitions.size shouldEqual 1
       initial.getTransitions(action0).to.size shouldEqual 2
       initial.getTransitions(action0).executionCounter shouldEqual 2
-      s1.getNeverExploredActions.size shouldEqual 2
       s1.getTransitions.size shouldEqual 0
       sut.getAllExploredActions.size shouldEqual 1
-      sut.getAllNeverExploredActions.size shouldEqual 1
       sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
       sut.getActionExecutionTimes(action0) shouldEqual 2
 
       // execute action1 for the first time
       val s2SutState = new SutState(Arrays.asList(rootElementC))
-      val s2 = sut.getState(s2SutState, getNeverExploredActions)
+      val s2 = sut.getState(s2SutState)
       sut.executeAction(initial, action1, s2)
-      initial.getNeverExploredActions.size shouldEqual 0
       initial.getTransitions.size shouldEqual 2
       initial.getTransitions(action1).to.size shouldEqual 1
       initial.getTransitions(action1).executionCounter shouldEqual 1
-      s2.getNeverExploredActions.size shouldEqual 2
       s2.getTransitions.size shouldEqual 0
       sut.getAllExploredActions.size shouldEqual 2
-      sut.getAllNeverExploredActions.size shouldEqual 0
       sut.getActionExecutionTimes.get(action1).isDefined shouldEqual true
       sut.getActionExecutionTimes(action1) shouldEqual 1
     }
 
     "store a state for the second access" in {
       val initialSutState = getSutState
-      val initialFromAccess0 = sut.getState(initialSutState, getNeverExploredActions)
-      val initialFromAccess1 = sut.getState(initialSutState, getNeverExploredActions)
+      val initialFromAccess0 = sut.getState(initialSutState)
+      val initialFromAccess1 = sut.getState(initialSutState)
       initialFromAccess0 shouldEqual initialFromAccess1
     }
 
     "clear the state machine" in {
       sut.clear()
-      sut.getAllNeverExploredActions.isEmpty shouldEqual true
       sut.getAllExploredActions.isEmpty shouldEqual true
       sut.actionExecutionTimes.isEmpty shouldEqual true
       sut.getAllStates.isEmpty shouldEqual true
@@ -119,13 +108,11 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       val action1 = new NavigateToAction("http://wikipedia.org")
 
       val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-      val initialNeverExploredActions = Set[Action](action0, action1)
       val finalSutState = new SutState(Arrays.asList(rootElementC))
-      val finalNeverExploredActions = Set[Action](action0, action1)
 
       // Create the whole state machine:
-      val initialState = sut.getState(initialSutState, initialNeverExploredActions)
-      val finalState = sut.getState(finalSutState, finalNeverExploredActions)
+      val initialState = sut.getState(initialSutState)
+      val finalState = sut.getState(finalSutState)
       sut.executeAction(initialState, action0, finalState)
 
       // Save the state machine:
@@ -140,7 +127,6 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
 
       // Verify the loaded state machine:
       sut.getAllExploredActions.size shouldEqual 1
-      sut.getAllNeverExploredActions.size shouldEqual 1
       sut.getActionExecutionTimes(action0) shouldEqual 1
       sut.getActionExecutionTimes.contains(action1) shouldEqual false
       sut.getAllStates.size shouldEqual 2
@@ -149,14 +135,12 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       loadedInitialState.getSutState shouldEqual initialSutState
       loadedInitialState.getTransitions.size shouldEqual 1
       loadedInitialState.getTransitions.contains(action0) shouldEqual true
-      loadedInitialState.getNeverExploredActions.size shouldEqual 1
       val loadedTransition = loadedInitialState.getTransitions(action0)
       loadedTransition.executionCounter shouldEqual 1
       loadedTransition.to.size shouldEqual 1
       loadedTransition.to.head shouldEqual loadedFinalState
       loadedFinalState.getSutState shouldEqual finalSutState
       loadedFinalState.getTransitions.isEmpty shouldEqual true
-      loadedFinalState.getNeverExploredActions shouldEqual finalNeverExploredActions
     }
 
     "save GML " in {
@@ -167,22 +151,18 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       val action1 = new NavigateToAction("http://wikipedia.org")
 
       val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-      val initialNeverExploredActions = Set[Action](action0, action1)
       val finalSutState = new SutState(Arrays.asList(rootElementC))
-      val finalNeverExploredActions = Set[Action](action0, action1)
 
       // Create the whole state machine:
       sut.clear()
-      val initialState = sut.getState(initialSutState, initialNeverExploredActions)
-      val finalState = sut.getState(finalSutState, finalNeverExploredActions)
+      val initialState = sut.getState(initialSutState)
+      val finalState = sut.getState(finalSutState)
       sut.executeAction(initialState, action0, finalState)
       sut.executeAction(initialState, action1, finalState)
       sut.executeAction(finalState, action0, initialState)
       sut.executeAction(finalState, action1, initialState)
 
-      initialState.getNeverExploredActions.size shouldEqual 0
       initialState.getTransitions.size shouldEqual 2
-      finalState.getNeverExploredActions.size shouldEqual 0
       finalState.getTransitions.size shouldEqual 2
 
       val filePath = "./target/test_state_machine.gml"
