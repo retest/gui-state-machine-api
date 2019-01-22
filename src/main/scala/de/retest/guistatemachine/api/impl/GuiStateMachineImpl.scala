@@ -13,7 +13,7 @@ import scala.collection.immutable.{HashMap, HashSet}
 
 @SerialVersionUID(1L)
 class GuiStateMachineImpl extends GuiStateMachine with Serializable {
-  private val logger = Logger[GuiStateMachineApiImpl]
+  @transient private val logger = Logger[GuiStateMachineImpl]
   // Make it accessible from the impl package for unit tests.
   private var states = new HashMap[SutState, State]
 
