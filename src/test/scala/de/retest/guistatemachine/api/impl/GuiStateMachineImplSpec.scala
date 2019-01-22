@@ -59,7 +59,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getAllExploredActions.size shouldEqual 1
       sut.getAllNeverExploredActions.size shouldEqual 1
       sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
-      sut.getActionExecutionTimes.get(action0).get shouldEqual 1
+      sut.getActionExecutionTimes(action0) shouldEqual 1
 
       // execute action0 for the second time
       val s1SutState = new SutState(Arrays.asList(rootElementB))
@@ -74,7 +74,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getAllExploredActions.size shouldEqual 1
       sut.getAllNeverExploredActions.size shouldEqual 1
       sut.getActionExecutionTimes.get(action0).isDefined shouldEqual true
-      sut.getActionExecutionTimes.get(action0).get shouldEqual 2
+      sut.getActionExecutionTimes(action0) shouldEqual 2
 
       // execute action1 for the first time
       val s2SutState = new SutState(Arrays.asList(rootElementC))
@@ -89,7 +89,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getAllExploredActions.size shouldEqual 2
       sut.getAllNeverExploredActions.size shouldEqual 0
       sut.getActionExecutionTimes.get(action1).isDefined shouldEqual true
-      sut.getActionExecutionTimes.get(action1).get shouldEqual 1
+      sut.getActionExecutionTimes(action1) shouldEqual 1
     }
 
     "store a state for the second access" in {
@@ -105,6 +105,59 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getAllExploredActions.isEmpty shouldEqual true
       sut.actionExecutionTimes.isEmpty shouldEqual true
       sut.getAllStates.isEmpty shouldEqual true
+    }
+
+    "save and load" in {
+      val filePath = "./target/test_state_machine"
+      val oldFile = new File(filePath)
+
+      if (oldFile.exists()) oldFile.delete() shouldEqual true
+
+      val rootElementA = getRootElement("a", 0)
+      val rootElementB = getRootElement("b", 0)
+      val rootElementC = getRootElement("c", 0)
+      val action0 = new NavigateToAction("http://google.com")
+      val action1 = new NavigateToAction("http://wikipedia.org")
+
+      val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
+      val initialNeverExploredActions = Set[Action](action0, action1)
+      val finalSutState = new SutState(Arrays.asList(rootElementC))
+      val finalNeverExploredActions = Set[Action](action0, action1)
+
+      // Create the whole state machine:
+      val initialState = sut.getState(initialSutState, initialNeverExploredActions)
+      val finalState = sut.getState(finalSutState, finalNeverExploredActions)
+      sut.executeAction(initialState, action0, finalState)
+
+      // Save the state machine:
+      sut.save(filePath)
+      val f = new File(filePath)
+      f.exists() shouldEqual true
+      f.isDirectory shouldEqual false
+
+      // Load the state machine:
+      sut.clear()
+      sut.load(filePath)
+
+      // Verify the loaded state machine:
+      sut.getAllExploredActions.size shouldEqual 1
+      sut.getAllNeverExploredActions.size shouldEqual 1
+      sut.getActionExecutionTimes(action0) shouldEqual 1
+      sut.getActionExecutionTimes.contains(action1) shouldEqual false
+      sut.getAllStates.size shouldEqual 2
+      val loadedInitialState = sut.getAllStates(initialSutState)
+      val loadedFinalState = sut.getAllStates(finalSutState)
+      loadedInitialState.getSutState shouldEqual initialSutState
+      loadedInitialState.getTransitions.size shouldEqual 1
+      loadedInitialState.getTransitions.contains(action0) shouldEqual true
+      loadedInitialState.getNeverExploredActions.size shouldEqual 1
+      val loadedTransition = loadedInitialState.getTransitions(action0)
+      loadedTransition.executionCounter shouldEqual 1
+      loadedTransition.to.size shouldEqual 1
+      loadedTransition.to.head shouldEqual loadedFinalState
+      loadedFinalState.getSutState shouldEqual finalSutState
+      loadedFinalState.getTransitions.isEmpty shouldEqual true
+      loadedFinalState.getNeverExploredActions shouldEqual finalNeverExploredActions
     }
 
     "save GML " in {

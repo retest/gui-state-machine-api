@@ -7,12 +7,12 @@ import de.retest.surili.model.actions.{Action, NavigateToAction}
 import de.retest.ui.descriptors.SutState
 
 class StateImplSpec extends AbstractApiSpec {
-  val rootElementA = getRootElement("a", 0)
-  val rootElementB = getRootElement("b", 0)
-  val sutStateA = new SutState(Arrays.asList(rootElementA))
-  val sutStateB = new SutState(Arrays.asList(rootElementB))
-  val action0 = new NavigateToAction("http://google.com")
-  val action1 = new NavigateToAction("http://wikipedia.org")
+  private val rootElementA = getRootElement("a", 0)
+  private val rootElementB = getRootElement("b", 0)
+  private val sutStateA = new SutState(Arrays.asList(rootElementA))
+  private val sutStateB = new SutState(Arrays.asList(rootElementB))
+  private val action0 = new NavigateToAction("http://google.com")
+  private val action1 = new NavigateToAction("http://wikipedia.org")
 
   "StateImpl" should {
     "not equal" in {

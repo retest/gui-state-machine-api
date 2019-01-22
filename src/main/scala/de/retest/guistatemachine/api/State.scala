@@ -34,7 +34,7 @@ trait State {
     * @return Returns a random action or an empty value if there are none left.
     */
   def getRandomAction(): Option[Action] = {
-    val r = getAllActions.toVector
+    val r = getAllActions().toVector
     if (r.isEmpty) { None } else {
       val rnd = new Random()
       Some(r(rnd.nextInt(r.size)))
