@@ -117,15 +117,17 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
 
   private def getGraph(): GraphType = {
     val graph = new GraphType(classOf[GraphActionEdge])
-    getAllStates.foreach { x =>
+    val allStatesSorted = getAllStates.toSeq.sortWith(hashCodeComparisonOfTuples)
+    allStatesSorted.foreach { x =>
       val vertex = x._1
       if (!graph.addVertex(vertex)) throw new RuntimeException(s"Failed to add vertex $vertex")
     }
 
-    getAllStates.foreach { x =>
+    allStatesSorted.foreach { x =>
       val fromVertex = x._1
+      val allTransitionsSorted = x._2.getTransitions.toSeq.sortWith(hashCodeComparisonOfTuples)
 
-      x._2.getTransitions foreach { transition =>
+      allTransitionsSorted foreach { transition =>
         val actionTransitions = transition._2
         val action = transition._1
         actionTransitions.to.foreach { toState =>
@@ -133,9 +135,10 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
           val edge = GraphActionEdge(fromVertex, toVertex, action)
           if (!graph.addEdge(fromVertex, toVertex, edge)) throw new RuntimeException(s"Failed to add edge $edge")
         }
-
       }
     }
     graph
   }
+
+  private def hashCodeComparisonOfTuples[A, B](a: (A, B), b: (A, B)) = a._1.hashCode().compareTo(b._2.hashCode()) < 0
 }
