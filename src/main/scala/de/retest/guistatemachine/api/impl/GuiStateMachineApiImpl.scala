@@ -5,7 +5,7 @@ import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutp
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi, Id}
 
 class GuiStateMachineApiImpl extends GuiStateMachineApi {
-  private val stateMachines = IdMap[GuiStateMachine]()
+  private var stateMachines = IdMap[GuiStateMachine]()
 
   override def createStateMachine(): Id = stateMachines.addNewElement(new GuiStateMachineImpl)
 
@@ -26,6 +26,6 @@ class GuiStateMachineApiImpl extends GuiStateMachineApi {
     val ois = new ObjectInputStream(new FileInputStream(filePath))
     val readStateMachines = ois.readObject.asInstanceOf[IdMap[GuiStateMachine]]
     ois.close()
-    stateMachines.values = readStateMachines.values
+    stateMachines = readStateMachines
   }
 }

@@ -10,15 +10,10 @@ import scala.collection.immutable.HashMap
   */
 @SerialVersionUID(1L)
 case class IdMap[T]() extends Serializable {
-  type HashMapType = HashMap[Id, T]
+  private type HashMapType = HashMap[Id, T]
 
-  var values = new HashMapType
+  private var values = new HashMapType
 
-  /**
-    * Generates a new ID based on the existing entries.
-    * TODO #1 Generate IDs in a better way. Maybe random numbers until one unused element is found?
-    */
-  def generateId: Id = if (values.isEmpty) Id(0) else Id(values.keySet.max.id + 1)
   def addNewElement(v: T): Id = {
     val generatedId = generateId
     values = values + (generatedId -> v)
@@ -38,12 +33,23 @@ case class IdMap[T]() extends Serializable {
   def hasElement(id: Id): Boolean = values.contains(id)
 
   def clear(): Unit = values = new HashMap[Id, T]
+
+  def size: Int = values.size
+
+  /**
+    * Generates a new ID based on the existing entries.
+    */
+  private def generateId: Id = {
+    var id = Id(0L)
+    while (values.keySet.contains(id)) { id = Id(id.id + 1) }
+    id
+  }
 }
 
 object IdMap {
   def apply[T](v: T*): IdMap[T] = {
     val r = new IdMap[T]()
-    for (e <- v) r.addNewElement(e)
+    for (e <- v) { r.addNewElement(e) }
     r
   }
 }
