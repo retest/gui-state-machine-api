@@ -20,67 +20,67 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   /**
     * The legacy code stored execution counters for every action.
     */
-  var allExploredActions = new HashSet[Action]
+  private var allExploredActions = new HashSet[Action]
 
   /**
     * `actionExecutionCounter` from the legacy code.
     * Stores the total number of executions per action.
     */
-  var actionExecutionTimes = new HashMap[Action, Int]
+  private var actionExecutionTimes = new HashMap[Action, Int]
 
-  override def getState(sutState: SutState): State = {
+  override def getState(sutState: SutState): State = this.synchronized {
     if (states.contains(sutState)) {
       states(sutState)
     } else {
       logger.info(s"Create new state from SUT state with hash code ${sutState.hashCode()}")
       val s = new StateImpl(sutState)
-      states = states + (sutState -> s)
+      states += (sutState -> s)
       s
     }
   }
 
-  override def executeAction(from: State, a: Action, to: State): State = {
-    allExploredActions = allExploredActions + a
+  override def executeAction(from: State, a: Action, to: State): State = this.synchronized {
+    allExploredActions += a
     val old = actionExecutionTimes.get(a)
     old match {
-      case Some(o) => actionExecutionTimes = actionExecutionTimes + (a -> (o + 1))
-      case None    => actionExecutionTimes = actionExecutionTimes + (a -> 1)
+      case Some(o) => actionExecutionTimes += (a -> (o + 1))
+      case None    => actionExecutionTimes += (a -> 1)
     }
     from.addTransition(a, to)
     to
   }
 
-  override def getAllStates: Map[SutState, State] = states
+  override def getAllStates: Map[SutState, State] = this.synchronized { states }
 
-  override def getAllExploredActions: Set[Action] = allExploredActions
+  override def getAllExploredActions: Set[Action] = this.synchronized { allExploredActions }
 
-  override def getActionExecutionTimes: Map[Action, Int] = actionExecutionTimes
+  override def getActionExecutionTimes: Map[Action, Int] = this.synchronized { actionExecutionTimes }
 
-  override def clear(): Unit = {
-    states = HashMap[SutState, State]()
-    allExploredActions = HashSet[Action]()
-    actionExecutionTimes = HashMap[Action, Int]()
+  override def clear(): Unit = this.synchronized {
+    states = new HashMap[SutState, State]
+    allExploredActions = new HashSet[Action]
+    actionExecutionTimes = new HashMap[Action, Int]
   }
 
-  override def save(filePath: String): Unit = {
+  override def save(filePath: String): Unit = this.synchronized {
     val oos = new ObjectOutputStream(new FileOutputStream(filePath))
     oos.writeObject(this)
     oos.close()
   }
 
-  override def load(filePath: String): Unit = {
+  override def load(filePath: String): Unit = this.synchronized {
     clear()
     val ois = new ObjectInputStream(new FileInputStream(filePath))
     val readStateMachine = ois.readObject.asInstanceOf[GuiStateMachineImpl]
     ois.close()
-    this.states = readStateMachine.states
-    this.allExploredActions = readStateMachine.allExploredActions
-    this.actionExecutionTimes = readStateMachine.actionExecutionTimes
+    states = readStateMachine.states
+    allExploredActions = readStateMachine.allExploredActions
+    actionExecutionTimes = readStateMachine.actionExecutionTimes
   }
 
   type GraphType = DirectedPseudograph[SutState, GraphActionEdge]
 
-  override def saveGML(filePath: String): Unit = {
+  override def saveGML(filePath: String): Unit = this.synchronized {
     // get graph from user
     val toDraw = getGraph()
 
@@ -99,7 +99,6 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     val output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"))
     try writer.export(output, toDraw)
     finally if (output != null) output.close()
-
   }
 
   private def getGraph(): GraphType = {

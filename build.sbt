@@ -22,7 +22,7 @@ resolvers += "nexus-retest-maven-all" at " https://nexus.retest.org/repository/a
 libraryDependencies += "de.retest" % "surili-model" % "0.1.0-SNAPSHOT" % "provided" withSources () withJavadoc ()
 libraryDependencies += "de.retest" % "retest-sut-api" % "3.2.0" % "provided" withSources () withJavadoc ()
 
-// Dependencies to write GraphML files for yEd:
+// Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
 libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.0.1"
 

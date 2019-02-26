@@ -13,6 +13,5 @@ class GraphicsProvider extends YedGmlGraphicsProvider[SutState, GraphActionEdge,
       .setTargetArrow(EdgeGraphicDefinition.ArrowType.SHORT_ARROW)
       .setLineType(GraphicDefinition.LineType.DASHED)
       .build
-  // we have no groups in this example
   override def getGroupGraphics(group: AnyRef, groupElements: java.util.Set[SutState]): NodeGraphicDefinition = null
 }

@@ -15,10 +15,10 @@ class StateImpl(sutState: SutState) extends State with Serializable {
     */
   var transitions = new HashMap[Action, ActionTransitions]
 
-  override def getSutState: SutState = sutState
-  override def getTransitions: Map[Action, ActionTransitions] = transitions
+  override def getSutState: SutState = this.synchronized { sutState }
+  override def getTransitions: Map[Action, ActionTransitions] = this.synchronized { transitions }
 
-  private[api] override def addTransition(a: Action, to: State): Int = {
+  private[api] override def addTransition(a: Action, to: State): Int = this.synchronized {
     val old = transitions.get(a)
     old match {
       case Some(o) =>

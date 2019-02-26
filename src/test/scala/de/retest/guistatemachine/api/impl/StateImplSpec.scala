@@ -3,7 +3,6 @@ package de.retest.guistatemachine.api.impl
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.AbstractApiSpec
-import de.retest.surili.model.actions.NavigateToAction
 import de.retest.ui.descriptors.SutState
 
 class StateImplSpec extends AbstractApiSpec {
@@ -11,8 +10,6 @@ class StateImplSpec extends AbstractApiSpec {
   private val rootElementB = getRootElement("b", 0)
   private val sutStateA = new SutState(Arrays.asList(rootElementA))
   private val sutStateB = new SutState(Arrays.asList(rootElementB))
-  private val action0 = new NavigateToAction("http://google.com")
-  private val action1 = new NavigateToAction("http://wikipedia.org")
 
   "StateImpl" should {
     "not equal" in {

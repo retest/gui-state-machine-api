@@ -18,9 +18,11 @@ stateMachine.saveGML("mystatemachine.gml")
 stateMachine.save("mystatemachine.ser")
 ```
 
-The state machine can be saved as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) file which can be visualized by editors like [yEd](https://www.yworks.com/products/yed).
+State machines can be saved as on loaded from files.
+Besides, they can be saved as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) files which can be visualized by editors like [yEd](https://www.yworks.com/products/yed).
 
 ## Automatic Build with TravisCI
+
 [![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
 [![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
@@ -30,6 +32,7 @@ Define the Nexus password in the environment variable `TRAVIS_NEXUS_PW`.
 Otherwise, the build will fail!
 
 ## SBT Commands
+
 * `sbt compile` to build the project manually.
 * `sbt assembly` to create a standalone JAR which includes all dependencies including the Scala libraries. The standalone JAR is generated as `target/scala-<scalaversion>/gui-state-machine-api-assembly-<version>.jar`.
 * `sbt eclipse` to generate a project for Eclipse.
@@ -43,6 +46,7 @@ Otherwise, the build will fail!
 * `sbt publish` publishes the artifacts in ReTest's Nexus. Requires a `$HOME/.sbt/.credentials` file with the correct credentials. This command can be useful to publish SNAPSHOT versions.
 
 ## NFA for the Representation of Tests
+
 A nondeterministic finite automaton represents the states of the GUI during the test.
 The actions executed by the user on the widgets are represented by transitions.
 If an action has not been executed yet from a state, it leads to an unknown state.
@@ -53,3 +57,7 @@ Whenever an unknown state is replaced by a newly discovered state, the NFA has t
 The NFA is used to generate test cases (sequence of UI actions) with the help of a genetic algorithm.
 For example, whenever a random action is executed with the help of monkey testing, it adds a transition to the state machine.
 After running the genetic algorithm, the state machine is then used to create a test suite.
+
+## Concurrency
+
+The creation and modification of state machines should be threadsafe.

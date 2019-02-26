@@ -17,10 +17,11 @@ class GuiStateMachineApiImpl extends GuiStateMachineApi {
 
   override def save(filePath: String): Unit = {
     val oos = new ObjectOutputStream(new FileOutputStream(filePath))
-    oos.writeObject(stateMachines)
+    oos.writeObject(stateMachines) // TODO #15 Do we need to make a copy before to make it threadsafe?
     oos.close()
   }
 
+  // TODO #15 Make thread safe?
   override def load(filePath: String): Unit = {
     clear()
     val ois = new ObjectInputStream(new FileInputStream(filePath))

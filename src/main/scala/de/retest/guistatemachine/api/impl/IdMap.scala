@@ -2,7 +2,7 @@ package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.Id
 
-import scala.collection.immutable.HashMap
+import scala.collection.mutable.HashMap
 
 /**
   * This custom type allows storing values using [[Id]] as key.
@@ -12,34 +12,35 @@ import scala.collection.immutable.HashMap
 case class IdMap[T]() extends Serializable {
   private type HashMapType = HashMap[Id, T]
 
-  private var values = new HashMapType
+  private val values = new HashMapType
 
-  def addNewElement(v: T): Id = {
-    val generatedId = generateId
-    values = values + (generatedId -> v)
+  def addNewElement(v: T): Id = this.synchronized {
+    val generatedId = generateId()
+    values += (generatedId -> v)
     generatedId
   }
 
-  def removeElement(id: Id): Boolean =
+  def removeElement(id: Id): Boolean = this.synchronized {
     if (values.contains(id)) {
-      values = values - id
+      values -= id
       true
     } else {
       false
     }
+  }
 
-  def getElement(id: Id): Option[T] = values.get(id)
+  def getElement(id: Id): Option[T] = this.synchronized { values.get(id) }
 
-  def hasElement(id: Id): Boolean = values.contains(id)
+  def hasElement(id: Id): Boolean = this.synchronized { values.contains(id) }
 
-  def clear(): Unit = values = new HashMap[Id, T]
+  def clear(): Unit = this.synchronized { values.clear() }
 
-  def size: Int = values.size
+  def size: Int = this.synchronized { values.size }
 
   /**
     * Generates a new ID based on the existing entries.
     */
-  private def generateId: Id = {
+  private def generateId(): Id = {
     var id = Id(0L)
     while (values.keySet.contains(id)) { id = Id(id.id + 1) }
     id

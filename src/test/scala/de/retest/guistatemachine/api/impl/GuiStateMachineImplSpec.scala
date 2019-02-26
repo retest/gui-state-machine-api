@@ -91,7 +91,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
     "clear the state machine" in {
       sut.clear()
       sut.getAllExploredActions.isEmpty shouldEqual true
-      sut.actionExecutionTimes.isEmpty shouldEqual true
+      sut.getActionExecutionTimes.isEmpty shouldEqual true
       sut.getAllStates.isEmpty shouldEqual true
     }
 
