@@ -1,11 +1,11 @@
 # GUI State Machine API
 
 API for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
-This is a small code example of creating a new state machine and adding two states connected with a transition:
+This is a small code example of creating a new state machine, adding two states connected with a transition and saving the state machine:
 ```scala
 import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
-import de.retest.ui.descriptors.SutState
-import de.retest.surili.model.actions.NavigateToAction
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.NavigateToAction
 
 val guiStateMachineApi = new GuiStateMachineApiImpl
 val stateMachineId = guiStateMachineApi.createStateMachine()
@@ -18,7 +18,7 @@ stateMachine.saveGML("mystatemachine.gml")
 stateMachine.save("mystatemachine.ser")
 ```
 
-State machines can be saved as on loaded from files.
+State machines can be saved as and loaded from files using Java object serialization/deserialization.
 Besides, they can be saved as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) files which can be visualized by editors like [yEd](https://www.yworks.com/products/yed).
 
 ## Automatic Build with TravisCI
