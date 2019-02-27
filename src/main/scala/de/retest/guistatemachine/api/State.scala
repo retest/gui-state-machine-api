@@ -1,10 +1,10 @@
 package de.retest.guistatemachine.api
 
-import de.retest.surili.model.actions.Action
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.Action
 
 /**
-  * A state should be identified by its corresponding `de.retest.ui.descriptors.SutState`.
+  * A state should be identified by its corresponding SutState.
   * It consists of actions which have not been explored yet and transitions to states which build up the state machine.
   */
 trait State {

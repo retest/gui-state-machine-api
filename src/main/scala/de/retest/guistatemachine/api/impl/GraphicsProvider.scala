@@ -3,7 +3,7 @@ package de.retest.guistatemachine.api.impl
 import java.awt.Color
 
 import com.github.systemdir.gml.model.{EdgeGraphicDefinition, GraphicDefinition, NodeGraphicDefinition, YedGmlGraphicsProvider}
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
 
 class GraphicsProvider extends YedGmlGraphicsProvider[SutState, GraphActionEdge, AnyRef] {
   override def getVertexGraphics(vertex: SutState): NodeGraphicDefinition =

@@ -1,8 +1,8 @@
 package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{ActionTransitions, State}
-import de.retest.surili.model.actions.Action
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.Action
 
 import scala.collection.immutable.HashMap
 

@@ -4,8 +4,8 @@ import java.io.File
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.AbstractApiSpec
-import de.retest.surili.model.actions.{Action, NavigateToAction}
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.{Action, NavigateToAction}
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {

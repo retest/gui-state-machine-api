@@ -1,9 +1,9 @@
 package de.retest.guistatemachine.api
 
-import java.util.{Arrays, Collections}
+import java.util.Arrays
 
-import de.retest.ui.descriptors._
-import de.retest.ui.image.Screenshot
+import de.retest.recheck.ui.descriptors._
+import de.retest.recheck.ui.image.Screenshot
 import org.scalatest.{Matchers, WordSpec}
 
 abstract trait AbstractApiSpec extends WordSpec with Matchers {
@@ -24,18 +24,21 @@ abstract trait AbstractApiSpec extends WordSpec with Matchers {
     * @param numberOfContainedComponents This value is a criteria for equality of the returned element.
     * @return A new root element which is equal to itself but not to any other root element.
     */
-  def getRootElement(id: String, numberOfContainedComponents: Int): RootElement = new RootElement(
-    "retestId",
-    getIdentifyingAttributes(id),
-    new Attributes(),
-    new Screenshot("prefix", Array(1, 2, 3), Screenshot.ImageType.PNG),
-    if (numberOfContainedComponents <= 0) { Collections.emptyList() } else {
-      scala.collection.JavaConverters.seqAsJavaList(0 to numberOfContainedComponents map { _ =>
+  def getRootElement(id: String, numberOfContainedComponents: Int): RootElement = {
+    val r = new RootElement(
+      "retestId",
+      getIdentifyingAttributes(id),
+      new Attributes(),
+      new Screenshot("prefix", Array(1, 2, 3), Screenshot.ImageType.PNG),
+      "screen0",
+      0,
+      "My Window"
+    )
+    if (numberOfContainedComponents > 0) {
+      r.addChildren(scala.collection.JavaConverters.seqAsJavaList[Element](0 to numberOfContainedComponents map { _ =>
         getRootElement("x", 0)
-      })
-    },
-    "screen0",
-    0,
-    "My Window"
-  )
+      }))
+    }
+    r
+  }
 }

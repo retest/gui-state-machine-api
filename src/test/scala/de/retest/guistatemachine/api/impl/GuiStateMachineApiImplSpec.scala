@@ -4,8 +4,8 @@ import java.io.File
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.{AbstractApiSpec, Id}
-import de.retest.surili.model.actions.NavigateToAction
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.NavigateToAction
 
 class GuiStateMachineApiImplSpec extends AbstractApiSpec {
   val sut = new GuiStateMachineApiImpl

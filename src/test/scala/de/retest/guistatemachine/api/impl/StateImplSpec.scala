@@ -3,7 +3,7 @@ package de.retest.guistatemachine.api.impl
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.AbstractApiSpec
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
 
 class StateImplSpec extends AbstractApiSpec {
   private val rootElementA = getRootElement("a", 0)

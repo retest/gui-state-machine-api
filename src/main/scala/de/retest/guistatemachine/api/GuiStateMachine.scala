@@ -1,7 +1,7 @@
 package de.retest.guistatemachine.api
 
-import de.retest.surili.model.actions.Action
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.Action
 
 /**
   * API to create a NFA which represents the current state machine of an automatic GUI test generation with the help of a genetic algorithm.

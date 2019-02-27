@@ -5,8 +5,8 @@ import java.io._
 import com.github.systemdir.gml.YedGmlWriter
 import com.typesafe.scalalogging.Logger
 import de.retest.guistatemachine.api.{GuiStateMachine, State}
-import de.retest.surili.model.actions.Action
-import de.retest.ui.descriptors.SutState
+import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.Action
 import org.jgrapht.graph.DirectedPseudograph
 
 import scala.collection.immutable.{HashMap, HashSet}
