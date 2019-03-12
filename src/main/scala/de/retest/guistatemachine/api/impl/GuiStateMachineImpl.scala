@@ -50,8 +50,6 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     to
   }
 
-  override def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State = executeAction(StateImpl(fromSutState), a, StateImpl(toSutState))
-
   override def getAllStates: Map[SutState, State] = this.synchronized { states }
 
   override def getAllExploredActions: Set[Action] = this.synchronized { allExploredActions }
