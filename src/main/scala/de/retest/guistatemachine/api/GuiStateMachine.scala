@@ -30,8 +30,7 @@ trait GuiStateMachine {
     * @return The current state which the transition of a leads to.
     */
   def executeAction(from: State, a: Action, to: State): State
-  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State =
-    executeAction(fromSutState, a, toSutState)
+  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State
 
   def getAllStates: Map[SutState, State]
 

@@ -7,7 +7,7 @@ import de.retest.surili.commons.actions.Action
 import scala.collection.immutable.HashMap
 
 @SerialVersionUID(1L)
-class StateImpl(sutState: SutState) extends State with Serializable {
+case class StateImpl(sutState: SutState) extends State with Serializable {
 
   /**
     * TODO #4 Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
