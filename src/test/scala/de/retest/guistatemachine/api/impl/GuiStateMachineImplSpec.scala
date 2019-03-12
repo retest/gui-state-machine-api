@@ -47,7 +47,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action0 for the first time
       val s0SutState = new SutState(Arrays.asList(rootElementA))
       val s0 = sut.getState(s0SutState)
-      sut.executeAction(initial, action0, s0)
+      sut.executeAction(initialSutState, action0, s0SutState)
       initial.getTransitions.size shouldEqual 1
       initial.getTransitions(action0).to.size shouldEqual 1
       initial.getTransitions(action0).executionCounter shouldEqual 1
@@ -59,7 +59,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action0 for the second time
       val s1SutState = new SutState(Arrays.asList(rootElementB))
       val s1 = sut.getState(s1SutState)
-      sut.executeAction(initial, action0, s1)
+      sut.executeAction(initialSutState, action0, s1SutState)
       initial.getTransitions.size shouldEqual 1
       initial.getTransitions(action0).to.size shouldEqual 2
       initial.getTransitions(action0).executionCounter shouldEqual 2
@@ -71,7 +71,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action1 for the first time
       val s2SutState = new SutState(Arrays.asList(rootElementC))
       val s2 = sut.getState(s2SutState)
-      sut.executeAction(initial, action1, s2)
+      sut.executeAction(initialSutState, action1, s2SutState)
       initial.getTransitions.size shouldEqual 2
       initial.getTransitions(action1).to.size shouldEqual 1
       initial.getTransitions(action1).executionCounter shouldEqual 1
@@ -111,9 +111,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       val finalSutState = new SutState(Arrays.asList(rootElementC))
 
       // Create the whole state machine:
-      val initialState = sut.getState(initialSutState)
-      val finalState = sut.getState(finalSutState)
-      sut.executeAction(initialState, action0, finalState)
+      sut.executeAction(initialSutState, action0, finalSutState)
 
       // Save the state machine:
       sut.save(filePath)
@@ -157,10 +155,10 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.clear()
       val initialState = sut.getState(initialSutState)
       val finalState = sut.getState(finalSutState)
-      sut.executeAction(initialState, action0, finalState)
-      sut.executeAction(initialState, action1, finalState)
-      sut.executeAction(finalState, action0, initialState)
-      sut.executeAction(finalState, action1, initialState)
+      sut.executeAction(initialSutState, action0, finalSutState)
+      sut.executeAction(initialSutState, action1, finalSutState)
+      sut.executeAction(finalSutState, action0, initialSutState)
+      sut.executeAction(finalSutState, action1, initialSutState)
 
       initialState.getTransitions.size shouldEqual 2
       finalState.getTransitions.size shouldEqual 2
