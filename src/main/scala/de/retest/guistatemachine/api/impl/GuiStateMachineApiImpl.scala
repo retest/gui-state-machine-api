@@ -1,11 +1,12 @@
 package de.retest.guistatemachine.api.impl
 
-import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
-
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi, Id}
 
+/**
+  * Thread-safe implementation of the API. It is thread-safe because it uses `IdMap`.
+  */
 class GuiStateMachineApiImpl extends GuiStateMachineApi {
-  private var stateMachines = IdMap[GuiStateMachine]()
+  private val stateMachines = IdMap[GuiStateMachine]()
 
   override def createStateMachine(): Id = stateMachines.addNewElement(new GuiStateMachineImpl)
 
@@ -14,19 +15,4 @@ class GuiStateMachineApiImpl extends GuiStateMachineApi {
   override def getStateMachine(id: Id): Option[GuiStateMachine] = stateMachines.getElement(id)
 
   override def clear(): Unit = stateMachines.clear()
-
-  override def save(filePath: String): Unit = {
-    val oos = new ObjectOutputStream(new FileOutputStream(filePath))
-    oos.writeObject(stateMachines) // TODO #15 Do we need to make a copy before to make it threadsafe?
-    oos.close()
-  }
-
-  // TODO #15 Make thread safe?
-  override def load(filePath: String): Unit = {
-    clear()
-    val ois = new ObjectInputStream(new FileInputStream(filePath))
-    val readStateMachines = ois.readObject.asInstanceOf[IdMap[GuiStateMachine]]
-    ois.close()
-    stateMachines = readStateMachines
-  }
 }

@@ -1,11 +1,10 @@
 package de.retest.guistatemachine.api.impl
 
-import java.io.File
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.AbstractApiSpec
 import de.retest.recheck.ui.descriptors.SutState
-import de.retest.surili.commons.actions.{Action, NavigateToAction}
+import de.retest.surili.commons.actions.NavigateToAction
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
@@ -94,88 +93,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getActionExecutionTimes.isEmpty shouldEqual true
       sut.getAllStates.isEmpty shouldEqual true
     }
-
-    "save and load" in {
-      val filePath = "./target/test_state_machine"
-      val oldFile = new File(filePath)
-
-      if (oldFile.exists()) oldFile.delete() shouldEqual true
-
-      val rootElementA = getRootElement("a", 0)
-      val rootElementB = getRootElement("b", 0)
-      val rootElementC = getRootElement("c", 0)
-      val action0 = new NavigateToAction("http://google.com")
-      val action1 = new NavigateToAction("http://wikipedia.org")
-
-      val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-      val finalSutState = new SutState(Arrays.asList(rootElementC))
-
-      // Create the whole state machine:
-      sut.executeAction(initialSutState, action0, finalSutState)
-
-      // Save the state machine:
-      sut.save(filePath)
-      val f = new File(filePath)
-      f.exists() shouldEqual true
-      f.isDirectory shouldEqual false
-
-      // Load the state machine:
-      sut.clear()
-      sut.load(filePath)
-
-      // Verify the loaded state machine:
-      sut.getAllExploredActions.size shouldEqual 1
-      sut.getActionExecutionTimes(action0) shouldEqual 1
-      sut.getActionExecutionTimes.contains(action1) shouldEqual false
-      sut.getAllStates.size shouldEqual 2
-      val loadedInitialState = sut.getAllStates(initialSutState)
-      val loadedFinalState = sut.getAllStates(finalSutState)
-      loadedInitialState.getSutState shouldEqual initialSutState
-      loadedInitialState.getTransitions.size shouldEqual 1
-      loadedInitialState.getTransitions.contains(action0) shouldEqual true
-      val loadedTransition = loadedInitialState.getTransitions(action0)
-      loadedTransition.executionCounter shouldEqual 1
-      loadedTransition.to.size shouldEqual 1
-      loadedTransition.to.head shouldEqual loadedFinalState
-      loadedFinalState.getSutState shouldEqual finalSutState
-      loadedFinalState.getTransitions.isEmpty shouldEqual true
-    }
-
-    "save GML " in {
-      val rootElementA = getRootElement("a", 0)
-      val rootElementB = getRootElement("b", 0)
-      val rootElementC = getRootElement("c", 0)
-      val action0 = new NavigateToAction("http://google.com")
-      val action1 = new NavigateToAction("http://wikipedia.org")
-
-      val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-      val finalSutState = new SutState(Arrays.asList(rootElementC))
-
-      // Create the whole state machine:
-      sut.clear()
-      val initialState = sut.getState(initialSutState)
-      val finalState = sut.getState(finalSutState)
-      sut.executeAction(initialSutState, action0, finalSutState)
-      sut.executeAction(initialSutState, action1, finalSutState)
-      sut.executeAction(finalSutState, action0, initialSutState)
-      sut.executeAction(finalSutState, action1, initialSutState)
-
-      initialState.getTransitions.size shouldEqual 2
-      finalState.getTransitions.size shouldEqual 2
-
-      val filePath = "./target/test_state_machine.gml"
-      val oldFile = new File(filePath)
-
-      if (oldFile.exists()) oldFile.delete() shouldEqual true
-
-      sut.saveGML(filePath)
-
-      val f = new File(filePath)
-      f.exists() shouldEqual true
-      f.isDirectory shouldEqual false
-    }
   }
 
-  def getSutState: SutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-  def getNeverExploredActions: Set[Action] = Set[Action](action0, action1)
+  private def getSutState: SutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
 }

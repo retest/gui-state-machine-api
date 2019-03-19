@@ -12,6 +12,7 @@ class IdMapSpec extends WordSpec with Matchers {
       map.hasElement(Id(0)) shouldEqual true
       map.getElement(Id(0)).get shouldEqual 1
       map.removeElement(Id(0)) shouldEqual true
+      map.removeElement(Id(0)) shouldEqual false
       map.hasElement(Id(0)) shouldEqual false
       map.size shouldEqual 2
       map.addNewElement(4) shouldEqual Id(0)
