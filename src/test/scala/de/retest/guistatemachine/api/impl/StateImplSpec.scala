@@ -1,15 +1,12 @@
 package de.retest.guistatemachine.api.impl
 
-import java.util.Arrays
-
 import de.retest.guistatemachine.api.AbstractApiSpec
-import de.retest.recheck.ui.descriptors.SutState
 
 class StateImplSpec extends AbstractApiSpec {
   private val rootElementA = getRootElement("a", 0)
   private val rootElementB = getRootElement("b", 0)
-  private val sutStateA = new SutState(Arrays.asList(rootElementA))
-  private val sutStateB = new SutState(Arrays.asList(rootElementB))
+  private val sutStateA = createSutState(rootElementA)
+  private val sutStateB = createSutState(rootElementB)
 
   "StateImpl" should {
     "not equal" in {

@@ -8,6 +8,8 @@ import org.scalatest.{Matchers, WordSpec}
 
 abstract trait AbstractApiSpec extends WordSpec with Matchers {
 
+  def createSutState(rootElements: RootElement*) = new SutState(Arrays.asList(rootElements: _*))
+
   /**
     * Creates a new identifying attributes collection which should only match other identifying attributes with the same ID.
     *
