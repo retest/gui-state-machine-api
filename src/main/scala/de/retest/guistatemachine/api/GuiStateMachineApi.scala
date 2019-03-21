@@ -1,5 +1,6 @@
 package de.retest.guistatemachine.api
 import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
+import de.retest.guistatemachine.api.neo4j.GuiStateMachineApiNeo4J
 
 /**
   * This API allows the creation, modification and deletion of state machines ([[GuiStateMachine]]) which are created
@@ -37,10 +38,12 @@ trait GuiStateMachineApi {
 }
 
 object GuiStateMachineApi {
-  private val impl = new GuiStateMachineApiImpl
+  val default = new GuiStateMachineApiImpl
 
   /**
     * @return The standard implementaiton of the API.
     */
-  def apply(): GuiStateMachineApi = impl
+  def apply(): GuiStateMachineApi = default
+
+  val neo4j = new GuiStateMachineApiNeo4J
 }

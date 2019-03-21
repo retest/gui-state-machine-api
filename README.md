@@ -62,3 +62,20 @@ The NFA is based on the UI model from ["Search-Based System Testing: High Covera
 ## Concurrency
 
 The creation and modification of state machines should be thread-safe.
+
+## Backends
+
+There can be different backends which manage the state machine.
+
+### Neo4J
+
+This backend uses the GraphDB [Neo4J](https://neo4j.com/) (community edition) with an embedded database.
+Each state machine is represented by a separate graph database stored in a separate file.
+
+The nodes all have the property "sutState" which contains the corresponding SUT state and can be used as index to query the nodes.
+The relationship types correspond to actions.
+Each relation has the property "counter" which contains the execution counter of the action.
+
+We need to use an [Object Graph Mapper](https://neo4j.com/docs/ogm-manual/current/introduction/) to store the corresponding SUT states in the nodes.
+
+See also <https://neo4j.com/docs/java-reference/current/tutorials-java-embedded/>
