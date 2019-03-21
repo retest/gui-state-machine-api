@@ -6,7 +6,7 @@ import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineSerializer
 import de.retest.recheck.ui.descriptors.SutState
 import org.jgrapht.graph.DirectedPseudograph
 
-case class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiStateMachineSerializer {
+class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiStateMachineSerializer {
 
   type GraphType = DirectedPseudograph[SutState, GraphActionEdge]
 
@@ -33,10 +33,10 @@ case class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends
     // write to file
     val outputFile = new File(filePath)
     val output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"))
-    try { writer.export(output, toDraw) } finally { if (output != null) { output.close() } }
+    try { writer.export(output, toDraw) } finally { output.close() }
   }
 
-  override def load(filePath: String): Unit = throw new RuntimeException("Loading GML is not supported.")
+  override def load(filePath: String): Unit = throw new UnsupportedOperationException("Loading GML is not supported.")
 
   private def createGraph(): GraphType = {
     val graph = new GraphType(classOf[GraphActionEdge])

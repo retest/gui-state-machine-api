@@ -8,6 +8,6 @@ trait GuiStateMachineSerializer {
 }
 
 object GuiStateMachineSerializer {
-  def javaObjectStream(guiStateMachine: GuiStateMachine): GuiStateMachineSerializer = GuiStateMachineJavaObjectStreamSerializer(guiStateMachine)
-  def gml(guiStateMachine: GuiStateMachine): GuiStateMachineSerializer = GuiStateMachinGMLSerializer(guiStateMachine)
+  def javaObjectStream(guiStateMachine: GuiStateMachine): GuiStateMachineSerializer = new GuiStateMachineJavaObjectStreamSerializer(guiStateMachine)
+  def gml(guiStateMachine: GuiStateMachine): GuiStateMachineSerializer = new GuiStateMachinGMLSerializer(guiStateMachine)
 }
