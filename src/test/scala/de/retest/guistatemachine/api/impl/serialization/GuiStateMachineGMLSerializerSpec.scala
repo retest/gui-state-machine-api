@@ -164,7 +164,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
     }
 
     "load GML " in {
-      the[RuntimeException] thrownBy GuiStateMachineSerializer.gml(guiStateMachine).load("bla") should have message "Loading GML is not supported."
+      the[UnsupportedOperationException] thrownBy GuiStateMachineSerializer.gml(guiStateMachine).load("bla") should have message "Loading GML is not supported."
     }
   }
 }
