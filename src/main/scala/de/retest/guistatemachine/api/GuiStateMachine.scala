@@ -30,7 +30,8 @@ trait GuiStateMachine {
     * @return The current state which the transition of a leads to.
     */
   def executeAction(from: State, a: Action, to: State): State
-  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State = executeAction(getState(fromSutState), a, getState(toSutState))
+  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State =
+    executeAction(getState(fromSutState), a, getState(toSutState))
 
   def getAllStates: Map[SutState, State]
 
@@ -55,26 +56,9 @@ trait GuiStateMachine {
   def clear(): Unit
 
   /**
-    * Stores the state machine on the disk.
-    * Persistence can be useful when the state machines become quite big and the generation/modification is interrupted
-    * and continued later.
+    * Clears the current states and assigns them from another state machine.
     *
-    * @param filePath The file which the state machine is stored into.
+    * @param other The other state machine.
     */
-  def save(filePath: String): Unit
-
-  /**
-    * Clears the state machine and loads it from the disk.
-    *
-    * @param filePath The file which the state machine is loaded from.
-    */
-  def load(filePath: String): Unit
-
-  /**
-    * Converts the state machines into GML which can be read by editors like yED.
-    *
-    * @param filePath The file which the GML data is stored into.
-    * @throws RuntimeException If a vertex or edge cannot be added, this exception is thrown.
-    */
-  def saveGML(filePath: String): Unit
+  def assignFrom(other: GuiStateMachine): Unit
 }

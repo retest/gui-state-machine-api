@@ -1,11 +1,9 @@
 package de.retest.guistatemachine.api
+import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
 
 /**
   * This API allows the creation, modification and deletion of state machines ([[GuiStateMachine]]) which are created
   * during test generations with the help of Genetic Algorithms.
-  * To store the state machines permanently, you have to call [[GuiStateMachineApi.save]] manually.
-  * Otherwise, they will only be stored in the memory.
-  * [[GuiStateMachineApi.load]] allows loading state machines from a file.
   */
 trait GuiStateMachineApi {
 
@@ -36,20 +34,13 @@ trait GuiStateMachineApi {
     * Clears all state machines.
     */
   def clear(): Unit
+}
+
+object GuiStateMachineApi {
+  private val impl = new GuiStateMachineApiImpl
 
   /**
-    * Stores all state machines on the disk.
-    * Persistence can be useful when the state machines become quite big and the generation/modification is interrupted
-    * and continued later.
-    *
-    * @param filePath The file which the state machines are stored into.
+    * @return The standard implementaiton of the API.
     */
-  def save(filePath: String): Unit
-
-  /**
-    * Clears all current state machines and loads all state machines from the disk.
-    *
-    * @param filePath The file which the state machines are loaded from.
-    */
-  def load(filePath: String): Unit
+  def apply(): GuiStateMachineApi = impl
 }

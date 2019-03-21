@@ -1,21 +1,24 @@
 # GUI State Machine API
 
-API for the creation and modification of nondeterministic finite automaton for the automatic generation of GUI tests with the help of a genetic algorithm.
+API for the creation and modification of incomplete state machines which represent the exploration of a GUI application.
+The states represent the GUI elements and the transitions represent the GUI actions.
+
 This is a small code example of creating a new state machine, adding two states connected with a transition and saving the state machine:
 ```scala
-import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
+import de.retest.guistatemachine.api.GuiStateMachineApi
+import de.retest.guistatemachine.api.GuiStateMachineSerializer
 import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.NavigateToAction
 
-val guiStateMachineApi = new GuiStateMachineApiImpl
-val stateMachineId = guiStateMachineApi.createStateMachine()
-val stateMachine = guiStateMachineApi.getStateMachine(stateMachineId).get
+val stateMachineId = GuiStateMachineApi().createStateMachine()
+val stateMachine = GuiStateMachineApi().getStateMachine(stateMachineId).get
 val currentState = new SutState(currentDescriptors)
 val action = new NavigateToAction("http://google.com")
 val nextState = new SutState(nextDescriptors)
 stateMachine.executeAction(currentState, action, nextState)
-stateMachine.saveGML("mystatemachine.gml")
-stateMachine.save("mystatemachine.ser")
+
+GuiStateMachineSerializer.javaObjectStream(stateMachine).save("mystatemachine.ser")
+GuiStateMachineSerializer.gml(stateMachine).save("mystatemachine.gml")
 ```
 
 State machines can be saved as and loaded from files using Java object serialization/deserialization.

@@ -1,5 +1,4 @@
-package de.retest.guistatemachine.api.impl
-
+package de.retest.guistatemachine.api.impl.serialization
 import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.Action
 

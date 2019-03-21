@@ -5,8 +5,8 @@ import de.retest.guistatemachine.api.Id
 import scala.collection.mutable.HashMap
 
 /**
-  * This custom type allows storing values using [[Id]] as key.
-  * We cannot extend immutable maps in Scala, so we have to keep it as field.
+  * This custom type allows storing values using [[Id]] as key. We cannot extend immutable maps in Scala, so we have to
+  * keep it as field. The implementation is thread-safe.
   */
 @SerialVersionUID(1L)
 case class IdMap[T]() extends Serializable {
@@ -48,6 +48,13 @@ case class IdMap[T]() extends Serializable {
 }
 
 object IdMap {
+
+  /**
+    * Creates a new `IdMap` by a number of values.
+    * @param v The initial values of the `IdMap`.
+    * @tparam T The type of the values of the `IdMap`.
+    * @return A newly created `IdMap`.
+    */
   def apply[T](v: T*): IdMap[T] = {
     val r = new IdMap[T]()
     for (e <- v) { r.addNewElement(e) }

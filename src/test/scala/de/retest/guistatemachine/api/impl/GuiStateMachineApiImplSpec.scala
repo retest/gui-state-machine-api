@@ -1,91 +1,28 @@
 package de.retest.guistatemachine.api.impl
 
-import java.io.File
-import java.util.Arrays
-
-import de.retest.guistatemachine.api.{AbstractApiSpec, Id}
-import de.retest.recheck.ui.descriptors.SutState
-import de.retest.surili.commons.actions.NavigateToAction
+import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineApi, Id}
 
 class GuiStateMachineApiImplSpec extends AbstractApiSpec {
-  val sut = new GuiStateMachineApiImpl
-  var stateMachineId = Id(-1)
-
   "GuiStateMachineApi" should {
     "create, get and remove a new state machine" in {
-      stateMachineId = sut.createStateMachine()
+      val stateMachineId = GuiStateMachineApi().createStateMachine()
       stateMachineId shouldEqual Id(0)
 
-      val stateMachine = sut.getStateMachine(stateMachineId)
+      val stateMachine = GuiStateMachineApi().getStateMachine(stateMachineId)
       stateMachine.isDefined shouldBe true
       val fsm = stateMachine.get
       fsm.getActionExecutionTimes.size shouldEqual 0
       fsm.getAllExploredActions.size shouldEqual 0
 
-      sut.removeStateMachine(stateMachineId) shouldBe true
+      GuiStateMachineApi().removeStateMachine(stateMachineId) shouldBe true
     }
 
     "clear all state machines" in {
-      sut.createStateMachine shouldEqual Id(0)
-      sut.createStateMachine shouldEqual Id(1)
-      sut.createStateMachine shouldEqual Id(2)
-      sut.clear()
-      sut.getStateMachine(Id(2)).isEmpty shouldEqual true
-    }
-
-    "save and load" in {
-      val filePath = "./target/test_state_machines"
-      val oldFile = new File(filePath)
-
-      if (oldFile.exists()) oldFile.delete() shouldEqual true
-
-      val rootElementA = getRootElement("a", 0)
-      val rootElementB = getRootElement("b", 0)
-      val rootElementC = getRootElement("c", 0)
-      val action0 = new NavigateToAction("http://google.com")
-      val action1 = new NavigateToAction("http://wikipedia.org")
-
-      val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-      val finalSutState = new SutState(Arrays.asList(rootElementC))
-
-      // Create the whole state machine:
-      sut.clear()
-      stateMachineId = sut.createStateMachine()
-      val stateMachine = sut.getStateMachine(stateMachineId).get
-      val initialState = stateMachine.getState(initialSutState)
-      val finalState = stateMachine.getState(finalSutState)
-      stateMachine.executeAction(initialState, action0, finalState)
-
-      // Save all state machines:
-      sut.save(filePath)
-      val f = new File(filePath)
-      f.exists() shouldEqual true
-      f.isDirectory shouldEqual false
-
-      // Load all state machines:
-      sut.clear()
-      sut.load(filePath)
-
-      // Verify all loaded state machines:
-      val loadedStateMachineOp = sut.getStateMachine(stateMachineId)
-      loadedStateMachineOp.isDefined shouldEqual true
-      val loadedStateMachine = loadedStateMachineOp.get.asInstanceOf[GuiStateMachineImpl]
-
-      loadedStateMachine.getAllExploredActions.size shouldEqual 1
-      loadedStateMachine.getActionExecutionTimes(action0) shouldEqual 1
-      loadedStateMachine.getActionExecutionTimes.contains(action1) shouldEqual false
-      loadedStateMachine.getAllStates.size shouldEqual 2
-      val loadedInitialState = loadedStateMachine.getAllStates(initialSutState)
-      val loadedFinalState = loadedStateMachine.getAllStates(finalSutState)
-      loadedInitialState.getSutState shouldEqual initialSutState
-      loadedInitialState.getTransitions.size shouldEqual 1
-      loadedInitialState.getTransitions.contains(action0) shouldEqual true
-      val loadedTransition = loadedInitialState.getTransitions(action0)
-      loadedTransition.executionCounter shouldEqual 1
-      loadedTransition.to.size shouldEqual 1
-      loadedTransition.to.head shouldEqual loadedFinalState
-      loadedFinalState.getSutState shouldEqual finalSutState
-      loadedFinalState.getTransitions.isEmpty shouldEqual true
+      GuiStateMachineApi().createStateMachine shouldEqual Id(0)
+      GuiStateMachineApi().createStateMachine shouldEqual Id(1)
+      GuiStateMachineApi().createStateMachine shouldEqual Id(2)
+      GuiStateMachineApi().clear()
+      GuiStateMachineApi().getStateMachine(Id(2)).isEmpty shouldEqual true
     }
   }
 }

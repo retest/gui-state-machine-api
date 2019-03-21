@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.api.impl
+package de.retest.guistatemachine.api.impl.serialization
 
 import java.awt.Color
 
