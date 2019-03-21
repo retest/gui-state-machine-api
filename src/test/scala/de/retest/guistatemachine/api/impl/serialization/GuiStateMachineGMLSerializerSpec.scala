@@ -1,11 +1,9 @@
 package de.retest.guistatemachine.api.impl.serialization
 
 import java.io.File
-import java.util.Arrays
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer}
-import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.NavigateToAction
 import org.scalatest.BeforeAndAfterEach
 
@@ -24,8 +22,8 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
       val action0 = new NavigateToAction("http://google.com")
       val action1 = new NavigateToAction("http://wikipedia.org")
 
-      val initialSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-      val finalSutState = new SutState(Arrays.asList(rootElementC))
+      val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
+      val finalSutState = createSutState(rootElementC)
 
       // Create the whole state machine:
       val initialState = guiStateMachine.getState(initialSutState)
