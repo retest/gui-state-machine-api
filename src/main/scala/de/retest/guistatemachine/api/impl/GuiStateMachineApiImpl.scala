@@ -1,18 +1,24 @@
 package de.retest.guistatemachine.api.impl
 
-import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi, Id}
+import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi}
+
+import scala.collection.concurrent.TrieMap
 
 /**
-  * Thread-safe implementation of the API. It is thread-safe because it uses `IdMap`.
+  * Thread-safe implementation of the API.
   */
 class GuiStateMachineApiImpl extends GuiStateMachineApi {
-  private val stateMachines = IdMap[GuiStateMachine]()
+  private val stateMachines = TrieMap[String, GuiStateMachine]()
 
-  override def createStateMachine(): Id = stateMachines.addNewElement(new GuiStateMachineImpl)
+  override def createStateMachine(name: String): GuiStateMachine = {
+    val guiStateMachine = new GuiStateMachineImpl
+    stateMachines += (name -> guiStateMachine)
+    guiStateMachine
+  }
 
-  override def removeStateMachine(id: Id): Boolean = stateMachines.removeElement(id)
+  override def removeStateMachine(name: String): Boolean = stateMachines.remove(name).isDefined
 
-  override def getStateMachine(id: Id): Option[GuiStateMachine] = stateMachines.getElement(id)
+  override def getStateMachine(name: String): Option[GuiStateMachine] = stateMachines.get(name)
 
   override def clear(): Unit = stateMachines.clear()
 }

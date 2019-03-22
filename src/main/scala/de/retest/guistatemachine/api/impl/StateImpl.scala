@@ -13,7 +13,7 @@ case class StateImpl(sutState: SutState) extends State with Serializable {
     * Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
     * The legacy code used `AmbigueState` here which was more complicated than just a multi map.
     */
-  var transitions = new HashMap[Action, ActionTransitions]
+  var transitions = HashMap[Action, ActionTransitions]()
 
   override def getSutState: SutState = this.synchronized { sutState }
   override def getTransitions: Map[Action, ActionTransitions] = this.synchronized { transitions }

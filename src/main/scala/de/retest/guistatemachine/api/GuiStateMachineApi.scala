@@ -12,23 +12,23 @@ trait GuiStateMachineApi {
     *
     * @return The new GUI state machine.
     */
-  def createStateMachine(): Id
+  def createStateMachine(name: String): GuiStateMachine
 
   /**
     * Removes an existing [[GuiStateMachine]].
     *
-    * @param id The ID of the GUI state machine.
+    * @param name The name of the GUI state machine.
     * @return True if it existed and was removed by this call. Otherwise, false.
     */
-  def removeStateMachine(id: Id): Boolean
+  def removeStateMachine(name: String): Boolean
 
   /**
     * Gets an existing [[GuiStateMachine]].
     *
-    * @param id The ID of the GUI state machine.
+    * @param name The name of the GUI state machine.
     * @return The existing GUI state machine or nothing.
     */
-  def getStateMachine(id: Id): Option[GuiStateMachine]
+  def getStateMachine(name: String): Option[GuiStateMachine]
 
   /**
     * Clears all state machines.
