@@ -3,7 +3,7 @@ package de.retest.guistatemachine.api.neo4j
 import de.retest.guistatemachine.api.{GuiStateMachine, State}
 import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.Action
-import org.neo4j.graphdb.{GraphDatabaseService, Node, Transaction}
+import org.neo4j.graphdb.{GraphDatabaseService, Node, ResourceIterator, Transaction}
 
 import scala.collection.immutable.HashMap
 
@@ -15,9 +15,12 @@ class GuiStateMachineNeo4J(var graphDb: GraphDatabaseService) extends GuiStateMa
       tx = Some(graphDb.beginTx)
       getNodeBySutState(sutState) match {
         case None => {
+          // Create a new node for the sutState in the graph database.
           val node = graphDb.createNode
+          node.addLabel(SutStateLabel)
           // TODO #19 SutState is not a supported property value!
-          node.setProperty("sutState", sutState)
+          val value = new SutStateConverter().toGraphProperty(sutState)
+          node.setProperty("sutState", value)
         }
         case _ =>
       }
@@ -36,24 +39,22 @@ class GuiStateMachineNeo4J(var graphDb: GraphDatabaseService) extends GuiStateMa
 
   override def getAllStates: Map[SutState, State] = {
     var tx: Option[Transaction] = None
-    val allNodes = try {
+    try {
       tx = Some(graphDb.beginTx)
       val allNodes = graphDb.getAllNodes()
+      var result = HashMap[SutState, State]()
+      val iterator = allNodes.iterator()
+
+      while (iterator.hasNext) {
+        val node = iterator.next()
+        val sutState = getSutState(node)
+        result = result + (sutState -> new StateNeo4J(sutState, this))
+      }
       tx.get.success()
-      allNodes
+      result
     } finally {
       if (tx.isDefined) { tx.get.close() }
     }
-
-    var result = HashMap[SutState, State]()
-    val iterator = allNodes.iterator()
-
-    while (iterator.hasNext) {
-      val node = iterator.next()
-      val sutState = node.getProperty("sutState").asInstanceOf[SutState]
-      result = result + (sutState -> new StateNeo4J(sutState, this))
-    }
-    result
   }
 
   override def getAllExploredActions: Set[Action] = Set() // TODO #19 get all relationships in a transaction
@@ -61,14 +62,14 @@ class GuiStateMachineNeo4J(var graphDb: GraphDatabaseService) extends GuiStateMa
   override def getActionExecutionTimes: Map[Action, Int] = Map() // TODO #19 get all execution time properties "counter" from all actions
 
   override def clear(): Unit = {
-    var tx: Transaction = null
+    var tx: Option[Transaction] = None
     try {
-      tx = graphDb.beginTx
+      tx = Some(graphDb.beginTx)
       // Deletes all nodes and relationships.
       graphDb.execute("MATCH (n)\nDETACH DELETE n")
-      tx.success
+      tx.get.success
     } finally {
-      if (tx != null) { tx.close() }
+      if (tx.isDefined) { tx.get.close() }
     }
   }
 
@@ -78,10 +79,23 @@ class GuiStateMachineNeo4J(var graphDb: GraphDatabaseService) extends GuiStateMa
     graphDb = otherStateMachine.graphDb
   }
 
+  private[neo4j] def getSutState(node: Node): SutState = {
+    val value = node.getProperty("sutState").asInstanceOf[String]
+    new SutStateConverter().toEntityAttribute(value)
+  }
+
   // TODO #19 Create an index on the property "sutState": https://neo4j.com/docs/cypher-manual/current/schema/index/#schema-index-create-a-single-property-index
   private[neo4j] def getNodeBySutState(sutState: SutState): Option[Node] = {
-    val nodes = graphDb.findNodes(SutStateLabel, "sutState", sutState)
-    val first = nodes.stream().findFirst()
+    var nodes: Option[ResourceIterator[Node]] = None
+    val first = try {
+      val value = new SutStateConverter().toGraphProperty(sutState)
+      nodes = Some(graphDb.findNodes(SutStateLabel, "sutState", value))
+      nodes.get.stream().findFirst()
+    } finally {
+      if (nodes.isDefined) {
+        nodes.get.close()
+      }
+    }
     if (first.isPresent) {
       Some(first.get())
     } else {

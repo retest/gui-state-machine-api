@@ -18,7 +18,7 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
       val relationship = iterator.next()
       val relationshipTypeAction = relationship.getType.asInstanceOf[RelationshipTypeAction]
       val action = relationshipTypeAction.action
-      val sutState = relationship.getEndNode.getProperty("sutState").asInstanceOf[SutState]
+      val sutState = guiStateMachine.getSutState(relationship.getEndNode)
       val actionTransitions = if (result.contains(action)) {
         val existing = result.get(action).get
         ActionTransitions(existing.to ++ Set(new StateNeo4J(sutState, guiStateMachine)), existing.executionCounter + 1)
@@ -41,7 +41,7 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
       val iterator = existingRelationships.iterator()
       while (iterator.hasNext && existingRelationship.isEmpty) {
         val relationship = iterator.next()
-        val sutState = relationship.getEndNode().getProperty("sutState").asInstanceOf[SutState]
+        val sutState = guiStateMachine.getSutState(relationship.getEndNode)
         if (to.getSutState == sutState) {
           existingRelationship = Some(relationship)
         }
@@ -49,7 +49,8 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
 
       val counter = if (existingRelationship.isEmpty) {
         val other = guiStateMachine.getNodeBySutState(to.getSutState).get // TODO #19 What happens if the node is not found?
-        node.createRelationshipTo(other, relationshipTypeAction)
+        val relationship = node.createRelationshipTo(other, relationshipTypeAction)
+        relationship.setProperty("counter", 1)
         1
       } else {
         val r = existingRelationship.get

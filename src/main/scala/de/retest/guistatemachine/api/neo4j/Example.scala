@@ -15,9 +15,12 @@ object Example extends App {
   private val action1 = new NavigateToAction("http://wikipedia.org")
 
   val stateMachine = GuiStateMachineApi.neo4j.createStateMachine("tmp")
+  //stateMachine.clear()
   val startState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
   val endState = new SutState(Arrays.asList(rootElementA))
   stateMachine.executeAction(startState, action0, endState)
+
+  println(s"All states ${stateMachine.getAllStates.size}")
 
   /**
     * Creates a new identifying attributes collection which should only match other identifying attributes with the same ID.
