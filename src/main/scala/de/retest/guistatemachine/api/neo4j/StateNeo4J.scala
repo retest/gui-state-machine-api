@@ -33,11 +33,11 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
     }
 
   private[api] override def addTransition(a: Action, to: State): Int = Neo4jSessionFactory.transaction {
-    val filter = new Filter("start", ComparisonOperator.EQUALS, sutState)
-    val filter2 = new Filter("action", ComparisonOperator.EQUALS, a)
+    val filterStart = new Filter("start", ComparisonOperator.EQUALS, sutState)
+    val filterAction = new Filter("action", ComparisonOperator.EQUALS, a)
     val targetSutState = to.asInstanceOf[StateNeo4J].sutState
-    val filter3 = new Filter("end", ComparisonOperator.EQUALS, targetSutState)
-    val transitions = session.loadAll(classOf[ActionTransitionEntity], filter.and(filter2).and(filter3))
+    val filterEnd = new Filter("end", ComparisonOperator.EQUALS, targetSutState)
+    val transitions = session.loadAll(classOf[ActionTransitionEntity], filterStart.and(filterAction).and(filterEnd))
     val first = transitions.stream().findFirst()
     val counter = if (first.isPresent) {
       first.get().counter = first.get().counter + 1
