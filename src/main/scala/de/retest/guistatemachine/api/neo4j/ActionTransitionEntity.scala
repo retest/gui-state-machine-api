@@ -1,13 +1,21 @@
 package de.retest.guistatemachine.api.neo4j
 import de.retest.recheck.ui.descriptors.SutState
+import de.retest.surili.commons.actions.Action
+import org.neo4j.ogm.annotation.typeconversion.Convert
 import org.neo4j.ogm.annotation.{EndNode, RelationshipEntity, StartNode}
 
-@RelationshipEntity(`type` = "EXECUTED")
-class ActionTransitionEntity(start: SutState, end: SutState) extends Entity {
+@RelationshipEntity(`type` = "ACTIONS")
+class ActionTransitionEntity(s: SutState, e: SutState, a: Action) extends Entity {
 
-  def this() = this(null, null)
+  def this() = this(null, null, null)
 
-  @StartNode val s = start
+  @StartNode val start: SutState = s
 
-  @EndNode val e = end
+  @EndNode val end: SutState = e
+
+  @Convert(classOf[ActionConverter])
+  val action: Action = a
+
+  /// The number of times this action has been executed.
+  var counter: Int = 1
 }

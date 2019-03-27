@@ -70,6 +70,7 @@ There can be different backends which manage the state machine.
 ### Neo4J
 
 This backend uses the GraphDB [Neo4J](https://neo4j.com/) (community edition) with an embedded database.
+It uses [Neo4J-OGM](https://neo4j.com/docs/ogm-manual/current/) to map our types to the graph database.
 
 Each state machine is represented by a separate graph database stored in a separate directory.
 The nodes all have the property "sutState" which contains the corresponding SUT state serialized as XML.

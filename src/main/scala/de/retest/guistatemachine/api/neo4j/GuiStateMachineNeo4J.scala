@@ -3,33 +3,26 @@ package de.retest.guistatemachine.api.neo4j
 import de.retest.guistatemachine.api.{GuiStateMachine, State}
 import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.Action
-import org.neo4j.graphdb.{GraphDatabaseService, Node, ResourceIterator, Transaction}
+import org.neo4j.ogm.cypher.{ComparisonOperator, Filter}
 
 import scala.collection.immutable.HashMap
 
-class GuiStateMachineNeo4J(var graphDb: GraphDatabaseService) extends GuiStateMachine {
+class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
+  implicit val session = Neo4jSessionFactory.getSessionFactory(uri).openSession() // TODO #19 Save the session at some point and close it at some point
 
   override def getState(sutState: SutState): State = {
-    var tx: Option[Transaction] = None
-    try {
-      tx = Some(graphDb.beginTx)
+    Neo4jSessionFactory.transaction {
       getNodeBySutState(sutState) match {
-        case None => {
-          // Create a new node for the sutState in the graph database.
-          val node = graphDb.createNode
-          node.addLabel(SutStateLabel)
-          // TODO #19 SutState is not a supported property value!
-          val value = new SutStateConverter().toGraphProperty(sutState)
-          node.setProperty("sutState", value)
-        }
+        case None =>
+          // Create a new node for the SUT state in the graph database.
+          session.save(new SutStateEntity(sutState))
+
+        // Do nothing if the node for the SUT state does already exist.
         case _ =>
       }
-      tx.get.success
-    } finally {
-      if (tx.isDefined) { tx.get.close() }
     }
 
-    new StateNeo4J(sutState, this)
+    StateNeo4J(sutState, this)
   }
 
   override def executeAction(from: State, a: Action, to: State): State = {
@@ -37,65 +30,42 @@ class GuiStateMachineNeo4J(var graphDb: GraphDatabaseService) extends GuiStateMa
     to
   }
 
-  override def getAllStates: Map[SutState, State] = {
-    var tx: Option[Transaction] = None
-    try {
-      tx = Some(graphDb.beginTx)
-      val allNodes = graphDb.getAllNodes()
+  override def getAllStates: Map[SutState, State] =
+    Neo4jSessionFactory.transaction {
+      val allNodes = session.loadAll(classOf[SutStateEntity])
       var result = HashMap[SutState, State]()
       val iterator = allNodes.iterator()
 
       while (iterator.hasNext) {
         val node = iterator.next()
-        val sutState = getSutState(node)
-        result = result + (sutState -> new StateNeo4J(sutState, this))
+        val sutState = node.sutState
+        result = result + (sutState -> StateNeo4J(sutState, this))
       }
-      tx.get.success()
       result
-    } finally {
-      if (tx.isDefined) { tx.get.close() }
     }
-  }
 
   override def getAllExploredActions: Set[Action] = Set() // TODO #19 get all relationships in a transaction
 
   override def getActionExecutionTimes: Map[Action, Int] = Map() // TODO #19 get all execution time properties "counter" from all actions
 
-  override def clear(): Unit = {
-    var tx: Option[Transaction] = None
-    try {
-      tx = Some(graphDb.beginTx)
+  override def clear(): Unit =
+    Neo4jSessionFactory.transaction {
       // Deletes all nodes and relationships.
-      graphDb.execute("MATCH (n)\nDETACH DELETE n")
-      tx.get.success
-    } finally {
-      if (tx.isDefined) { tx.get.close() }
+      session.deleteAll(classOf[SutStateEntity])
+      session.deleteAll(classOf[ActionTransitionEntity])
     }
-  }
 
   override def assignFrom(other: GuiStateMachine): Unit = {
-    clear()
+    // TODO #19 Should we delete the old graph database?
     val otherStateMachine = other.asInstanceOf[GuiStateMachineNeo4J]
-    graphDb = otherStateMachine.graphDb
-  }
-
-  private[neo4j] def getSutState(node: Node): SutState = {
-    val value = node.getProperty("sutState").asInstanceOf[String]
-    new SutStateConverter().toEntityAttribute(value)
+    uri = otherStateMachine.uri
   }
 
   // TODO #19 Create an index on the property "sutState": https://neo4j.com/docs/cypher-manual/current/schema/index/#schema-index-create-a-single-property-index
-  private[neo4j] def getNodeBySutState(sutState: SutState): Option[Node] = {
-    var nodes: Option[ResourceIterator[Node]] = None
-    val first = try {
-      val value = new SutStateConverter().toGraphProperty(sutState)
-      nodes = Some(graphDb.findNodes(SutStateLabel, "sutState", value))
-      nodes.get.stream().findFirst()
-    } finally {
-      if (nodes.isDefined) {
-        nodes.get.close()
-      }
-    }
+  // TODO #19 Should always be used inside of a transaction.
+  private[neo4j] def getNodeBySutState(sutState: SutState): Option[SutStateEntity] = {
+    val filter = new Filter("sutState", ComparisonOperator.EQUALS, sutState) // TODO #19 Is this how we filter for an attribute?
+    val first = session.loadAll(classOf[SutStateEntity], filter).stream().findFirst()
     if (first.isPresent) {
       Some(first.get())
     } else {

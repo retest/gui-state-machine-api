@@ -5,8 +5,6 @@ import java.io.File
 import com.typesafe.scalalogging.Logger
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi}
-import org.neo4j.graphdb.GraphDatabaseService
-import org.neo4j.graphdb.factory.GraphDatabaseFactory
 
 import scala.collection.concurrent.TrieMap
 
@@ -16,26 +14,32 @@ class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
   // TODO #19 Load existing state machines from the disk.
 
   override def createStateMachine(name: String): GuiStateMachine = {
-    var dir = new File(name)
-    var graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dir)
-    registerShutdownHook(graphDb)
+    val uri = getUri(name)
+    Neo4jSessionFactory.getSessionFactory(uri)
+    logger.info("Created new graph DB in {}.", uri)
 
-    logger.info("Created new graph DB in {}.", dir.getAbsolutePath)
-
-    val guiStateMachine = new GuiStateMachineNeo4J(graphDb)
+    val guiStateMachine = new GuiStateMachineNeo4J(uri)
     stateMachines += (name -> guiStateMachine)
     guiStateMachine
   }
 
-  override def removeStateMachine(name: String): Boolean = stateMachines.remove(name).isDefined // TODO #19 Remove from disk?
+  override def removeStateMachine(name: String): Boolean = stateMachines.get(name) match {
+    case Some(_) =>
+      if (stateMachines.remove(name).isDefined) {
+        val uri = getUri(name)
+        Neo4jSessionFactory.getSessionFactory(uri).close() // TODO #19 Removes from disk?
+        true
+      } else {
+        false
+      }
+    case None => false
+  }
 
   override def getStateMachine(name: String): Option[GuiStateMachine] = stateMachines.get(name)
 
-  override def clear(): Unit = stateMachines.clear()
+  override def clear(): Unit = stateMachines.keySet foreach { name => // TODO #19 keys can be modified concurrently
+    removeStateMachine(name)
+  } // TODO #19 Removes from disk?
 
-  private def registerShutdownHook(graphDb: GraphDatabaseService): Unit = { // Registers a shutdown hook for the Neo4j instance so that it
-    // shuts down nicely when the VM exits (even if you "Ctrl-C" the
-    // running application).
-    Runtime.getRuntime.addShutdownHook(new Thread() { override def run(): Unit = { graphDb.shutdown() } })
-  }
+  private def getUri(name: String): String = new File(name).toURI.toString
 }

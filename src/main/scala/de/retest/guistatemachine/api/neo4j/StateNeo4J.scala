@@ -2,79 +2,52 @@ package de.retest.guistatemachine.api.neo4j
 import de.retest.guistatemachine.api.{ActionTransitions, State}
 import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.Action
-import org.neo4j.graphdb.{Direction, Node, Relationship, Transaction}
+import org.neo4j.ogm.cypher.{ComparisonOperator, Filter}
 
 import scala.collection.immutable.HashMap
 
 case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J) extends State {
+  implicit val session = guiStateMachine.session
 
   override def getSutState: SutState = sutState
-  override def getTransitions: Map[Action, ActionTransitions] = {
-    val node = getNode()
-    val outgoingRelationships = node.getRelationships(Direction.OUTGOING)
-    var result = HashMap[Action, ActionTransitions]()
-    val iterator = outgoingRelationships.iterator()
-    while (iterator.hasNext()) {
-      val relationship = iterator.next()
-      val relationshipTypeAction = relationship.getType.asInstanceOf[RelationshipTypeAction]
-      val action = relationshipTypeAction.action
-      val sutState = guiStateMachine.getSutState(relationship.getEndNode)
-      val actionTransitions = if (result.contains(action)) {
-        val existing = result.get(action).get
-        ActionTransitions(existing.to ++ Set(new StateNeo4J(sutState, guiStateMachine)), existing.executionCounter + 1)
-      } else {
-        ActionTransitions(Set(new StateNeo4J(sutState, guiStateMachine)), 1)
-      }
-      result = result + (action -> actionTransitions)
-    }
-    result
-  }
-
-  private[api] override def addTransition(a: Action, to: State): Int = {
-    var tx: Option[Transaction] = None
-    try {
-      tx = Some(guiStateMachine.graphDb.beginTx)
-      val node = guiStateMachine.getNodeBySutState(sutState).get // TODO #19 What happens if the node is not found?
-      val relationshipTypeAction = RelationshipTypeAction(a)
-      val existingRelationships = node.getRelationships(relationshipTypeAction, Direction.OUTGOING)
-      var existingRelationship: Option[Relationship] = None
-      val iterator = existingRelationships.iterator()
-      while (iterator.hasNext && existingRelationship.isEmpty) {
+  override def getTransitions: Map[Action, ActionTransitions] =
+    Neo4jSessionFactory.transaction {
+      val filter = new Filter("start", ComparisonOperator.EQUALS, sutState)
+      val transitions = session.loadAll(classOf[ActionTransitionEntity], filter)
+      var result = HashMap[Action, ActionTransitions]()
+      val iterator = transitions.iterator()
+      while (iterator.hasNext) {
         val relationship = iterator.next()
-        val sutState = guiStateMachine.getSutState(relationship.getEndNode)
-        if (to.getSutState == sutState) {
-          existingRelationship = Some(relationship)
+        val action = relationship.action
+        val targetSutState = relationship.end
+        val counter = relationship.counter
+        val actionTransitions = if (result.contains(action)) {
+          val existing = result(action)
+          ActionTransitions(existing.to ++ Set(StateNeo4J(targetSutState, guiStateMachine)), existing.executionCounter + counter)
+        } else {
+          ActionTransitions(Set(StateNeo4J(targetSutState, guiStateMachine)), counter)
         }
+        result = result + (action -> actionTransitions)
       }
-
-      val counter = if (existingRelationship.isEmpty) {
-        val other = guiStateMachine.getNodeBySutState(to.getSutState).get // TODO #19 What happens if the node is not found?
-        val relationship = node.createRelationshipTo(other, relationshipTypeAction)
-        relationship.setProperty("counter", 1)
-        1
-      } else {
-        val r = existingRelationship.get
-        val counter = r.getProperty("counter").asInstanceOf[Int] + 1
-        existingRelationship.get.setProperty("counter", counter)
-        counter
-      }
-      tx.get.success()
-      counter
-    } finally {
-      if (tx.isDefined) { tx.get.close() }
+      result
     }
-  }
 
-  private def getNode(): Node = {
-    var tx: Option[Transaction] = None
-
-    try {
-      tx = Some(guiStateMachine.graphDb.beginTx)
-      val node = guiStateMachine.getNodeBySutState(sutState).get // TODO #19 What happens if the node is not found?
-      tx.get.success()
-      node
-    } finally {
-      if (tx.isDefined) { tx.get.close() }
+  private[api] override def addTransition(a: Action, to: State): Int = Neo4jSessionFactory.transaction {
+    val filter = new Filter("start", ComparisonOperator.EQUALS, sutState)
+    val filter2 = new Filter("action", ComparisonOperator.EQUALS, a)
+    val targetSutState = to.asInstanceOf[StateNeo4J].sutState
+    val filter3 = new Filter("end", ComparisonOperator.EQUALS, targetSutState)
+    val transitions = session.loadAll(classOf[ActionTransitionEntity], filter.and(filter2).and(filter3))
+    val first = transitions.stream().findFirst()
+    val counter = if (first.isPresent) {
+      first.get().counter = first.get().counter + 1
+      session.save(first.get())
+      first.get().counter
+    } else {
+      val transition = new ActionTransitionEntity(sutState, targetSutState, a)
+      session.save(transition)
+      1
     }
+    counter
   }
 }

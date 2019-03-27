@@ -12,7 +12,6 @@ object Example extends App {
   private val rootElementB = getRootElement("b", 0)
   private val rootElementC = getRootElement("c", 0)
   private val action0 = new NavigateToAction("http://google.com")
-  private val action1 = new NavigateToAction("http://wikipedia.org")
 
   val stateMachine = GuiStateMachineApi.neo4j.createStateMachine("tmp")
   //stateMachine.clear()
