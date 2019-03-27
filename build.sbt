@@ -22,6 +22,7 @@ resolvers += "sonatype-snapshots" at "https://oss.sonatype.org/content/repositor
 
 // Dependencies to represent states and actions:
 libraryDependencies += "de.retest" % "surili-commons" % "0.1.0-SNAPSHOT" withSources () withJavadoc () changing ()
+libraryDependencies += "javax.xml.bind" % "jaxb-api" % "2.3.0"
 
 // Dependencies for a graph database:
 libraryDependencies += "org.neo4j" % "neo4j" % "3.0.1"

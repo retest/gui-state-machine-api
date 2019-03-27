@@ -35,7 +35,6 @@ Otherwise, the build will fail!
 ## SBT Commands
 
 * `sbt compile` to build the project manually.
-* `sbt assembly` to create a standalone JAR which includes all dependencies including the Scala libraries. The standalone JAR is generated as `target/scala-<scalaversion>/gui-state-machine-api-assembly-<version>.jar`.
 * `sbt eclipse` to generate a project for Eclipse.
 * `sbt test` to execute all unit tests.
 * `sbt coverage` to generate coverage data.

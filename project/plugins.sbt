@@ -1,5 +1,3 @@
-// to create a standalone JAR file with all dependencies
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.6")
 // code formatting
 addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.15")
 // for signed releases
