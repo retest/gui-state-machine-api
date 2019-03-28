@@ -37,7 +37,7 @@ class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
 
   override def getStateMachine(name: String): Option[GuiStateMachine] = stateMachines.get(name)
 
-  override def clear(): Unit = stateMachines.keySet foreach { name => // TODO #19 keys can be modified concurrently
+  override def clear(): Unit = stateMachines.keySet foreach { name => // TODO #19 keys can be modified concurrently. So we might not remove all state machines?
     removeStateMachine(name)
   } // TODO #19 Removes from disk?
 

@@ -8,7 +8,7 @@ import org.neo4j.ogm.cypher.{ComparisonOperator, Filter}
 import scala.collection.immutable.HashMap
 
 class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
-  implicit val session = Neo4jSessionFactory.getSessionFactory(uri).openSession() // TODO #19 Save the session at some point and close it at some point
+  implicit val session = Neo4jSessionFactory.getSessionFactory(uri).openSession() // TODO #19 Close the session at some point?
 
   override def getState(sutState: SutState): State = {
     Neo4jSessionFactory.transaction {

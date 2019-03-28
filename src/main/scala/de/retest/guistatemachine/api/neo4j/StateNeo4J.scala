@@ -18,7 +18,7 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
       val iterator = transitions.iterator()
       while (iterator.hasNext) {
         val relationship = iterator.next()
-        val action = relationship.action
+        val action = new ActionConverter(Some(relationship.start)).toEntityAttribute(relationship.actionXML)
         val targetSutState = relationship.end
         val counter = relationship.counter
         val actionTransitions = if (result.contains(action)) {

@@ -28,6 +28,7 @@ libraryDependencies += "javax.xml.bind" % "jaxb-api" % "2.3.0"
 libraryDependencies += "org.neo4j" % "neo4j" % "3.0.1"
 libraryDependencies += "org.neo4j" % "neo4j-ogm-core" % "3.1.7"
 libraryDependencies += "org.neo4j" % "neo4j-ogm-embedded-driver" % "3.1.7"
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.1.1"
 
 // Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"

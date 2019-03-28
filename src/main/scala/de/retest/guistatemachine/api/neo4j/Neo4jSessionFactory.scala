@@ -6,7 +6,6 @@ import org.neo4j.ogm.transaction.Transaction
 
 import scala.collection.concurrent.TrieMap
 
-// TODO #19 Use sessions to modify the state graph.
 object Neo4jSessionFactory {
   private val sessionFactories = TrieMap[String, SessionFactory]()
 
