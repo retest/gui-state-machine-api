@@ -48,9 +48,9 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
 
     allStatesSorted.foreach { x =>
       val fromVertex = x._1
-      val allTransitionsSorted = x._2.getOutgoingActionTransitions.toSeq.sortWith(hashCodeComparisonOfTuples)
+      val allOutgoingActionTransitionsSorted = x._2.getOutgoingActionTransitions.toSeq.sortWith(hashCodeComparisonOfTuples)
 
-      allTransitionsSorted foreach { transition =>
+      allOutgoingActionTransitionsSorted foreach { transition =>
         val actionTransitions = transition._2
         val action = transition._1
         actionTransitions.states.foreach { toState =>
