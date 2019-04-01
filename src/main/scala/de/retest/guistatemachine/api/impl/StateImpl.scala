@@ -13,22 +13,43 @@ case class StateImpl(sutState: SutState) extends State with Serializable {
     * Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
     * The legacy code used `AmbigueState` here which was more complicated than just a multi map.
     */
-  var transitions = HashMap[Action, ActionTransitions]()
+  private var outgoingActionTransitions = HashMap[Action, ActionTransitions]()
+
+  /**
+    * Redundant information but helpful to be retrieved.
+    */
+  private var incomingActionTransitions = HashMap[Action, ActionTransitions]()
 
   override def getSutState: SutState = this.synchronized { sutState }
-  override def getTransitions: Map[Action, ActionTransitions] = this.synchronized { transitions }
+  override def getOutgoingActionTransitions: Map[Action, ActionTransitions] = this.synchronized { outgoingActionTransitions }
+  override def getIncomingActionTransitions: Map[Action, ActionTransitions] = this.synchronized { incomingActionTransitions }
 
-  private[api] override def addTransition(a: Action, to: State): Int = this.synchronized {
-    val old = transitions.get(a)
-    old match {
-      case Some(o) =>
-        val updated = ActionTransitions(o.to + to, o.executionCounter + 1)
-        transitions = transitions + (a -> updated)
-        updated.executionCounter
+  private[api] override def addTransition(a: Action, to: State): Int = {
+    val executionCounter = this.synchronized {
+      outgoingActionTransitions.get(a) match {
+        case Some(oldTransitions) =>
+          val updatedTransitions = ActionTransitions(oldTransitions.states + to, oldTransitions.executionCounter + 1)
+          outgoingActionTransitions = outgoingActionTransitions + (a -> updatedTransitions)
+          updatedTransitions.executionCounter
 
-      case None =>
-        transitions += (a -> ActionTransitions(Set(to), 1))
-        1
+        case None =>
+          outgoingActionTransitions += (a -> ActionTransitions(Set(to), 1))
+          1
+      }
     }
+
+    to.synchronized {
+      val other = to.asInstanceOf[StateImpl]
+      other.incomingActionTransitions.get(a) match {
+        case Some(oldTransitions) =>
+          val updatedTransitions = ActionTransitions(oldTransitions.states + this, oldTransitions.executionCounter + 1)
+          other.incomingActionTransitions = other.incomingActionTransitions + (a -> updatedTransitions)
+
+        case None =>
+          other.incomingActionTransitions += (a -> ActionTransitions(Set(this), 1))
+      }
+    }
+
+    executionCounter
   }
 }
