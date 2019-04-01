@@ -26,15 +26,10 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
       val finalSutState = createSutState(rootElementC)
 
       // Create the whole state machine:
-      val initialState = guiStateMachine.getState(initialSutState)
-      val finalState = guiStateMachine.getState(finalSutState)
       guiStateMachine.executeAction(initialSutState, action0, finalSutState)
       guiStateMachine.executeAction(initialSutState, action1, finalSutState)
       guiStateMachine.executeAction(finalSutState, action0, initialSutState)
       guiStateMachine.executeAction(finalSutState, action1, initialSutState)
-
-      initialState.getTransitions.size shouldEqual 2
-      finalState.getTransitions.size shouldEqual 2
 
       val filePath = "./target/test_state_machine.gml"
       val oldFile = new File(filePath)

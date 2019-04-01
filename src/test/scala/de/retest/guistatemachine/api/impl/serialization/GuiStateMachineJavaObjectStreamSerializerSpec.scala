@@ -51,14 +51,14 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       val loadedInitialState = guiStateMachine.getAllStates(initialSutState)
       val loadedFinalState = guiStateMachine.getAllStates(finalSutState)
       loadedInitialState.getSutState shouldEqual initialSutState
-      loadedInitialState.getTransitions.size shouldEqual 1
-      loadedInitialState.getTransitions.contains(action0) shouldEqual true
-      val loadedTransition = loadedInitialState.getTransitions(action0)
+      loadedInitialState.getOutgoingActionTransitions.size shouldEqual 1
+      loadedInitialState.getOutgoingActionTransitions.contains(action0) shouldEqual true
+      val loadedTransition = loadedInitialState.getOutgoingActionTransitions(action0)
       loadedTransition.executionCounter shouldEqual 1
-      loadedTransition.to.size shouldEqual 1
-      loadedTransition.to.head shouldEqual loadedFinalState
+      loadedTransition.states.size shouldEqual 1
+      loadedTransition.states.head shouldEqual loadedFinalState
       loadedFinalState.getSutState shouldEqual finalSutState
-      loadedFinalState.getTransitions.isEmpty shouldEqual true
+      loadedFinalState.getOutgoingActionTransitions.isEmpty shouldEqual true
     }
   }
 }

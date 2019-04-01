@@ -48,12 +48,12 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
 
     allStatesSorted.foreach { x =>
       val fromVertex = x._1
-      val allTransitionsSorted = x._2.getTransitions.toSeq.sortWith(hashCodeComparisonOfTuples)
+      val allTransitionsSorted = x._2.getOutgoingActionTransitions.toSeq.sortWith(hashCodeComparisonOfTuples)
 
       allTransitionsSorted foreach { transition =>
         val actionTransitions = transition._2
         val action = transition._1
-        actionTransitions.to.foreach { toState =>
+        actionTransitions.states.foreach { toState =>
           val toVertex = toState.getSutState
           val edge = GraphActionEdge(fromVertex, toVertex, action)
           if (!graph.addEdge(fromVertex, toVertex, edge)) { throw new RuntimeException(s"Failed to add edge $edge") }

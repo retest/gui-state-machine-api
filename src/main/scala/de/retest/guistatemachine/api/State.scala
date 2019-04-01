@@ -19,7 +19,12 @@ trait State {
     * Hence, we have a set of states per action.
     * In the legacy code there was a type called `AmbigueState` but a multimap simplifies the implementation.
     */
-  def getTransitions: Map[Action, ActionTransitions]
+  def getOutgoingActionTransitions: Map[Action, ActionTransitions]
+
+  /**
+    * Helper method to retrieve all incoming transitions.
+    */
+  def getIncomingActionTransitions: Map[Action, ActionTransitions]
 
   /**
     * Overriding this method is required to allow the usage of a set of states.
@@ -37,7 +42,7 @@ trait State {
 
   override def hashCode(): Int = this.getSutState.hashCode()
 
-  override def toString: String = s"sutState=$getSutState,transitions=$getTransitions"
+  override def toString: String = s"sutState=$getSutState,transitions=$getOutgoingActionTransitions"
 
   /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].
