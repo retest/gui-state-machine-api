@@ -34,7 +34,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getAllStates.size shouldEqual 2
     }
 
-    "add two transitions to two new states for the same action and one transition to another state for another action" in {
+    "add two transitions to two new states for the same action and two transitions for the same action to another state" in {
       val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
       val initial = sut.getState(initialSutState)
       sut.getAllExploredActions.size shouldEqual 0
@@ -87,6 +87,22 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       sut.getAllExploredActions.size shouldEqual 2
       sut.getActionExecutionTimes.get(action1).isDefined shouldEqual true
       sut.getActionExecutionTimes(action1) shouldEqual 1
+
+      // execute action1 for the second time but from s1SutState to create one incoming action from two different states
+      sut.executeAction(s1SutState, action1, s2SutState)
+      s1.getOutgoingActionTransitions.size shouldEqual 1
+      s1.getOutgoingActionTransitions(action1).states.size shouldEqual 1
+      s1.getOutgoingActionTransitions(action1).executionCounter shouldEqual 1
+      s1.getIncomingActionTransitions.size shouldEqual 1
+      s1.getIncomingActionTransitions(action0).states.size shouldEqual 1
+      s1.getIncomingActionTransitions(action0).executionCounter shouldEqual 1
+      s2.getOutgoingActionTransitions.size shouldEqual 0
+      s2.getIncomingActionTransitions.size shouldEqual 1
+      s2.getIncomingActionTransitions(action1).states shouldEqual Set(initial, s1)
+      s2.getIncomingActionTransitions(action1).executionCounter shouldEqual 2
+      sut.getAllExploredActions.size shouldEqual 2
+      sut.getActionExecutionTimes.get(action1).isDefined shouldEqual true
+      sut.getActionExecutionTimes(action1) shouldEqual 2
     }
 
     "store a state for the second access" in {
