@@ -10,7 +10,7 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
   implicit val session = guiStateMachine.session
 
   override def getSutState: SutState = sutState
-  override def getTransitions: Map[Action, ActionTransitions] =
+  override def getOutgoingActionTransitions: Map[Action, ActionTransitions] =
     Neo4jSessionFactory.transaction {
       val filter = new Filter("start", ComparisonOperator.EQUALS, sutState)
       val transitions = session.loadAll(classOf[ActionTransitionEntity], filter)
@@ -23,7 +23,7 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
         val counter = relationship.counter
         val actionTransitions = if (result.contains(action)) {
           val existing = result(action)
-          ActionTransitions(existing.to ++ Set(StateNeo4J(targetSutState, guiStateMachine)), existing.executionCounter + counter)
+          ActionTransitions(existing.states ++ Set(StateNeo4J(targetSutState, guiStateMachine)), existing.executionCounter + counter)
         } else {
           ActionTransitions(Set(StateNeo4J(targetSutState, guiStateMachine)), counter)
         }
@@ -31,6 +31,27 @@ case class StateNeo4J(sutState: SutState, guiStateMachine: GuiStateMachineNeo4J)
       }
       result
     }
+
+  def getIncomingActionTransitions: Map[Action, ActionTransitions] = Neo4jSessionFactory.transaction {
+    val filter = new Filter("end", ComparisonOperator.EQUALS, sutState)
+    val transitions = session.loadAll(classOf[ActionTransitionEntity], filter)
+    var result = HashMap[Action, ActionTransitions]()
+    val iterator = transitions.iterator()
+    while (iterator.hasNext) {
+      val relationship = iterator.next()
+      val action = new ActionConverter(Some(relationship.start)).toEntityAttribute(relationship.actionXML)
+      val sourceSutState = relationship.start
+      val counter = relationship.counter
+      val actionTransitions = if (result.contains(action)) {
+        val existing = result(action)
+        ActionTransitions(existing.states ++ Set(StateNeo4J(sourceSutState, guiStateMachine)), existing.executionCounter + counter)
+      } else {
+        ActionTransitions(Set(StateNeo4J(sourceSutState, guiStateMachine)), counter)
+      }
+      result = result + (action -> actionTransitions)
+    }
+    result
+  }
 
   private[api] override def addTransition(a: Action, to: State): Int = Neo4jSessionFactory.transaction {
     val filterStart = new Filter("start", ComparisonOperator.EQUALS, sutState)
