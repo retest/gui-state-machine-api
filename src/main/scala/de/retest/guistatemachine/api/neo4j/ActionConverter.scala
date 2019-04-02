@@ -4,6 +4,7 @@ import de.retest.recheck.ui.descriptors.{Element, SutState}
 import de.retest.surili.commons.actions._
 import org.neo4j.ogm.typeconversion.AttributeConverter
 
+import scala.collection.JavaConverters._
 import scala.xml._
 
 /**
@@ -91,20 +92,17 @@ class ActionConverter(val sutState: Option[SutState]) extends AttributeConverter
   }
 
   private def getElementByRetestId(retestId: String, sutState: SutState): Option[Element] = {
-    val elements = scala.collection.mutable.Set[Element]()
-    val iterator = sutState.getRootElements.iterator()
+    val elements = asScalaBuffer(sutState.getRootElements).toBuffer[Element]
+    val iterator = elements.iterator
     var result: Option[Element] = None
 
     while (iterator.hasNext && result.isEmpty) {
       val element = iterator.next()
       result = if (element.getRetestId == retestId) {
         Some(element)
-      } else { None }
-
-      val nestedIterator = element.getContainedElements.iterator()
-
-      while (nestedIterator.hasNext) {
-        elements += nestedIterator.next()
+      } else {
+        elements ++= asScalaBuffer(element.getContainedElements)
+        None
       }
     }
 
