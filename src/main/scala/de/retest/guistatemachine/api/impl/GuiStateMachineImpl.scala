@@ -1,9 +1,7 @@
 package de.retest.guistatemachine.api.impl
 
 import com.typesafe.scalalogging.Logger
-import de.retest.guistatemachine.api.{GuiStateMachine, State}
-import de.retest.recheck.ui.descriptors.SutState
-import de.retest.surili.commons.actions.Action
+import de.retest.guistatemachine.api.{ActionIdentifier, GuiStateMachine, State, SutStateIdentifier}
 
 import scala.collection.immutable.{HashMap, HashSet}
 
@@ -13,31 +11,31 @@ import scala.collection.immutable.{HashMap, HashSet}
 @SerialVersionUID(1L)
 class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   @transient private val logger = Logger[GuiStateMachineImpl]
-  private var states = new HashMap[SutState, State]
+  private var states = new HashMap[SutStateIdentifier, State]
 
   /**
     * The legacy code stored execution counters for every action.
     */
-  private var allExploredActions = new HashSet[Action]
+  private var allExploredActions = new HashSet[ActionIdentifier]
 
   /**
     * `actionExecutionCounter` from the legacy code.
     * Stores the total number of executions per action.
     */
-  private var actionExecutionTimes = new HashMap[Action, Int]
+  private var actionExecutionTimes = new HashMap[ActionIdentifier, Int]
 
-  override def getState(sutState: SutState): State = this.synchronized {
+  override def getState(sutState: SutStateIdentifier): State = this.synchronized {
     if (states.contains(sutState)) {
       states(sutState)
     } else {
-      logger.info(s"Create new state from SUT state with hash code ${sutState.hashCode()}")
+      logger.info(s"Create new state from SUT state $sutState")
       val s = StateImpl(sutState)
       states += (sutState -> s)
       s
     }
   }
 
-  override def executeAction(from: State, a: Action, to: State): State = this.synchronized {
+  override def executeAction(from: State, a: ActionIdentifier, to: State): State = this.synchronized {
     allExploredActions += a
     val old = actionExecutionTimes.get(a)
     old match {
@@ -48,16 +46,16 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
     to
   }
 
-  override def getAllStates: Map[SutState, State] = this.synchronized { states }
+  override def getAllStates: Map[SutStateIdentifier, State] = this.synchronized { states }
 
-  override def getAllExploredActions: Set[Action] = this.synchronized { allExploredActions }
+  override def getAllExploredActions: Set[ActionIdentifier] = this.synchronized { allExploredActions }
 
-  override def getActionExecutionTimes: Map[Action, Int] = this.synchronized { actionExecutionTimes }
+  override def getActionExecutionTimes: Map[ActionIdentifier, Int] = this.synchronized { actionExecutionTimes }
 
   override def clear(): Unit = this.synchronized {
-    states = new HashMap[SutState, State]
-    allExploredActions = new HashSet[Action]
-    actionExecutionTimes = new HashMap[Action, Int]
+    states = new HashMap[SutStateIdentifier, State]
+    allExploredActions = new HashSet[ActionIdentifier]
+    actionExecutionTimes = new HashMap[ActionIdentifier, Int]
   }
 
   override def assignFrom(other: GuiStateMachine): Unit = this.synchronized {

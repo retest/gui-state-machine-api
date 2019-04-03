@@ -1,7 +1,6 @@
 package de.retest.guistatemachine.api.impl.serialization
-import de.retest.recheck.ui.descriptors.SutState
-import de.retest.surili.commons.actions.Action
+import de.retest.guistatemachine.api.{ActionIdentifier, SutStateIdentifier}
 
-case class GraphActionEdge(from: SutState, to: SutState, action: Action) {
+case class GraphActionEdge(from: SutStateIdentifier, to: SutStateIdentifier, action: ActionIdentifier) {
   override def toString: String = action.toString
 }

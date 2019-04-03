@@ -42,7 +42,8 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
       f.exists() shouldEqual true
       f.isDirectory shouldEqual false
 
-      val lines = scala.io.Source.fromFile(filePath).mkString
+      val source = scala.io.Source.fromFile(filePath)
+      val lines = source.mkString
       lines shouldEqual
         """Creator "JGraphT GML Exporter - modified by Hayato Hess, Andreas Hofstadler"
           |Version 1
@@ -53,7 +54,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 1
-          |		label "State[descriptor=[]] - hash code: 9132415"
+          |		label "hash=acd05dfba59670825451169c470d430727226dd0dec48c64961305a0c5ab1ecb"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -68,7 +69,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 2
-          |		label "State[descriptor=[, , ]] - hash code: 416617022"
+          |		label "hash=c44472d3d18e4f62b073a232e3119de9d94d3c6242b65125f454d62aced7f84e"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -85,7 +86,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 3
           |		source 1
           |		target 2
-          |		label "NavigateToAction(url=http://google.com)"
+          |		label "hash=240d08498736de4d893c146fd64b58b1ae1eda8c36a565919b035d86c6ee2084"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -103,7 +104,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 4
           |		source 1
           |		target 2
-          |		label "NavigateToAction(url=http://wikipedia.org)"
+          |		label "hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -121,7 +122,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 5
           |		source 2
           |		target 1
-          |		label "NavigateToAction(url=http://google.com)"
+          |		label "hash=240d08498736de4d893c146fd64b58b1ae1eda8c36a565919b035d86c6ee2084"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -139,7 +140,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 6
           |		source 2
           |		target 1
-          |		label "NavigateToAction(url=http://wikipedia.org)"
+          |		label "hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -154,6 +155,8 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	]
           |]
           |""".stripMargin
+
+      source.close()
     }
 
     "load GML " in {

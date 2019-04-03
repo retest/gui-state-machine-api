@@ -2,13 +2,12 @@ package de.retest.guistatemachine.api.impl.serialization
 import java.io.{BufferedWriter, File, FileOutputStream, OutputStreamWriter}
 
 import com.github.systemdir.gml.YedGmlWriter
-import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineSerializer}
-import de.retest.recheck.ui.descriptors.SutState
+import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineSerializer, SutStateIdentifier}
 import org.jgrapht.graph.DirectedPseudograph
 
 class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiStateMachineSerializer {
 
-  type GraphType = DirectedPseudograph[SutState, GraphActionEdge]
+  type GraphType = DirectedPseudograph[SutStateIdentifier, GraphActionEdge]
 
   /**
     * Converts the state machines into GML which can be read by editors like yED.
@@ -25,9 +24,9 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
 
     // get the gml writer
     val writer =
-      new YedGmlWriter.Builder[SutState, GraphActionEdge, AnyRef](graphicsProvider, YedGmlWriter.PRINT_LABELS: _*)
+      new YedGmlWriter.Builder[SutStateIdentifier, GraphActionEdge, AnyRef](graphicsProvider, YedGmlWriter.PRINT_LABELS: _*)
         .setEdgeLabelProvider(_.toString)
-        .setVertexLabelProvider(sutState => "%s - hash code: %d".format(sutState.toString, sutState.hashCode()))
+        .setVertexLabelProvider(_.toString)
         .build
 
     // write to file
@@ -54,7 +53,7 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
         val actionTransitions = transition._2
         val action = transition._1
         actionTransitions.states.foreach { toState =>
-          val toVertex = toState.getSutState
+          val toVertex = toState.getSutStateIdentifier
           val edge = GraphActionEdge(fromVertex, toVertex, action)
           if (!graph.addEdge(fromVertex, toVertex, edge)) { throw new RuntimeException(s"Failed to add edge $edge") }
         }
