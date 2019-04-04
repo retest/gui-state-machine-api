@@ -48,18 +48,18 @@ Otherwise, the build will fail!
 * `sbt 'release cross with-defaults'` to create a release with a new version number which is added as tag. This command does also publish the artifacts.
 * `sbt publish` publishes the artifacts in ReTest's Nexus. Requires a `$HOME/.sbt/.credentials` file with the correct credentials. This command can be useful to publish SNAPSHOT versions.
 
-## NFA for the Representation of Tests
+## NFA for the Representation of GUI Behavior
 
-A nondeterministic finite automaton represents the states of the GUI during the test.
-The actions executed by the user on the widgets are represented by transitions.
-If an action has not been executed yet from a state, it leads to an unknown state.
+A nondeterministic finite automaton (NFA) represents the states of the GUI during testing.
+The actions executed by the user on GUI elements are represented by transitions.
+If an action has not been executed yet from a state, it leads to the so-called unknown state *s<sub>?</sub>*.
 The unknown state is a special state from which all actions could be executed.
-The NFA is based on the UI model from [Search-Based System Testing: High Coverage, No False Alarms](http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf) (section "4.5 UI Model").
-Whenever an unknown state is replaced by a newly discovered state, the NFA has to be updated.
+Whenever an action, which previously led to *s<sub>?</sub>*, is being executed and then leads to a newly discovered state, the NFA has to be updated.
 
-The NFA is used to generate test cases (sequence of UI actions) with the help of a genetic algorithm.
-For example, whenever a random action is executed with the help of monkey testing, it adds a transition to the state machine.
-After running the genetic algorithm, the state machine is then used to create a test suite.
+The NFA is based on the UI model from ["Search-Based System Testing: High Coverage, No False Alarms"](http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf) (section "4.5 UI Model"). Originally, it has been used together with a genetic algorithm for search-based system testing, where it served two purposes:
+
+1. Population initialization: to give precedence to unexplored actions.
+2. Mutation: to repair test cases.
 
 ## Concurrency
 
