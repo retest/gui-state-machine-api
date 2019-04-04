@@ -4,6 +4,7 @@ API for the creation and modification of incomplete state machines which represe
 The states represent the GUI elements and the transitions represent the GUI actions.
 
 This is a small code example of creating a new state machine, adding two states connected with a transition and saving the state machine:
+
 ```scala
 import de.retest.guistatemachine.api.GuiStateMachineApi
 import de.retest.guistatemachine.api.GuiStateMachineSerializer
