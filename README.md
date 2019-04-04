@@ -63,4 +63,4 @@ After running the genetic algorithm, the state machine is then used to create a 
 
 ## Concurrency
 
-The creation and modification of state machines should be threadsafe.
+The creation and modification of state machines should be thread-safe.
