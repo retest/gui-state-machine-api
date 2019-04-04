@@ -1,30 +1,28 @@
 package de.retest.guistatemachine.api.impl
 
-import de.retest.guistatemachine.api.{ActionTransitions, State}
-import de.retest.recheck.ui.descriptors.SutState
-import de.retest.surili.commons.actions.Action
+import de.retest.guistatemachine.api.{ActionIdentifier, ActionTransitions, State, SutStateIdentifier}
 
 import scala.collection.immutable.HashMap
 
 @SerialVersionUID(1L)
-case class StateImpl(sutState: SutState) extends State with Serializable {
+case class StateImpl(sutState: SutStateIdentifier) extends State with Serializable {
 
   /**
     * Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
     * The legacy code used `AmbigueState` here which was more complicated than just a multi map.
     */
-  private var outgoingActionTransitions = HashMap[Action, ActionTransitions]()
+  private var outgoingActionTransitions = HashMap[ActionIdentifier, ActionTransitions]()
 
   /**
     * Redundant information but helpful to be retrieved.
     */
-  private var incomingActionTransitions = HashMap[Action, ActionTransitions]()
+  private var incomingActionTransitions = HashMap[ActionIdentifier, ActionTransitions]()
 
-  override def getSutState: SutState = this.synchronized { sutState }
-  override def getOutgoingActionTransitions: Map[Action, ActionTransitions] = this.synchronized { outgoingActionTransitions }
-  override def getIncomingActionTransitions: Map[Action, ActionTransitions] = this.synchronized { incomingActionTransitions }
+  override def getSutStateIdentifier: SutStateIdentifier = this.synchronized { sutState }
+  override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { outgoingActionTransitions }
+  override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { incomingActionTransitions }
 
-  private[api] override def addTransition(a: Action, to: State): Int = {
+  private[api] override def addTransition(a: ActionIdentifier, to: State): Int = {
     val executionCounter = this.synchronized {
       outgoingActionTransitions.get(a) match {
         case Some(oldTransitions) =>

@@ -3,7 +3,7 @@ package de.retest.guistatemachine.api.impl.serialization
 import java.io.File
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
-import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer}
+import de.retest.guistatemachine.api.{AbstractApiSpec, ActionIdentifier, GuiStateMachineSerializer, SutStateIdentifier}
 import de.retest.surili.commons.actions.NavigateToAction
 import org.scalatest.BeforeAndAfterEach
 
@@ -25,10 +25,14 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       val rootElementB = getRootElement("b", 0)
       val rootElementC = getRootElement("c", 0)
       val action0 = new NavigateToAction("http://google.com")
+      val action0Identifier = new ActionIdentifier(action0)
       val action1 = new NavigateToAction("http://wikipedia.org")
+      val action1Identifier = new ActionIdentifier(action1)
 
       val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
+      val initialSutStateIdentifier = new SutStateIdentifier(initialSutState)
       val finalSutState = createSutState(rootElementC)
+      val finalSutStateIdentifier = new SutStateIdentifier(finalSutState)
 
       // Create the whole state machine:
       guiStateMachine.executeAction(initialSutState, action0, finalSutState)
@@ -45,19 +49,19 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
 
       // Verify the loaded state machine:
       guiStateMachine.getAllExploredActions.size shouldEqual 1
-      guiStateMachine.getActionExecutionTimes(action0) shouldEqual 1
-      guiStateMachine.getActionExecutionTimes.contains(action1) shouldEqual false
+      guiStateMachine.getActionExecutionTimes(action0Identifier) shouldEqual 1
+      guiStateMachine.getActionExecutionTimes.contains(action1Identifier) shouldEqual false
       guiStateMachine.getAllStates.size shouldEqual 2
-      val loadedInitialState = guiStateMachine.getAllStates(initialSutState)
-      val loadedFinalState = guiStateMachine.getAllStates(finalSutState)
-      loadedInitialState.getSutState shouldEqual initialSutState
+      val loadedInitialState = guiStateMachine.getAllStates(initialSutStateIdentifier)
+      val loadedFinalState = guiStateMachine.getAllStates(finalSutStateIdentifier)
+      loadedInitialState.getSutStateIdentifier shouldEqual initialSutStateIdentifier
       loadedInitialState.getOutgoingActionTransitions.size shouldEqual 1
-      loadedInitialState.getOutgoingActionTransitions.contains(action0) shouldEqual true
-      val loadedTransition = loadedInitialState.getOutgoingActionTransitions(action0)
+      loadedInitialState.getOutgoingActionTransitions.contains(action0Identifier) shouldEqual true
+      val loadedTransition = loadedInitialState.getOutgoingActionTransitions(action0Identifier)
       loadedTransition.executionCounter shouldEqual 1
       loadedTransition.states.size shouldEqual 1
       loadedTransition.states.head shouldEqual loadedFinalState
-      loadedFinalState.getSutState shouldEqual finalSutState
+      loadedFinalState.getSutStateIdentifier shouldEqual finalSutStateIdentifier
       loadedFinalState.getOutgoingActionTransitions.isEmpty shouldEqual true
     }
   }

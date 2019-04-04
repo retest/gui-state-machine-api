@@ -13,13 +13,15 @@ import de.retest.surili.commons.actions.Action
   */
 trait GuiStateMachine {
 
+  def getState(sutStateIdentifier: SutStateIdentifier): State
+
   /**
     * Gets a state identified by the corresponding SUT state.
     *
     * @param sutState The SUT state which identifies the state.
     * @return The state identified by the descriptors. If there has not been any state yet, it will be added.
     */
-  def getState(sutState: SutState): State
+  def getState(sutState: SutState): State = getState(new SutStateIdentifier(sutState))
 
   /**
     * Executes an action from a state leading to the current state described by descriptors.
@@ -29,18 +31,19 @@ trait GuiStateMachine {
     * @param to The state which the execution leads to.
     * @return The current state which the transition of a leads to.
     */
-  def executeAction(from: State, a: Action, to: State): State
+  def executeAction(from: State, a: ActionIdentifier, to: State): State
+  def executeAction(from: State, a: Action, to: State): State = executeAction(from, new ActionIdentifier(a), to)
   def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State =
     executeAction(getState(fromSutState), a, getState(toSutState))
 
-  def getAllStates: Map[SutState, State]
+  def getAllStates: Map[SutStateIdentifier, State]
 
   /**
     * In the legacy code this was only used to show the number of actions which have been explored by Monkey Testing.
     *
     * @return All actions which have been explored and therefore have a corresponding transition.
     */
-  def getAllExploredActions: Set[Action]
+  def getAllExploredActions: Set[ActionIdentifier]
 
   /**
     * In the legacy code this was only used to calculate all never explored actions.
@@ -48,7 +51,7 @@ trait GuiStateMachine {
     *
     * @return The number of times every explored action has been executed in the NFA. Never explored actions are not part of it.
     */
-  def getActionExecutionTimes: Map[Action, Int]
+  def getActionExecutionTimes: Map[ActionIdentifier, Int]
 
   /**
     * Clears all states, transitions and never explored actions etc.
