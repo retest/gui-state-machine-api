@@ -1,5 +1,8 @@
 # GUI State Machine API
 
+[![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
+[![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
+
 API for the creation and modification of incomplete state machines which represent the exploration of a GUI application.
 The states represent the GUI elements and the transitions represent the GUI actions.
 
@@ -23,11 +26,6 @@ GuiStateMachineSerializer.gml(stateMachine).save("mystatemachine.gml")
 
 State machines can be saved as and loaded from files using Java object serialization/deserialization.
 Besides, they can be saved as [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) files which can be visualized by editors like [yEd](https://www.yworks.com/products/yed).
-
-## Automatic Build with TravisCI
-
-[![Build Status](https://travis-ci.com/retest/gui-state-machine-api.svg?branch=master)](https://travis-ci.com/retest/gui-state-machine-api)
-[![Code Coverage](https://img.shields.io/codecov/c/github/retest/gui-state-machine-api/master.svg)](https://codecov.io/github/retest/gui-state-machine-api?branch=master)
 
 ## Build Credentials
 
