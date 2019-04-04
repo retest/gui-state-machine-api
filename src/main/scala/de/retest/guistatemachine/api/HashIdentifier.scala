@@ -23,7 +23,7 @@ class HashIdentifier(serializable: Serializable) extends scala.Serializable {
 
   override def hashCode(): Int = hash.hashCode
 
-  override def toString: String = s"hash=$hash"
+  override def toString: String = s"HashIdentifier[hash=$hash]"
 
 }
 

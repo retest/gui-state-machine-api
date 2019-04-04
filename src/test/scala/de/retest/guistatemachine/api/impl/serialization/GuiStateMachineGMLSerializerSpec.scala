@@ -54,7 +54,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 1
-          |		label "hash=acd05dfba59670825451169c470d430727226dd0dec48c64961305a0c5ab1ecb"
+          |		label "SutStateIdentifier[sutState=State[descriptor=[]], hash=acd05dfba59670825451169c470d430727226dd0dec48c64961305a0c5ab1ecb]"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -69,7 +69,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 2
-          |		label "hash=c44472d3d18e4f62b073a232e3119de9d94d3c6242b65125f454d62aced7f84e"
+          |		label "SutStateIdentifier[sutState=State[descriptor=[, , ]], hash=c44472d3d18e4f62b073a232e3119de9d94d3c6242b65125f454d62aced7f84e]"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -86,7 +86,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 3
           |		source 1
           |		target 2
-          |		label "hash=240d08498736de4d893c146fd64b58b1ae1eda8c36a565919b035d86c6ee2084"
+          |		label "ActionIdentifier[action=NavigateToAction(url=http://wikipedia.org), hash=240d08498736de4d893c146fd64b58b1ae1eda8c36a565919b035d86c6ee2084]"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -104,7 +104,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 4
           |		source 1
           |		target 2
-          |		label "hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f"
+          |		label "ActionIdentifier[action=NavigateToAction(url=http://google.com), hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f]"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -122,7 +122,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 5
           |		source 2
           |		target 1
-          |		label "hash=240d08498736de4d893c146fd64b58b1ae1eda8c36a565919b035d86c6ee2084"
+          |		label "ActionIdentifier[action=NavigateToAction(url=http://wikipedia.org), hash=240d08498736de4d893c146fd64b58b1ae1eda8c36a565919b035d86c6ee2084]"
           |		LabelGraphics
           |		[
           |			model	"centered"
@@ -140,7 +140,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |		id 6
           |		source 2
           |		target 1
-          |		label "hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f"
+          |		label "ActionIdentifier[action=NavigateToAction(url=http://google.com), hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f]"
           |		LabelGraphics
           |		[
           |			model	"centered"
