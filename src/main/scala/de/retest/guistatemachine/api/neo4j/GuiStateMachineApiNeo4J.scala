@@ -9,7 +9,7 @@ import scala.collection.concurrent.TrieMap
 
 class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
   private val logger = Logger[GuiStateMachineApiNeo4J]
-  private val stateMachines = TrieMap[String, GuiStateMachine]()
+  private val stateMachines = TrieMap[String, GuiStateMachineNeo4J]()
   // TODO #19 Load existing state machines from the disk.
 
   override def createStateMachine(name: String): GuiStateMachine = {
@@ -22,15 +22,12 @@ class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
     guiStateMachine
   }
 
-  override def removeStateMachine(name: String): Boolean = stateMachines.get(name) match {
-    case Some(_) =>
-      if (stateMachines.remove(name).isDefined) {
-        val uri = getUri(name)
-        Neo4jSessionFactory.getSessionFactory(uri).close() // TODO #19 Removes from disk?
-        true
-      } else {
-        false
-      }
+  override def removeStateMachine(name: String): Boolean = stateMachines.remove(name) match {
+    case Some(stateMachine) =>
+      stateMachine.session.purgeDatabase()
+      val uri = getUri(name)
+      Neo4jSessionFactory.getSessionFactory(uri).close()
+      true
     case None => false
   }
 

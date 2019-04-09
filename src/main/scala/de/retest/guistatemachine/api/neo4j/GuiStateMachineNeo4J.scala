@@ -38,12 +38,7 @@ class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
       result
     }
 
-  override def clear(): Unit =
-    Neo4jSessionFactory.transaction {
-      // Deletes all nodes and relationships.
-      session.deleteAll(classOf[SutStateEntity])
-      session.deleteAll(classOf[ActionTransitionEntity])
-    }
+  override def clear(): Unit = session.purgeDatabase()
 
   override def assignFrom(other: GuiStateMachine): Unit = {
     // TODO #19 Should we delete the old graph database?
