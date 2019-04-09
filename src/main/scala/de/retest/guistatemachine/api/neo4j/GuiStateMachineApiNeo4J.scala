@@ -24,7 +24,7 @@ class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
 
   override def removeStateMachine(name: String): Boolean = stateMachines.remove(name) match {
     case Some(stateMachine) =>
-      stateMachine.session.purgeDatabase()
+      stateMachine.clear()
       val uri = getUri(name)
       Neo4jSessionFactory.getSessionFactory(uri).close()
       true
