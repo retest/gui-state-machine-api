@@ -15,9 +15,17 @@ object Example extends App {
   private val action0 = new NavigateToAction("http://google.com")
 
   val stateMachine = GuiStateMachineApi.neo4j.createStateMachine("tmp")
-  //stateMachine.clear()
+  stateMachine.clear()
   val startState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
   val endState = new SutState(Arrays.asList(rootElementA))
+
+  stateMachine.getState(startState)
+  stateMachine.getState(endState)
+
+  // TODO #19 The states do not exist after this although saved. Concurrent transactions?
+
+  println(s"All states ${stateMachine.getAllStates.size}")
+
   stateMachine.executeAction(startState, action0, endState)
 
   println(s"All states ${stateMachine.getAllStates.size}")

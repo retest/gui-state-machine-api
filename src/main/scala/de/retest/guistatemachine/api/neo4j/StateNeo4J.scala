@@ -18,7 +18,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
       while (iterator.hasNext) {
         val relationship = iterator.next()
         val action = new ActionIdentifier(relationship.action)
-        val targetSutState = new SutStateIdentifier(relationship.end.id)
+        val targetSutState = new SutStateIdentifier(relationship.end.hash)
         val counter = relationship.counter
         val actionTransitions = if (result.contains(action)) {
           val existing = result(action)
@@ -39,7 +39,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
     while (iterator.hasNext) {
       val relationship = iterator.next()
       val action = new ActionIdentifier(relationship.action)
-      val sourceSutState = new SutStateIdentifier(relationship.start.id)
+      val sourceSutState = new SutStateIdentifier(relationship.start.hash)
       val counter = relationship.counter
       val actionTransitions = if (result.contains(action)) {
         val existing = result(action)
@@ -52,6 +52,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
     result
   }
 
+  // TODO #19 Can we somehow add the transition to the incoming and outgoing relations?
   private[api] override def addTransition(a: ActionIdentifier, to: State): Int = Neo4jSessionFactory.transaction {
     /*
     TODO #19 Filter for start and end states.
@@ -59,7 +60,6 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
     val filterEnd = new Filter("end", ComparisonOperator.EQUALS, targetSutStateIdentifier.hash)
      filterStart.and(filterAction).and(filterEnd)
      */
-
     val filterAction = new Filter("action", ComparisonOperator.EQUALS, a.hash)
     val targetSutStateIdentifier = to.asInstanceOf[StateNeo4J].sutStateIdentifier
 
@@ -67,18 +67,24 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
     val transitions = session.loadAll(classOf[ActionTransitionEntity], filterAction).toSeq
 
     val matchingTransitions = transitions.filter(actionTransitionEntity =>
-      actionTransitionEntity.start.id == sutStateIdentifier.hash && actionTransitionEntity.end.id == targetSutStateIdentifier.hash)
+      actionTransitionEntity.start.hash == sutStateIdentifier.hash && actionTransitionEntity.end.hash == targetSutStateIdentifier.hash)
     if (matchingTransitions.nonEmpty) {
       val first: ActionTransitionEntity = matchingTransitions.head
       first.counter = first.counter + 1
       session.save(first)
       first.counter
     } else {
-      val sourceState = guiStateMachine.getNodeBySutStateIdentifier(sutStateIdentifier).get
-      val targetState = guiStateMachine.getNodeBySutStateIdentifier(targetSutStateIdentifier).get
-      val transition = new ActionTransitionEntity(sourceState, targetState, a.hash)
-      session.save(transition)
-      1
+      guiStateMachine.getNodeBySutStateIdentifier(sutStateIdentifier) match {
+        case Some(sourceState) =>
+          guiStateMachine.getNodeBySutStateIdentifier(targetSutStateIdentifier) match {
+            case Some(targetState) =>
+              val transition = new ActionTransitionEntity(sourceState, targetState, a.hash)
+              session.save(transition)
+              1
+            case None => throw new RuntimeException(s"Missing target state $targetSutStateIdentifier.")
+          }
+        case None => throw new RuntimeException(s"Missing source state $sutStateIdentifier.")
+      }
     }
   }
 }

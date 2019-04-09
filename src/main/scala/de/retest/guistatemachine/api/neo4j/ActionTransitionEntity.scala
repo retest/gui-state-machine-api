@@ -1,17 +1,23 @@
 package de.retest.guistatemachine.api.neo4j
-import org.neo4j.ogm.annotation.{EndNode, Index, RelationshipEntity, StartNode}
+import org.neo4j.ogm.annotation._
 
 @RelationshipEntity(`type` = "ACTIONS")
-class ActionTransitionEntity(s: SutStateEntity, e: SutStateEntity, a: String) extends Entity {
+class ActionTransitionEntity(s: SutStateEntity, e: SutStateEntity, a: String) {
+
+  def this() = this(null, null, null)
+
+  @Id
+  @GeneratedValue
+  var id: java.lang.Long = 0L
 
   @Index
-  @StartNode val start: SutStateEntity = s
+  @StartNode var start: SutStateEntity = s
 
   @Index
-  @EndNode val end: SutStateEntity = e
+  @EndNode var end: SutStateEntity = e
 
   @Index
-  val action: String = a
+  var action: String = a
 
   /// The number of times this action has been executed.
   var counter: Int = 1
