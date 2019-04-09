@@ -1,15 +1,19 @@
 package de.retest.guistatemachine.api.neo4j
 
-import de.retest.recheck.ui.descriptors.SutState
-import org.neo4j.ogm.annotation._
-import org.neo4j.ogm.annotation.typeconversion.Convert
+import de.retest.guistatemachine.api.SutStateIdentifier
+import org.neo4j.ogm.annotation.{Relationship, _}
+
+import scala.collection.mutable
 
 @NodeEntity
-class SutStateEntity(state: SutState) extends Entity {
+class SutStateEntity(
+    @Id
+    //@Index(unique = true)
+    val id: java.lang.String) {
 
-  def this() = this(null)
+  def this(sutStateIdentifier: SutStateIdentifier) = this(sutStateIdentifier.hash)
+  def this() = this("")
 
-  @Index(unique = true)
-  @Convert(classOf[SutStateConverter])
-  val sutState: SutState = state
+  @Relationship(`type` = "ACTIONS", direction = Relationship.INCOMING) val incomingActionTransitions = mutable.HashSet[ActionTransitionEntity]()
+  @Relationship(`type` = "ACTIONS", direction = Relationship.OUTGOING) val outgoingActionTransitions = mutable.HashSet[ActionTransitionEntity]()
 }

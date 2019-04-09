@@ -1,4 +1,5 @@
-package de.retest.guistatemachine.api.neo4j
+package de.retest.guistatemachine.api.example
+
 import java.util.Arrays
 
 import de.retest.guistatemachine.api.GuiStateMachineApi
@@ -48,7 +49,7 @@ object Example extends App {
       "My Window"
     )
     if (numberOfContainedComponents > 0) {
-      r.addChildren(scala.collection.JavaConverters.seqAsJavaList[Element](0 to numberOfContainedComponents map { _ =>
+      r.addChildren(scala.collection.JavaConversions.seqAsJavaList[Element](0 to numberOfContainedComponents map { _ =>
         getRootElement("x", 0)
       }))
     }

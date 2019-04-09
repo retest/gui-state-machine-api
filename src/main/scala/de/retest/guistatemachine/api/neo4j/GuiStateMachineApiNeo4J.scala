@@ -3,13 +3,12 @@ package de.retest.guistatemachine.api.neo4j
 import java.io.File
 
 import com.typesafe.scalalogging.Logger
-import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineApi}
 
 import scala.collection.concurrent.TrieMap
 
 class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
-  private val logger = Logger[GuiStateMachineImpl]
+  private val logger = Logger[GuiStateMachineApiNeo4J]
   private val stateMachines = TrieMap[String, GuiStateMachine]()
   // TODO #19 Load existing state machines from the disk.
 

@@ -4,5 +4,5 @@ import org.neo4j.ogm.annotation.{GeneratedValue, Id}
 
 abstract class Entity {
   @Id @GeneratedValue private val id = 0L
-  def getId: Long = id
+  def getId: java.lang.Long = id
 }

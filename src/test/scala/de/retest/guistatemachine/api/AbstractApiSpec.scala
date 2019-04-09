@@ -37,7 +37,7 @@ abstract trait AbstractApiSpec extends WordSpec with Matchers {
       "My Window"
     )
     if (numberOfContainedComponents > 0) {
-      r.addChildren(scala.collection.JavaConverters.seqAsJavaList[Element](0 to numberOfContainedComponents map { _ =>
+      r.addChildren(scala.collection.JavaConversions.seqAsJavaList[Element](0 to numberOfContainedComponents map { _ =>
         getRootElement("x", 0)
       }))
     }

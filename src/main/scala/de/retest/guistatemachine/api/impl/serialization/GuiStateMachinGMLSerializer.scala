@@ -24,10 +24,7 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
 
     // get the gml writer
     val writer =
-      new YedGmlWriter.Builder[SutStateIdentifier, GraphActionEdge, AnyRef](graphicsProvider, YedGmlWriter.PRINT_LABELS: _*)
-        .setEdgeLabelProvider(_.toString)
-        .setVertexLabelProvider(_.toString)
-        .build
+      new YedGmlWriter.Builder[SutStateIdentifier, GraphActionEdge, AnyRef](graphicsProvider, YedGmlWriter.PRINT_LABELS: _*).build
 
     // write to file
     val outputFile = new File(filePath)

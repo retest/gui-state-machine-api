@@ -26,8 +26,6 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       val rootElementC = getRootElement("c", 0)
       val action0 = new NavigateToAction("http://google.com")
       val action0Identifier = new ActionIdentifier(action0)
-      val action1 = new NavigateToAction("http://wikipedia.org")
-      val action1Identifier = new ActionIdentifier(action1)
 
       val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
       val initialSutStateIdentifier = new SutStateIdentifier(initialSutState)

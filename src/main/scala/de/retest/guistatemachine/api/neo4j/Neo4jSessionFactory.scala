@@ -13,7 +13,7 @@ object Neo4jSessionFactory {
     case Some(sessionFactory) => sessionFactory
     case None =>
       val conf = new Configuration.Builder().uri(uri).build
-      val sessionFactory = new SessionFactory(conf, "de.retest.guistatemachine.api.neo4j")
+      val sessionFactory = new SessionFactory(conf, this.getClass.getPackage.getName)
       sessionFactories += (uri -> sessionFactory)
       sessionFactory
   }
