@@ -72,6 +72,8 @@ This backend uses the GraphDB [Neo4J](https://neo4j.com/) (community edition) wi
 It uses [Neo4J-OGM](https://neo4j.com/docs/ogm-manual/current/) to map our types to the graph database.
 
 Each state machine is represented by a separate graph database stored in a separate directory.
-The nodes all have the property "sutState" which contains the corresponding SUT state serialized as XML.
 The relationship types correspond to actions.
 Each relation has the property "counter" which contains the execution counter of the action.
+
+Visualization: <https://neo4j.com/developer/tools-graph-visualization/>
+Desktop application: <https://neo4j.com/developer/neo4j-desktop/>

@@ -2,7 +2,7 @@ name := "gui-state-machine-api"
 
 organization := "de.retest"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.11.8"
 
 /*
  * retest-sut-api provides a package and an object with the name a etc.
@@ -20,15 +20,14 @@ resolvers += "nexus-retest-maven-all" at "https://nexus.retest.org/repository/al
 
 resolvers += "sonatype-snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
+// Dependencies for a graph database:
+libraryDependencies += "org.neo4j" % "neo4j" % "3.5.4"
+libraryDependencies += "org.neo4j" % "neo4j-ogm-core" % "3.1.8"
+libraryDependencies += "org.neo4j" % "neo4j-ogm-embedded-driver" % "3.1.8"
+
 // Dependencies to represent states and actions:
 libraryDependencies += "de.retest" % "surili-commons" % "0.1.0-SNAPSHOT" withSources () withJavadoc () changing ()
 libraryDependencies += "javax.xml.bind" % "jaxb-api" % "2.3.0"
-
-// Dependencies for a graph database:
-libraryDependencies += "org.neo4j" % "neo4j" % "3.0.1"
-libraryDependencies += "org.neo4j" % "neo4j-ogm-core" % "3.1.7"
-libraryDependencies += "org.neo4j" % "neo4j-ogm-embedded-driver" % "3.1.7"
-libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.1.1"
 
 // Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
@@ -57,5 +56,5 @@ sys.env.get("TRAVIS_NEXUS_PW") match {
   case Some(password) =>
     credentials += Credentials("ReTest Nexus", "nexus.retest.org", "retest", password)
   case _ =>
-    throw new IllegalStateException("PASSWORD is missing!")
+    throw new IllegalStateException("TRAVIS_NEXUS_PW is not defined as environment variable!")
 }
