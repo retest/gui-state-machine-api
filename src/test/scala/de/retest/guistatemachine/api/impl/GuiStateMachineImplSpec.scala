@@ -80,7 +80,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       s2.getIncomingActionTransitions(action1Identifier).executionCounter shouldEqual 1
 
       // execute action1 for the second time but from s1SutState to create one incoming action from two different states
-      sut.executeAction(s1SutState, action1, s2SutState) shouldEqual 2
+      sut.executeAction(s1SutState, action1, s2SutState) shouldEqual 1
       s1.getOutgoingActionTransitions.size shouldEqual 1
       s1.getOutgoingActionTransitions(action1Identifier).states.size shouldEqual 1
       s1.getOutgoingActionTransitions(action1Identifier).executionCounter shouldEqual 1
