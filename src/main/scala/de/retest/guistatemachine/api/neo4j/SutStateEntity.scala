@@ -16,8 +16,8 @@ class SutStateEntity(
   @GeneratedValue
   var id: java.lang.Long = null
 
-  @Relationship(`type` = "ACTIONS", direction = Relationship.OUTGOING) var incomingActionTransitions = new java.util.LinkedList[ActionTransitionEntity]()
-  @Relationship(`type` = "ACTIONS", direction = Relationship.INCOMING) var outgoingActionTransitions = new java.util.LinkedList[ActionTransitionEntity]()
+  @Relationship(`type` = "ACTIONS", direction = Relationship.OUTGOING) var incomingActionTransitions = new java.util.ArrayList[ActionTransitionEntity]()
+  @Relationship(`type` = "ACTIONS", direction = Relationship.INCOMING) var outgoingActionTransitions = new java.util.ArrayList[ActionTransitionEntity]()
 }
 
 object SutStateEntity {
