@@ -29,29 +29,14 @@ trait GuiStateMachine {
     * @param from The state the action is executed from
     * @param a The action which is executed by the user.
     * @param to The state which the execution leads to.
-    * @return The current state which the transition of a leads to.
+    * @return The number of times the action has been executed.
     */
-  def executeAction(from: State, a: ActionIdentifier, to: State): State
-  def executeAction(from: State, a: Action, to: State): State = executeAction(from, new ActionIdentifier(a), to)
-  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): State =
+  def executeAction(from: State, a: ActionIdentifier, to: State): Int = from.addTransition(a, to)
+  def executeAction(from: State, a: Action, to: State): Int = executeAction(from, new ActionIdentifier(a), to)
+  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): Int =
     executeAction(getState(fromSutState), a, getState(toSutState))
 
   def getAllStates: Map[SutStateIdentifier, State]
-
-  /**
-    * In the legacy code this was only used to show the number of actions which have been explored by Monkey Testing.
-    *
-    * @return All actions which have been explored and therefore have a corresponding transition.
-    */
-  def getAllExploredActions: Set[ActionIdentifier]
-
-  /**
-    * In the legacy code this was only used to calculate all never explored actions.
-    * It could be used for the visualization of the NFA to see how often actions are executed.
-    *
-    * @return The number of times every explored action has been executed in the NFA. Never explored actions are not part of it.
-    */
-  def getActionExecutionTimes: Map[ActionIdentifier, Int]
 
   /**
     * Clears all states, transitions and never explored actions etc.

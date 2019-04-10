@@ -48,9 +48,6 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       GuiStateMachineSerializer.javaObjectStream(guiStateMachine).load(filePath)
 
       // Verify the loaded state machine:
-      guiStateMachine.getAllExploredActions.size shouldEqual 1
-      guiStateMachine.getActionExecutionTimes(action0Identifier) shouldEqual 1
-      guiStateMachine.getActionExecutionTimes.contains(action1Identifier) shouldEqual false
       guiStateMachine.getAllStates.size shouldEqual 2
       val loadedInitialState = guiStateMachine.getAllStates(initialSutStateIdentifier)
       val loadedFinalState = guiStateMachine.getAllStates(finalSutStateIdentifier)
