@@ -23,7 +23,7 @@ object Neo4jSessionFactory {
     try {
       val transaction = session.beginTransaction()
       txn = Some(transaction)
-      val r = f
+      val r = f(session)
       transaction.commit()
       r
     } finally {
