@@ -24,6 +24,7 @@ resolvers += "sonatype-snapshots" at "https://oss.sonatype.org/content/repositor
 libraryDependencies += "org.neo4j" % "neo4j" % "3.5.4"
 libraryDependencies += "org.neo4j" % "neo4j-ogm-core" % "3.1.8"
 libraryDependencies += "org.neo4j" % "neo4j-ogm-embedded-driver" % "3.1.8"
+libraryDependencies += "org.neo4j" % "neo4j-bolt" % "3.5.4"
 
 // Dependencies to represent states and actions:
 libraryDependencies += "de.retest" % "surili-commons" % "0.1.0-SNAPSHOT" withSources () withJavadoc () changing ()

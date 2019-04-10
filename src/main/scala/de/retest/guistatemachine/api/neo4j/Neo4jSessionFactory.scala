@@ -18,7 +18,9 @@ object Neo4jSessionFactory {
       sessionFactory
   }
 
-  def transaction[A](f: => A)(implicit session: Session): A = {
+  def transaction[A](f: Session => A)(implicit uri: String): A = {
+    // We have to create a session for every transaction since sessions are not thread-safe.
+    val session = Neo4jSessionFactory.getSessionFactory(uri).openSession() // TODO #19 Close the session at some point?
     var txn: Option[Transaction] = None
     try {
       val transaction = session.beginTransaction()
