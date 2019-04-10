@@ -8,10 +8,6 @@ class GuiStateMachineApiImplSpec extends AbstractApiSpec {
       GuiStateMachineApi().createStateMachine("tmp")
       val stateMachine = GuiStateMachineApi().getStateMachine("tmp")
       stateMachine.isDefined shouldBe true
-      val fsm = stateMachine.get
-      fsm.getActionExecutionTimes.size shouldEqual 0
-      fsm.getAllExploredActions.size shouldEqual 0
-
       GuiStateMachineApi().removeStateMachine("tmp") shouldBe true
       GuiStateMachineApi().getStateMachine("tmp").isDefined shouldBe false
     }
