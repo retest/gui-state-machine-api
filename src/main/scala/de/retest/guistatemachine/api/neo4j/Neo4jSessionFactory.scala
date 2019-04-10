@@ -21,12 +21,16 @@ object Neo4jSessionFactory {
   def transaction[A](f: => A)(implicit session: Session): A = {
     var txn: Option[Transaction] = None
     try {
-      txn = Some(session.beginTransaction())
+      val transaction = session.beginTransaction()
+      txn = Some(transaction)
       val r = f
-      txn.get.commit()
+      transaction.commit()
       r
     } finally {
-      if (txn.isDefined) { txn.get.close() }
+      txn match {
+        case Some(transaction) => transaction.close()
+        case None              =>
+      }
     }
   }
 }
