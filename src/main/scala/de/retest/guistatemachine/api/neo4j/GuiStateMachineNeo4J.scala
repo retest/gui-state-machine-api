@@ -25,7 +25,7 @@ class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
     }
 
     if (result) {
-      logger.info("Created new state with hash {}", sutStateIdentifier.hash)
+      logger.info(s"Created new state from SUT state identifier $sutStateIdentifier.")
     }
 
     StateNeo4J(sutStateIdentifier, this)

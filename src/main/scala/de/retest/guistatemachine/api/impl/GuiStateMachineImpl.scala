@@ -13,13 +13,13 @@ class GuiStateMachineImpl extends GuiStateMachine with Serializable {
   @transient private val logger = Logger[GuiStateMachineImpl]
   private var states = TrieMap[SutStateIdentifier, State]()
 
-  override def getState(sutState: SutStateIdentifier): State =
-    if (states.contains(sutState)) {
-      states(sutState)
+  override def getState(sutStateIdentifier: SutStateIdentifier): State =
+    if (states.contains(sutStateIdentifier)) {
+      states(sutStateIdentifier)
     } else {
-      logger.info(s"Create new state from SUT state $sutState")
-      val s = StateImpl(sutState)
-      states += (sutState -> s)
+      logger.info(s"Created new state from SUT state identifier $sutStateIdentifier.")
+      val s = StateImpl(sutStateIdentifier)
+      states += (sutStateIdentifier -> s)
       s
     }
 
