@@ -63,7 +63,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
         session.save(first)
         first.counter
       } else {
-        val transition = new ActionTransitionEntity(sourceState, targetState, a.hash)
+        val transition = new ActionTransitionEntity(sourceState, targetState, a)
         session.save(transition)
         1
       }
