@@ -14,7 +14,7 @@ class SutStateEntity(
 
   @Id
   @GeneratedValue
-  var id: java.lang.Long = 0L
+  var id: java.lang.Long = null
 
   @Relationship(`type` = "ACTIONS", direction = Relationship.UNDIRECTED) var actionTransitions = new java.util.LinkedList[ActionTransitionEntity]()
 

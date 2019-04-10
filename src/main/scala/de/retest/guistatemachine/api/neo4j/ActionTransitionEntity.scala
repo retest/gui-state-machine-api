@@ -8,7 +8,7 @@ class ActionTransitionEntity(s: SutStateEntity, e: SutStateEntity, a: String) {
 
   @Id
   @GeneratedValue
-  var id: java.lang.Long = 0L
+  var id: java.lang.Long = null
 
   @Index
   @StartNode var start: SutStateEntity = s
