@@ -68,12 +68,29 @@ There can be different backends which manage the state machine.
 
 ### Neo4J
 
-This backend uses the GraphDB [Neo4J](https://neo4j.com/) (community edition) with an embedded database.
+This backend uses the GraphDB [Neo4J](https://neo4j.com/) (community edition).
 It uses [Neo4J-OGM](https://neo4j.com/docs/ogm-manual/current/) to map our types to the graph database.
 
 Each state machine is represented by a separate graph database stored in a separate directory.
 The relationship types correspond to actions.
 Each relation has the property "counter" which contains the execution counter of the action.
 
-Visualization: <https://neo4j.com/developer/tools-graph-visualization/>
-Desktop application: <https://neo4j.com/developer/neo4j-desktop/>
+We have to use a Bolt driver since the corresponding software does not support to visualize embedded databases etc.
+
+Useful software:
+
+* Visualization: <https://neo4j.com/developer/tools-graph-visualization/>
+* Gephi: <https://gephi.org/>
+* Desktop application: <https://neo4j.com/developer/neo4j-desktop/>
+* IntelliJ IDEA plugin: <https://plugins.jetbrains.com/plugin/8087-graph-database-support>
+
+Run neo4j with Docker:
+```bash
+docker run \
+    --publish=7474:7474 --publish=7687:7687 \
+    --volume=$HOME/neo4j/data:/data \
+    --volume=$HOME/neo4j/logs:/logs \
+    neo4j:3.5
+```
+The user has to be part of the group `docker`.
+See <https://neo4j.com/docs/operations-manual/current/docker/>.

@@ -13,22 +13,38 @@ object Example extends App {
   private val rootElementB = getRootElement("b", 0)
   private val rootElementC = getRootElement("c", 0)
   private val action0 = new NavigateToAction("http://google.com")
+  private val action1 = new NavigateToAction("http://wikipedia.org")
 
   val stateMachine = GuiStateMachineApi.neo4j.createStateMachine("tmp")
   stateMachine.clear()
-  val startState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
-  val endState = new SutState(Arrays.asList(rootElementA))
 
-  stateMachine.getState(startState)
-  stateMachine.getState(endState)
+  println(s"All states after clearing: ${stateMachine.getAllStates.size}")
 
-  // TODO #19 The states do not exist after this although saved. Concurrent transactions?
+  val startSutState = new SutState(Arrays.asList(rootElementA, rootElementB, rootElementC))
+  val endSutState = new SutState(Arrays.asList(rootElementA))
 
-  println(s"All states ${stateMachine.getAllStates.size}")
+  stateMachine.getState(startSutState)
 
-  stateMachine.executeAction(startState, action0, endState)
+  println(s"All states after adding start state: ${stateMachine.getAllStates.size}")
 
-  println(s"All states ${stateMachine.getAllStates.size}")
+  stateMachine.getState(endSutState)
+
+  println(s"All states after adding end state: ${stateMachine.getAllStates.size}")
+
+  val startStateTmp = stateMachine.getState(startSutState)
+
+  stateMachine.executeAction(startSutState, action0, endSutState)
+  stateMachine.executeAction(startSutState, action1, endSutState)
+
+  val startState = stateMachine.getState(startSutState)
+  val numberOfOutgoingActionTransitions = startState.getOutgoingActionTransitions.size
+  println(s"Number of outgoing action transitions: $numberOfOutgoingActionTransitions") // TODO #19 No outgoing actions.
+
+  val endState = stateMachine.getState(endSutState)
+  val numberOfIncomingActionTransitions = endState.getIncomingActionTransitions.size
+  println(s"Number of incoming action transitions: $numberOfOutgoingActionTransitions") // TODO #19 No incoming actions.
+
+  println(s"All states after executing action0: ${stateMachine.getAllStates.size}")
 
   /**
     * Creates a new identifying attributes collection which should only match other identifying attributes with the same ID.
