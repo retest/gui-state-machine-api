@@ -19,8 +19,8 @@ class SutStateEntity(@Property(name = SutStateEntity.PropertyNameHash)
   @Property(name = SutStateEntity.PropertyMessage)
   var message: String = msg
 
-  @Relationship(`type` = "ACTIONS", direction = Relationship.OUTGOING) var incomingActionTransitions = new java.util.ArrayList[ActionTransitionEntity]()
-  @Relationship(`type` = "ACTIONS", direction = Relationship.INCOMING) var outgoingActionTransitions = new java.util.ArrayList[ActionTransitionEntity]()
+  @Relationship(`type` = "ACTIONS", direction = Relationship.INCOMING) var incomingActionTransitions = new java.util.ArrayList[ActionTransitionEntity]()
+  @Relationship(`type` = "ACTIONS", direction = Relationship.OUTGOING) var outgoingActionTransitions = new java.util.ArrayList[ActionTransitionEntity]()
 }
 
 object SutStateEntity {
