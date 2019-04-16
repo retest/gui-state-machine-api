@@ -75,14 +75,32 @@ Each state machine is represented by a separate graph database stored in a separ
 The relationship types correspond to actions.
 Each relation has the property "counter" which contains the execution counter of the action.
 
-We have to use a Bolt driver since the corresponding software does not support to visualize embedded databases etc.
+We cannot use an embdedded driver if we want to use the corresponding software such as Neo4J Desktop.
+apoc procedures have to be registered manually for an embedded database.
 
-Useful software:
+Useful software for Neo4J:
 
 * Visualization: <https://neo4j.com/developer/tools-graph-visualization/>
 * Gephi: <https://gephi.org/>
 * Desktop application: <https://neo4j.com/developer/neo4j-desktop/>
 * IntelliJ IDEA plugin: <https://plugins.jetbrains.com/plugin/8087-graph-database-support>
+
+### GraphML Export
+
+neo4j.conf:
+```
+apoc.export.file.enabled=true
+```
+
+Use this call:
+```
+call apoc.export.graphml.all("test.graphml",{})
+```
+
+This can be done in the Neo4J browser.
+The file is stored in the home directory.
+
+### Docker
 
 Run neo4j with Docker:
 ```bash
@@ -94,3 +112,6 @@ docker run \
 ```
 The user has to be part of the group `docker`.
 See <https://neo4j.com/docs/operations-manual/current/docker/>.
+
+apoc procedures must be installed manually to the Docker image.
+See <https://github.com/neo4j-contrib/neo4j-apoc-procedures>.
