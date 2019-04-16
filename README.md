@@ -75,7 +75,9 @@ Each state machine is represented by a separate graph database stored in a separ
 The relationship types correspond to actions.
 Each relation has the property "counter" which contains the execution counter of the action.
 
-We cannot use an embdedded driver if we want to use the corresponding software such as Neo4J Desktop.
+The embedded databases are stored into sub directories in the directory `$HOME/.retest/guistatemachines` by default.
+Using an embedded database simplifies the usage of the API on a local machine and improves the performance.
+However, we cannot use an embdedded driver if we want to use the corresponding software such as Neo4J Desktop.
 apoc procedures have to be registered manually for an embedded database.
 
 Useful software for Neo4J:

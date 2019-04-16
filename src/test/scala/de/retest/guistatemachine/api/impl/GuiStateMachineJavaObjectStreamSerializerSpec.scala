@@ -1,8 +1,7 @@
-package de.retest.guistatemachine.api.impl.serialization
+package de.retest.guistatemachine.api.impl
 
 import java.io.File
 
-import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{AbstractApiSpec, ActionIdentifier, GuiStateMachineSerializer, SutStateIdentifier}
 import de.retest.surili.commons.actions.NavigateToAction
 import org.scalatest.BeforeAndAfterEach
@@ -53,7 +52,6 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       loadedInitialState.getOutgoingActionTransitions.size shouldEqual 1
       loadedInitialState.getOutgoingActionTransitions.contains(action0Identifier) shouldEqual true
       val loadedTransition = loadedInitialState.getOutgoingActionTransitions(action0Identifier)
-      loadedTransition.executionCounter shouldEqual 1
       loadedTransition.states.size shouldEqual 1
       loadedTransition.states.head shouldEqual loadedFinalState
       loadedFinalState.getSutStateIdentifier shouldEqual finalSutStateIdentifier

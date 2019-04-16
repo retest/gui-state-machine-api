@@ -22,17 +22,15 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
   override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { outgoingActionTransitions }
   override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { incomingActionTransitions }
 
-  private[api] override def addTransition(a: ActionIdentifier, to: State): Int = {
-    val executionCounter = this.synchronized {
+  private[api] override def addTransition(a: ActionIdentifier, to: State): Unit = {
+    this.synchronized {
       outgoingActionTransitions.get(a) match {
         case Some(oldTransitions) =>
-          val updatedTransitions = ActionTransitions(oldTransitions.states + to, oldTransitions.executionCounter + 1)
+          val updatedTransitions = ActionTransitions(oldTransitions.states + to)
           outgoingActionTransitions = outgoingActionTransitions + (a -> updatedTransitions)
-          updatedTransitions.executionCounter
 
         case None =>
-          outgoingActionTransitions += (a -> ActionTransitions(Set(to), 1))
-          1
+          outgoingActionTransitions += (a -> ActionTransitions(Set(to)))
       }
     }
 
@@ -40,14 +38,12 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
       val other = to.asInstanceOf[StateImpl]
       other.incomingActionTransitions.get(a) match {
         case Some(oldTransitions) =>
-          val updatedTransitions = ActionTransitions(oldTransitions.states + this, oldTransitions.executionCounter + 1)
+          val updatedTransitions = ActionTransitions(oldTransitions.states + this)
           other.incomingActionTransitions = other.incomingActionTransitions + (a -> updatedTransitions)
 
         case None =>
-          other.incomingActionTransitions += (a -> ActionTransitions(Set(this), 1))
+          other.incomingActionTransitions += (a -> ActionTransitions(Set(this)))
       }
     }
-
-    executionCounter
   }
 }

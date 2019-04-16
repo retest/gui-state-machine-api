@@ -1,4 +1,4 @@
-package de.retest.guistatemachine.api.impl.serialization
+package de.retest.guistatemachine.api.serialization
 
 import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
 

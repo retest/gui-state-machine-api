@@ -46,7 +46,6 @@ trait State {
     *
     * @param a The action which represents the transition's consumed symbol.
     * @param to The state which the transition leads t o.
-    * @return The number of times the action has been executed from this state. The target state does not matter for this number.
     */
-  private[api] def addTransition(a: ActionIdentifier, to: State): Int
+  private[api] def addTransition(a: ActionIdentifier, to: State): Unit
 }

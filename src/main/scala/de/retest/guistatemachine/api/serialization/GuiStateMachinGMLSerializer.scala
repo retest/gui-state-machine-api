@@ -1,4 +1,5 @@
-package de.retest.guistatemachine.api.impl.serialization
+package de.retest.guistatemachine.api.serialization
+
 import java.io.{BufferedWriter, File, FileOutputStream, OutputStreamWriter}
 
 import com.github.systemdir.gml.YedGmlWriter

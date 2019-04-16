@@ -15,14 +15,13 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
       val iterator = sutStateEntity.outgoingActionTransitions.iterator()
       while (iterator.hasNext) {
         val relationship = iterator.next()
-        val action = new ActionIdentifier(relationship.action)
+        val action = new ActionIdentifier(relationship.action, relationship.message)
         val targetSutState = new SutStateIdentifier(relationship.end.hash)
-        val counter = relationship.counter
         val actionTransitions = if (result.contains(action)) {
           val existing = result(action)
-          ActionTransitions(existing.states ++ Set(StateNeo4J(targetSutState, guiStateMachine)), existing.executionCounter + counter)
+          ActionTransitions(existing.states ++ Set(StateNeo4J(targetSutState, guiStateMachine)))
         } else {
-          ActionTransitions(Set(StateNeo4J(targetSutState, guiStateMachine)), counter)
+          ActionTransitions(Set(StateNeo4J(targetSutState, guiStateMachine)))
         }
         result = result + (action -> actionTransitions)
       }
@@ -36,21 +35,20 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
       val iterator = sutStateEntity.incomingActionTransitions.iterator()
       while (iterator.hasNext) {
         val relationship = iterator.next()
-        val action = new ActionIdentifier(relationship.action)
+        val action = new ActionIdentifier(relationship.action, relationship.message)
         val sourceSutState = new SutStateIdentifier(relationship.start.hash)
-        val counter = relationship.counter
         val actionTransitions = if (result.contains(action)) {
           val existing = result(action)
-          ActionTransitions(existing.states ++ Set(StateNeo4J(sourceSutState, guiStateMachine)), existing.executionCounter + counter)
+          ActionTransitions(existing.states ++ Set(StateNeo4J(sourceSutState, guiStateMachine)))
         } else {
-          ActionTransitions(Set(StateNeo4J(sourceSutState, guiStateMachine)), counter)
+          ActionTransitions(Set(StateNeo4J(sourceSutState, guiStateMachine)))
         }
         result = result + (action -> actionTransitions)
       }
       result
     }(guiStateMachine.uri)
 
-  private[api] override def addTransition(a: ActionIdentifier, to: State): Int =
+  private[api] override def addTransition(a: ActionIdentifier, to: State): Unit =
     Neo4jSessionFactory.transaction { session =>
       val sourceState = getSutStateEntity(session)
       val targetSutStateIdentifier = to.asInstanceOf[StateNeo4J].sutStateIdentifier
@@ -60,13 +58,10 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
 
       if (matchingTransitions.nonEmpty) {
         val first = matchingTransitions.head
-        first.counter = first.counter + 1
         session.save(first)
-        first.counter
       } else {
         val transition = new ActionTransitionEntity(sourceState, targetState, a)
         session.save(transition)
-        1
       }
     }(guiStateMachine.uri)
 

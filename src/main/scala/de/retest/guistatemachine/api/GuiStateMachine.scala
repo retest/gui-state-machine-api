@@ -29,11 +29,10 @@ trait GuiStateMachine {
     * @param from The state the action is executed from
     * @param a The action which is executed by the user.
     * @param to The state which the execution leads to.
-    * @return The number of times the action has been executed.
     */
-  def executeAction(from: State, a: ActionIdentifier, to: State): Int = from.addTransition(a, to)
-  def executeAction(from: State, a: Action, to: State): Int = executeAction(from, new ActionIdentifier(a), to)
-  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): Int =
+  def executeAction(from: State, a: ActionIdentifier, to: State): Unit = from.addTransition(a, to)
+  def executeAction(from: State, a: Action, to: State): Unit = executeAction(from, new ActionIdentifier(a), to)
+  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): Unit =
     executeAction(getState(fromSutState), a, getState(toSutState))
 
   def getAllStates: Map[SutStateIdentifier, State]

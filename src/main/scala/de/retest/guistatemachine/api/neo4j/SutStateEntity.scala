@@ -9,7 +9,7 @@ class SutStateEntity(@Property(name = SutStateEntity.PropertyNameHash)
                      var hash: java.lang.String,
                      msg: String) {
 
-  def this(sutStateIdentifier: SutStateIdentifier) = this(sutStateIdentifier.hash, sutStateIdentifier.msg)
+  def this(sutStateIdentifier: SutStateIdentifier) = this(sutStateIdentifier.hash, sutStateIdentifier.sutStateMsg)
   def this() = this(null, null)
 
   @Id

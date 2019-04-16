@@ -39,7 +39,7 @@ class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
 
       while (iterator.hasNext) {
         val node = iterator.next()
-        val sutState = new SutStateIdentifier(node.hash)
+        val sutState = new SutStateIdentifier(node.hash, node.message)
         result = result + (sutState -> StateNeo4J(sutState, this))
       }
       result

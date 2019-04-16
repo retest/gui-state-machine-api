@@ -1,6 +1,6 @@
 package de.retest.guistatemachine.api
 
-import de.retest.guistatemachine.api.impl.serialization.{GuiStateMachinGMLSerializer, GuiStateMachineJavaObjectStreamSerializer}
+import de.retest.guistatemachine.api.serialization.{GuiStateMachinGMLSerializer, GuiStateMachineJavaObjectStreamSerializer}
 
 trait GuiStateMachineSerializer {
   def save(filePath: String)
