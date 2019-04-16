@@ -24,6 +24,7 @@ class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
 
   override def removeStateMachine(name: String): Boolean = stateMachines.remove(name) match {
     case Some(stateMachine) =>
+      // TODO #19 Should we remove the state machine from the disk?
       stateMachine.clear()
       val uri = getUri(name)
       Neo4jSessionFactory.getSessionFactoryEmbedded(uri).close()
@@ -35,7 +36,7 @@ class GuiStateMachineApiNeo4J extends GuiStateMachineApi {
 
   override def clear(): Unit = stateMachines.keySet foreach { name => // TODO #19 keys can be modified concurrently. So we might not remove all state machines?
     removeStateMachine(name)
-  } // TODO #19 Removes from disk?
+  }
 
   private def getUri(name: String): String = new File(name).toURI.toString
 }

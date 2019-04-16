@@ -38,11 +38,11 @@ object Example extends App {
 
   val startState = stateMachine.getState(startSutState)
   val numberOfOutgoingActionTransitions = startState.getOutgoingActionTransitions.size
-  println(s"Number of outgoing action transitions: $numberOfOutgoingActionTransitions") // TODO #19 No outgoing actions.
+  println(s"Number of outgoing action transitions: $numberOfOutgoingActionTransitions")
 
   val endState = stateMachine.getState(endSutState)
   val numberOfIncomingActionTransitions = endState.getIncomingActionTransitions.size
-  println(s"Number of incoming action transitions: $numberOfOutgoingActionTransitions") // TODO #19 No incoming actions.
+  println(s"Number of incoming action transitions: $numberOfOutgoingActionTransitions")
 
   println(s"All states after executing action0: ${stateMachine.getAllStates.size}")
 
