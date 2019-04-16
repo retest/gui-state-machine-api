@@ -1,5 +1,6 @@
 package de.retest.guistatemachine.api.neo4j
 import de.retest.guistatemachine.api.{ActionIdentifier, ActionTransitions, State, SutStateIdentifier}
+import org.neo4j.ogm.session.Session
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable.HashMap
@@ -9,7 +10,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
   override def getSutStateIdentifier: SutStateIdentifier = sutStateIdentifier
   override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] =
     Neo4jSessionFactory.transaction { session =>
-      val sutStateEntity = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, sutStateIdentifier)
+      val sutStateEntity = getSutStateEntity(session)
       var result = HashMap[ActionIdentifier, ActionTransitions]()
       val iterator = sutStateEntity.outgoingActionTransitions.iterator()
       while (iterator.hasNext) {
@@ -30,7 +31,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
 
   def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] =
     Neo4jSessionFactory.transaction { session =>
-      val sutStateEntity = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, sutStateIdentifier)
+      val sutStateEntity = getSutStateEntity(session)
       var result = HashMap[ActionIdentifier, ActionTransitions]()
       val iterator = sutStateEntity.incomingActionTransitions.iterator()
       while (iterator.hasNext) {
@@ -51,7 +52,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
 
   private[api] override def addTransition(a: ActionIdentifier, to: State): Int =
     Neo4jSessionFactory.transaction { session =>
-      val sourceState = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, sutStateIdentifier)
+      val sourceState = getSutStateEntity(session)
       val targetSutStateIdentifier = to.asInstanceOf[StateNeo4J].sutStateIdentifier
       val targetState = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, targetSutStateIdentifier)
       val matchingTransitions =
@@ -68,4 +69,6 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
         1
       }
     }(guiStateMachine.uri)
+
+  private def getSutStateEntity(session: Session): SutStateEntity = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, sutStateIdentifier)
 }
