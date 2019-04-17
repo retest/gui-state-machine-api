@@ -2,7 +2,7 @@ package de.retest.guistatemachine.api
 import java.nio.file.Paths
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineApiImpl
-import de.retest.guistatemachine.api.neo4j.GuiStateMachineApiNeo4J
+import de.retest.guistatemachine.api.neo4j.GuiStateMachineApiNeo4JEmbedded
 
 /**
   * This API allows the creation, modification and deletion of state machines ([[GuiStateMachine]]) which are created
@@ -44,7 +44,7 @@ object GuiStateMachineApi {
   /**
     * The default directory where all state machines are stored.
     */
-  val StorageDirectory = Paths.get(System.getProperty("user.home"), ".retest", "guistatemachines").toAbsolutePath.toString
+  val Neo4JEmbeddedStorageDirectory: Path = Paths.get(System.getProperty("user.home"), ".retest", "guistatemachines").toAbsolutePath.toString
 
   val default = new GuiStateMachineApiImpl
 
@@ -53,5 +53,5 @@ object GuiStateMachineApi {
     */
   def apply(): GuiStateMachineApi = default
 
-  val neo4j = new GuiStateMachineApiNeo4J(StorageDirectory)
+  val neo4jEmbedded = new GuiStateMachineApiNeo4JEmbedded(Paths.get(Neo4JEmbeddedStorageDirectory))
 }

@@ -15,10 +15,11 @@ object Example extends App {
   private val action0 = new NavigateToAction("http://google.com")
   private val action1 = new NavigateToAction("http://wikipedia.org")
 
-  val stateMachine = GuiStateMachineApi.neo4j.getStateMachine("tmp") match {
+  val api = GuiStateMachineApi.neo4jEmbedded
+  val stateMachine = api.getStateMachine("tmp") match {
     case Some(s) => s
 
-    case None => GuiStateMachineApi.neo4j.createStateMachine("tmp")
+    case None => api.createStateMachine("tmp")
   }
 
   println(s"All states before clearing: ${stateMachine.getAllStates.size}")

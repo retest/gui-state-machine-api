@@ -9,7 +9,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
 
   override def getSutStateIdentifier: SutStateIdentifier = sutStateIdentifier
   override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] =
-    Neo4jSessionFactory.transaction { session =>
+    Neo4JUtil.transaction { session =>
       val sutStateEntity = getSutStateEntity(session)
       var result = HashMap[ActionIdentifier, ActionTransitions]()
       val iterator = sutStateEntity.outgoingActionTransitions.iterator()
@@ -26,10 +26,10 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
         result = result + (action -> actionTransitions)
       }
       result
-    }(guiStateMachine.uri)
+    }(guiStateMachine.sessionFactory)
 
   def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] =
-    Neo4jSessionFactory.transaction { session =>
+    Neo4JUtil.transaction { session =>
       val sutStateEntity = getSutStateEntity(session)
       var result = HashMap[ActionIdentifier, ActionTransitions]()
       val iterator = sutStateEntity.incomingActionTransitions.iterator()
@@ -46,10 +46,10 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
         result = result + (action -> actionTransitions)
       }
       result
-    }(guiStateMachine.uri)
+    }(guiStateMachine.sessionFactory)
 
   private[api] override def addTransition(a: ActionIdentifier, to: State): Unit =
-    Neo4jSessionFactory.transaction { session =>
+    Neo4JUtil.transaction { session =>
       val sourceState = getSutStateEntity(session)
       val targetSutStateIdentifier = to.asInstanceOf[StateNeo4J].sutStateIdentifier
       val targetState = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, targetSutStateIdentifier)
@@ -63,7 +63,7 @@ case class StateNeo4J(sutStateIdentifier: SutStateIdentifier, guiStateMachine: G
         val transition = new ActionTransitionEntity(sourceState, targetState, a)
         session.save(transition)
       }
-    }(guiStateMachine.uri)
+    }(guiStateMachine.sessionFactory)
 
   private def getSutStateEntity(session: Session): SutStateEntity = guiStateMachine.getNodeBySutStateIdentifierOrThrow(session, sutStateIdentifier)
 }

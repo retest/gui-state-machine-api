@@ -3,15 +3,15 @@ package de.retest.guistatemachine.api.neo4j
 import com.typesafe.scalalogging.Logger
 import de.retest.guistatemachine.api.{GuiStateMachine, State, SutStateIdentifier}
 import org.neo4j.ogm.cypher.{ComparisonOperator, Filter}
-import org.neo4j.ogm.session.Session
+import org.neo4j.ogm.session.{Session, SessionFactory}
 
 import scala.collection.immutable.HashMap
 
-class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
+class GuiStateMachineNeo4J(var config: Neo4JConfig, var sessionFactory: SessionFactory) extends GuiStateMachine {
   private val logger = Logger[GuiStateMachineNeo4J]
 
   override def getState(sutStateIdentifier: SutStateIdentifier): State = {
-    val result = Neo4jSessionFactory.transaction { session =>
+    val result = Neo4JUtil.transaction { session =>
       getNodeBySutStateIdentifier(session, sutStateIdentifier) match {
         case None =>
           // Create a new node for the SUT state in the graph database.
@@ -22,7 +22,7 @@ class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
         // Do nothing if the node for the SUT state does already exist.
         case Some(_) => false
       }
-    }(uri)
+    }(sessionFactory)
 
     if (result) {
       logger.info(s"Created new state from SUT state identifier $sutStateIdentifier.")
@@ -32,7 +32,7 @@ class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
   }
 
   override def getAllStates: Map[SutStateIdentifier, State] =
-    Neo4jSessionFactory.transaction { session =>
+    Neo4JUtil.transaction { session =>
       val allNodes = session.loadAll(classOf[SutStateEntity])
       var result = HashMap[SutStateIdentifier, State]()
       val iterator = allNodes.iterator()
@@ -43,17 +43,18 @@ class GuiStateMachineNeo4J(var uri: String) extends GuiStateMachine {
         result = result + (sutState -> StateNeo4J(sutState, this))
       }
       result
-    }(uri)
+    }(sessionFactory)
 
   override def clear(): Unit =
-    Neo4jSessionFactory.transaction { session =>
+    Neo4JUtil.transaction { session =>
       session.purgeDatabase()
-    }(uri)
+    }(sessionFactory)
 
   override def assignFrom(other: GuiStateMachine): Unit = {
     // TODO #19 Should we delete the old graph database?
     val otherStateMachine = other.asInstanceOf[GuiStateMachineNeo4J]
-    uri = otherStateMachine.uri
+    config = otherStateMachine.config
+    sessionFactory = otherStateMachine.sessionFactory
   }
 
   private[neo4j] def getNodeBySutStateIdentifier(session: Session, sutStateIdentifier: SutStateIdentifier): Option[SutStateEntity] = {
