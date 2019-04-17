@@ -104,16 +104,13 @@ The file is stored in the home directory.
 
 ### Docker
 
-Run neo4j with Docker:
-```bash
-docker run \
-    --publish=7474:7474 --publish=7687:7687 \
-    --volume=$HOME/neo4j/data:/data \
-    --volume=$HOME/neo4j/logs:/logs \
-    neo4j:3.5
-```
-The user has to be part of the group `docker`.
-See <https://neo4j.com/docs/operations-manual/current/docker/>.
+Run neo4j with Docker: [rundockerneo4j.sh](./scripts/rundockerneo4j.sh)
+The user has to be a member of the group `docker`.
+It starts a graph database with the Bolt protocol.
+The login user is `neo4j` and the password is `test`.
 
-apoc procedures must be installed manually to the Docker image.
-See <https://github.com/neo4j-contrib/neo4j-apoc-procedures>.
+Documentation:
+
+* <https://neo4j.com/developer/docker-run-neo4j/#_neo4j_docker_image>
+* <https://neo4j.com/docs/operations-manual/current/docker/>
+* apoc procedures must be installed manually to the Docker image: <https://github.com/neo4j-contrib/neo4j-apoc-procedures>
