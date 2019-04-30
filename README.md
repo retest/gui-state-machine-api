@@ -56,10 +56,11 @@ Whenever an action, which previously led to *s<sub>?</sub>*, is being executed a
 The same action might lead from one single state to different states since the states do not capture the whole program behavior.
 This makes the finite automaton nondeterministic.
 
-The NFA is based on the UI model from ["Search-Based System Testing: High Coverage, No False Alarms"](http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf) (section "4.5 UI Model"). Originally, it has been used together with a genetic algorithm for search-based system testing, where it served two purposes:
+The NFA is based on the UI model from ["Search-Based System Testing: High Coverage, No False Alarms"](http://www.specmate.org/papers/2012-07-Search-basedSystemTesting-HighCoverageNoFalseAlarms.pdf) (section "4.5 UI Model"). Originally, it has been used together with a genetic algorithm for search-based system testing, where it served three purposes:
 
 1. Population initialization: to give precedence to unexplored actions.
-2. Mutation: to repair test cases.
+2. Mutation: to insert unexplored actions.
+3. Mutation: to repair test cases which became invalid by the mutation.
 
 ## Concurrency
 
