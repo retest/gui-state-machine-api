@@ -2,7 +2,7 @@ package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{ActionIdentifier, ActionTransitions, State, SutStateIdentifier}
 
-import scala.collection.immutable.HashMap
+import scala.collection.immutable.{HashMap, HashSet}
 
 @SerialVersionUID(1L)
 case class StateImpl(sutState: SutStateIdentifier) extends State with Serializable {
@@ -18,9 +18,19 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
     */
   private var incomingActionTransitions = HashMap[ActionIdentifier, ActionTransitions]()
 
+  private var possibleActions: Set[ActionIdentifier] = HashSet[ActionIdentifier]()
+
   override def getSutStateIdentifier: SutStateIdentifier = this.synchronized { sutState }
-  override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { outgoingActionTransitions }
-  override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { incomingActionTransitions }
+  override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized {
+    outgoingActionTransitions
+  }
+  override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized {
+    incomingActionTransitions
+  }
+  override def setPossibleActions(possibleActions: Set[ActionIdentifier]): Unit = this.synchronized {
+    this.possibleActions = possibleActions
+  }
+  override def getPossibleActions: Set[ActionIdentifier] = this.synchronized { possibleActions }
 
   private[api] override def addTransition(a: ActionIdentifier, to: State): Int = {
     val executionCounter = this.synchronized {

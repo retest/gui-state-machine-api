@@ -24,6 +24,21 @@ trait State {
   def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions]
 
   /**
+    * @groupname possibleactions Possible Actions
+    * The set of possible actions has to be restricted for certain action types like ChangeValueAction. The set should always be the same for the same elements per state. It can be used for exploration strategies.
+    *
+    * @param possibleActions The possible actions of the state.
+    * @group possibleactions
+    */
+  def setPossibleActions(possibleActions: Set[ActionIdentifier])
+
+  /**
+    * @return The possible actions of the state.
+    * @group possibleactions
+    */
+  def getPossibleActions: Set[ActionIdentifier]
+
+  /**
     * Overriding this method is required to allow the usage of a set of states.
     * Comparing the descriptors should check for the equality of all root elements which compares the identifying attributes and the contained components
     * for each root element.
