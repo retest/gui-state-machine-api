@@ -13,7 +13,20 @@ import de.retest.surili.commons.actions.Action
   */
 trait GuiStateMachine {
 
-  def getState(sutStateIdentifier: SutStateIdentifier): State
+  /**
+    * Creates a new state in the state machine based on a SUT state.
+    * @param sutStateIdentifier The abstract representation of a SUT state which should uniquely identify the state.
+    * @param neverExploredActionTypesCounter The initial number of unexplored action types. This number is decremented with each unexplored action which is added as a new transition.
+    * @return The newly created state.
+    * @throws RuntimeException If the state does already exist.
+    * @group possibleactions
+    */
+  def createState(sutStateIdentifier: SutStateIdentifier, neverExploredActionTypesCounter: Int): State
+
+  def createState(sutState: SutState, neverExploredActionTypesCounter: Int): State =
+    createState(new SutStateIdentifier(sutState), neverExploredActionTypesCounter)
+
+  def getState(sutStateIdentifier: SutStateIdentifier): Option[State]
 
   /**
     * Gets a state identified by the corresponding SUT state.
@@ -21,7 +34,7 @@ trait GuiStateMachine {
     * @param sutState The SUT state which identifies the state.
     * @return The state identified by the descriptors. If there has not been any state yet, it will be added.
     */
-  def getState(sutState: SutState): State = getState(new SutStateIdentifier(sutState))
+  def getState(sutState: SutState): Option[State] = getState(new SutStateIdentifier(sutState))
 
   /**
     * Executes an action from a state leading to the current state described by descriptors.
@@ -33,8 +46,6 @@ trait GuiStateMachine {
     */
   def executeAction(from: State, a: ActionIdentifier, to: State): Int = from.addTransition(a, to)
   def executeAction(from: State, a: Action, to: State): Int = executeAction(from, new ActionIdentifier(a), to)
-  def executeAction(fromSutState: SutState, a: Action, toSutState: SutState): Int =
-    executeAction(getState(fromSutState), a, getState(toSutState))
 
   def getAllStates: Map[SutStateIdentifier, State]
 

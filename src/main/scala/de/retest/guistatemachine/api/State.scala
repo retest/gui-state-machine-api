@@ -27,16 +27,10 @@ trait State {
     * @groupname possibleactions Possible Actions
     * The set of possible actions has to be restricted for certain action types like ChangeValueAction. The set should always be the same for the same elements per state. It can be used for exploration strategies.
     *
-    * @param possibleActions The possible actions of the state.
+    * @return The number of unexplored action types in this state.
     * @group possibleactions
     */
-  def setPossibleActions(possibleActions: Set[ActionIdentifier])
-
-  /**
-    * @return The possible actions of the state.
-    * @group possibleactions
-    */
-  def getPossibleActions: Set[ActionIdentifier]
+  def getNeverExploredActionTypesCounter: Int
 
   /**
     * Overriding this method is required to allow the usage of a set of states.

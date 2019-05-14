@@ -2,10 +2,12 @@ package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{ActionIdentifier, ActionTransitions, State, SutStateIdentifier}
 
-import scala.collection.immutable.{HashMap, HashSet}
+import scala.collection.immutable.HashMap
 
 @SerialVersionUID(1L)
-case class StateImpl(sutState: SutStateIdentifier) extends State with Serializable {
+case class StateImpl(sutState: SutStateIdentifier, var neverExploredActionTypesCounter: Int)
+    extends State
+    with Serializable {
 
   /**
     * Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
@@ -18,8 +20,6 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
     */
   private var incomingActionTransitions = HashMap[ActionIdentifier, ActionTransitions]()
 
-  private var possibleActions: Set[ActionIdentifier] = HashSet[ActionIdentifier]()
-
   override def getSutStateIdentifier: SutStateIdentifier = this.synchronized { sutState }
   override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized {
     outgoingActionTransitions
@@ -27,10 +27,7 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
   override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized {
     incomingActionTransitions
   }
-  override def setPossibleActions(possibleActions: Set[ActionIdentifier]): Unit = this.synchronized {
-    this.possibleActions = possibleActions
-  }
-  override def getPossibleActions: Set[ActionIdentifier] = this.synchronized { possibleActions }
+  override def getNeverExploredActionTypesCounter: Int = this.synchronized { neverExploredActionTypesCounter }
 
   private[api] override def addTransition(a: ActionIdentifier, to: State): Int = {
     val executionCounter = this.synchronized {
@@ -42,6 +39,7 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
 
         case None =>
           outgoingActionTransitions += (a -> ActionTransitions(Set(to), 1))
+          neverExploredActionTypesCounter = neverExploredActionTypesCounter - 1
           1
       }
     }

@@ -28,69 +28,78 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       differentState.equals(s0) shouldBe false
       differentState.hashCode() should not equal s0.hashCode()
       sut.getAllStates.size shouldEqual 0
-      sut.getState(s0)
+      sut.createState(s0, 0)
       sut.getAllStates.size shouldEqual 1
-      sut.getState(s0Equal)
+      the[RuntimeException] thrownBy sut.createState(s0Equal, 0)
       sut.getAllStates.size shouldEqual 1
-      sut.getState(differentState)
+      sut.createState(differentState, 0)
       sut.getAllStates.size shouldEqual 2
     }
 
     "add two transitions to two new states for the same action and two transitions for the same action to another state" in {
       val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
-      val initial = sut.getState(initialSutState)
+      val initial = sut.createState(initialSutState, 2)
+      initial.getNeverExploredActionTypesCounter shouldEqual 2
 
       // execute action0 for the first time
       val s0SutState = createSutState(rootElementA)
-      val s0 = sut.getState(s0SutState)
-      sut.executeAction(initialSutState, action0, s0SutState) shouldEqual 1
+      val s0 = sut.createState(s0SutState, 2)
+      sut.executeAction(initial, action0, s0) shouldEqual 1
       initial.getOutgoingActionTransitions.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).states.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).executionCounter shouldEqual 1
       initial.getIncomingActionTransitions.size shouldEqual 0
+      initial.getNeverExploredActionTypesCounter shouldEqual 1
       s0.getOutgoingActionTransitions.size shouldEqual 0
       s0.getIncomingActionTransitions.size shouldEqual 1
       s0.getIncomingActionTransitions(action0Identifier).states.size shouldEqual 1
       s0.getIncomingActionTransitions(action0Identifier).executionCounter shouldEqual 1
+      s0.getNeverExploredActionTypesCounter shouldEqual 2
 
       // execute action0 for the second time
       val s1SutState = createSutState(rootElementB)
-      val s1 = sut.getState(s1SutState)
-      sut.executeAction(initialSutState, action0, s1SutState) shouldEqual 2
+      val s1 = sut.createState(s1SutState, 2)
+      sut.executeAction(initial, action0, s1) shouldEqual 2
       initial.getOutgoingActionTransitions.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).states.size shouldEqual 2
       initial.getOutgoingActionTransitions(action0Identifier).executionCounter shouldEqual 2
       initial.getIncomingActionTransitions.size shouldEqual 0
+      initial.getNeverExploredActionTypesCounter shouldEqual 1
       s1.getOutgoingActionTransitions.size shouldEqual 0
       s1.getIncomingActionTransitions.size shouldEqual 1
       s1.getIncomingActionTransitions(action0Identifier).states.size shouldEqual 1
       s1.getIncomingActionTransitions(action0Identifier).executionCounter shouldEqual 1
+      s1.getNeverExploredActionTypesCounter shouldEqual 2
 
       // execute action1 for the first time
       val s2SutState = createSutState(rootElementC)
-      val s2 = sut.getState(s2SutState)
-      sut.executeAction(initialSutState, action1, s2SutState) shouldEqual 1
+      val s2 = sut.createState(s2SutState, 2)
+      sut.executeAction(initial, action1, s2) shouldEqual 1
       initial.getOutgoingActionTransitions.size shouldEqual 2
       initial.getOutgoingActionTransitions(action1Identifier).states.size shouldEqual 1
       initial.getOutgoingActionTransitions(action1Identifier).executionCounter shouldEqual 1
       initial.getIncomingActionTransitions.size shouldEqual 0
+      initial.getNeverExploredActionTypesCounter shouldEqual 0
       s2.getOutgoingActionTransitions.size shouldEqual 0
       s2.getIncomingActionTransitions.size shouldEqual 1
       s2.getIncomingActionTransitions(action1Identifier).states.size shouldEqual 1
       s2.getIncomingActionTransitions(action1Identifier).executionCounter shouldEqual 1
+      s2.getNeverExploredActionTypesCounter shouldEqual 2
 
       // execute action1 for the second time but from s1SutState to create one incoming action from two different states
-      sut.executeAction(s1SutState, action1, s2SutState) shouldEqual 1
+      sut.executeAction(s1, action1, s2) shouldEqual 1
       s1.getOutgoingActionTransitions.size shouldEqual 1
       s1.getOutgoingActionTransitions(action1Identifier).states.size shouldEqual 1
       s1.getOutgoingActionTransitions(action1Identifier).executionCounter shouldEqual 1
       s1.getIncomingActionTransitions.size shouldEqual 1
       s1.getIncomingActionTransitions(action0Identifier).states.size shouldEqual 1
       s1.getIncomingActionTransitions(action0Identifier).executionCounter shouldEqual 1
+      s1.getNeverExploredActionTypesCounter shouldEqual 1
       s2.getOutgoingActionTransitions.size shouldEqual 0
       s2.getIncomingActionTransitions.size shouldEqual 1
       s2.getIncomingActionTransitions(action1Identifier).states shouldEqual Set(initial, s1)
       s2.getIncomingActionTransitions(action1Identifier).executionCounter shouldEqual 2
+      s2.getNeverExploredActionTypesCounter shouldEqual 2
     }
 
     "store a state for the second access" in {
