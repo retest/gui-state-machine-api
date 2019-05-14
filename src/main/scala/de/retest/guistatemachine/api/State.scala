@@ -55,7 +55,8 @@ trait State {
     *
     * @param a The action which represents the transition's consumed symbol.
     * @param to The state which the transition leads t o.
+    * @param isUnexploredActionType If this flag is true, the never explored action types counter is decreased.
     * @return The number of times the action has been executed from this state. The target state does not matter for this number.
     */
-  private[api] def addTransition(a: ActionIdentifier, to: State): Int
+  private[api] def addTransition(a: ActionIdentifier, to: State, isUnexploredActionType: Boolean): Int
 }

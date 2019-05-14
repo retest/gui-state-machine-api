@@ -44,7 +44,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action0 for the first time
       val s0SutState = createSutState(rootElementA)
       val s0 = sut.createState(s0SutState, 2)
-      sut.executeAction(initial, action0, s0) shouldEqual 1
+      sut.executeAction(initial, action0, s0, true) shouldEqual 1
       initial.getOutgoingActionTransitions.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).states.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).executionCounter shouldEqual 1
@@ -59,7 +59,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action0 for the second time
       val s1SutState = createSutState(rootElementB)
       val s1 = sut.createState(s1SutState, 2)
-      sut.executeAction(initial, action0, s1) shouldEqual 2
+      sut.executeAction(initial, action0, s1, true) shouldEqual 2
       initial.getOutgoingActionTransitions.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).states.size shouldEqual 2
       initial.getOutgoingActionTransitions(action0Identifier).executionCounter shouldEqual 2
@@ -74,7 +74,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action1 for the first time
       val s2SutState = createSutState(rootElementC)
       val s2 = sut.createState(s2SutState, 2)
-      sut.executeAction(initial, action1, s2) shouldEqual 1
+      sut.executeAction(initial, action1, s2, true) shouldEqual 1
       initial.getOutgoingActionTransitions.size shouldEqual 2
       initial.getOutgoingActionTransitions(action1Identifier).states.size shouldEqual 1
       initial.getOutgoingActionTransitions(action1Identifier).executionCounter shouldEqual 1
@@ -87,7 +87,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       s2.getNeverExploredActionTypesCounter shouldEqual 2
 
       // execute action1 for the second time but from s1SutState to create one incoming action from two different states
-      sut.executeAction(s1, action1, s2) shouldEqual 1
+      sut.executeAction(s1, action1, s2, true) shouldEqual 1
       s1.getOutgoingActionTransitions.size shouldEqual 1
       s1.getOutgoingActionTransitions(action1Identifier).states.size shouldEqual 1
       s1.getOutgoingActionTransitions(action1Identifier).executionCounter shouldEqual 1

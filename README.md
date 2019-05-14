@@ -20,7 +20,7 @@ val currentState = stateMachine.createState(currentSutState, 1)
 val action = new NavigateToAction("http://google.com")
 val nextSutState = new SutState(nextDescriptors)
 val nextState = stateMachine.createState(nextSutState, 1)
-stateMachine.executeAction(currentState, action, nextState)
+stateMachine.executeAction(currentState, action, nextState, true)
 
 GuiStateMachineSerializer.javaObjectStream(stateMachine).save("mystatemachine.ser")
 GuiStateMachineSerializer.gml(stateMachine).save("mystatemachine.gml")

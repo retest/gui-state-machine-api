@@ -5,9 +5,7 @@ import de.retest.guistatemachine.api.{ActionIdentifier, ActionTransitions, State
 import scala.collection.immutable.HashMap
 
 @SerialVersionUID(1L)
-case class StateImpl(sutState: SutStateIdentifier, var neverExploredActionTypesCounter: Int)
-    extends State
-    with Serializable {
+case class StateImpl(sutState: SutStateIdentifier, var neverExploredActionTypesCounter: Int) extends State with Serializable {
 
   /**
     * Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
@@ -29,8 +27,12 @@ case class StateImpl(sutState: SutStateIdentifier, var neverExploredActionTypesC
   }
   override def getNeverExploredActionTypesCounter: Int = this.synchronized { neverExploredActionTypesCounter }
 
-  private[api] override def addTransition(a: ActionIdentifier, to: State): Int = {
+  private[api] override def addTransition(a: ActionIdentifier, to: State, isUnexploredActionType: Boolean): Int = {
     val executionCounter = this.synchronized {
+      if (isUnexploredActionType) {
+        neverExploredActionTypesCounter = neverExploredActionTypesCounter - 1
+      }
+
       outgoingActionTransitions.get(a) match {
         case Some(oldTransitions) =>
           val updatedTransitions = ActionTransitions(oldTransitions.states + to, oldTransitions.executionCounter + 1)
@@ -39,7 +41,6 @@ case class StateImpl(sutState: SutStateIdentifier, var neverExploredActionTypesC
 
         case None =>
           outgoingActionTransitions += (a -> ActionTransitions(Set(to), 1))
-          neverExploredActionTypesCounter = neverExploredActionTypesCounter - 1
           1
       }
     }

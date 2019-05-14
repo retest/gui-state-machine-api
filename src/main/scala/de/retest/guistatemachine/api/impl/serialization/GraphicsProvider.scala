@@ -7,7 +7,11 @@ import de.retest.guistatemachine.api.SutStateIdentifier
 
 class GraphicsProvider extends YedGmlGraphicsProvider[SutStateIdentifier, GraphActionEdge, AnyRef] {
   override def getVertexGraphics(vertex: SutStateIdentifier): NodeGraphicDefinition =
-    new NodeGraphicDefinition.Builder().setFill(Color.LIGHT_GRAY).setLineColor(Color.black).setFontStyle(GraphicDefinition.FontStyle.ITALIC).build
+    new NodeGraphicDefinition.Builder()
+      .setFill(Color.LIGHT_GRAY)
+      .setLineColor(Color.black)
+      .setFontStyle(GraphicDefinition.FontStyle.ITALIC)
+      .build
   override def getEdgeGraphics(edge: GraphActionEdge, edgeSource: SutStateIdentifier, edgeTarget: SutStateIdentifier): EdgeGraphicDefinition =
     new EdgeGraphicDefinition.Builder()
       .setTargetArrow(EdgeGraphicDefinition.ArrowType.SHORT_ARROW)

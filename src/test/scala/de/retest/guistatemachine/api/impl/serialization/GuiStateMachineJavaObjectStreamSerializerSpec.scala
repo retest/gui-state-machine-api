@@ -37,7 +37,7 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       // Create the whole state machine:
       val initialState = guiStateMachine.createState(initialSutStateIdentifier, 1)
       val finalState = guiStateMachine.createState(finalSutStateIdentifier, 1)
-      guiStateMachine.executeAction(initialState, action0, finalState)
+      guiStateMachine.executeAction(initialState, action0, finalState, true)
 
       // Save the state machine:
       GuiStateMachineSerializer.javaObjectStream(guiStateMachine).save(filePath)
