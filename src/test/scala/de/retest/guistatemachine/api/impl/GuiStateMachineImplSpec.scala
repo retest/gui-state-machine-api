@@ -59,7 +59,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       // execute action0 for the second time
       val s1SutState = createSutState(rootElementB)
       val s1 = sut.createState(s1SutState, 2)
-      sut.executeAction(initial, action0, s1, true) shouldEqual 2
+      sut.executeAction(initial, action0, s1, false) shouldEqual 2
       initial.getOutgoingActionTransitions.size shouldEqual 1
       initial.getOutgoingActionTransitions(action0Identifier).states.size shouldEqual 2
       initial.getOutgoingActionTransitions(action0Identifier).executionCounter shouldEqual 2
