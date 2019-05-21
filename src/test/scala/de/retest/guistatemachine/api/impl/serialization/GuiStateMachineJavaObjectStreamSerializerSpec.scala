@@ -55,7 +55,7 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       loadedTransition.states.head shouldEqual loadedFinalState
       loadedFinalState.getSutStateIdentifier shouldEqual finalSutStateIdentifier
       loadedFinalState.getOutgoingActionTransitions.isEmpty shouldEqual true
-      loadedInitialState.getUnexploredActionTypes shouldEqual unexploredActionTypes
+      loadedFinalState.getUnexploredActionTypes shouldEqual unexploredActionTypes
     }
   }
 }
