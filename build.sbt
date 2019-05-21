@@ -19,7 +19,7 @@ fork := true
 resolvers += "nexus-retest-maven-all" at "https://nexus.retest.org/repository/all/"
 
 // Dependencies to represent states and actions:
-libraryDependencies += "de.retest" % "surili-commons" % "0.1.0-SNAPSHOT" withSources () withJavadoc () changing ()
+libraryDependencies += "de.retest" % "surili-commons" % "0.1.0-SNAPSHOT" % "provided" withSources () withJavadoc () changing ()
 
 // Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
