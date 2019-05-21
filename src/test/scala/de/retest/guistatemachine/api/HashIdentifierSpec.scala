@@ -1,12 +1,6 @@
 package de.retest.guistatemachine.api
 
-import de.retest.surili.commons.actions.NavigateToAction
-
 class HashIdentifierSpec extends AbstractApiSpec {
-  private val action0 = new NavigateToAction("http://google.com")
-  private val action0Identifier = new HashIdentifier(action0)
-  private val action1 = new NavigateToAction("http://wikipedia.org")
-  private val action1Identifier = new HashIdentifier(action1)
 
   "HashIdentifier" should {
     "generate SHA hashes" in {
@@ -26,7 +20,7 @@ class HashIdentifierSpec extends AbstractApiSpec {
     }
 
     "be converted into a string" in {
-      action0Identifier.toString shouldEqual "HashIdentifier[hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f]"
+      action0Identifier.toString shouldEqual "ActionIdentifier[action=NavigateToAction(url=http://google.com), hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f]"
     }
   }
 }

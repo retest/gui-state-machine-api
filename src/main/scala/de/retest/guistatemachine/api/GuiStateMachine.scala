@@ -1,7 +1,7 @@
 package de.retest.guistatemachine.api
 
 import de.retest.recheck.ui.descriptors.SutState
-import de.retest.surili.commons.actions.Action
+import de.retest.surili.commons.actions.{Action, ActionType}
 
 /**
   * API to create a NFA which represents the current state machine of an automatic GUI test generation with the help of a genetic algorithm.
@@ -15,16 +15,15 @@ trait GuiStateMachine {
 
   /**
     * Creates a new state in the state machine based on a SUT state.
+    *
     * @param sutStateIdentifier The abstract representation of a SUT state which should uniquely identify the state.
-    * @param neverExploredActionTypesCounter The initial number of unexplored action types. This number is decremented with each unexplored action which is added as a new transition.
+    * @param unexploredActionTypes The initially unexplored action types. This set is modified whenever an action is executed which has an unexplored action type.
     * @return The newly created state.
-    * @throws RuntimeException If the state does already exist.
-    * @group possibleactions
     */
-  def createState(sutStateIdentifier: SutStateIdentifier, neverExploredActionTypesCounter: Int): State
+  def createState(sutStateIdentifier: SutStateIdentifier, unexploredActionTypes: Set[ActionType]): State
 
-  def createState(sutState: SutState, neverExploredActionTypesCounter: Int): State =
-    createState(new SutStateIdentifier(sutState), neverExploredActionTypesCounter)
+  def createState(sutState: SutState, unexploredActionTypes: Set[ActionType]): State =
+    createState(new SutStateIdentifier(sutState), unexploredActionTypes)
 
   def getState(sutStateIdentifier: SutStateIdentifier): Option[State]
 
@@ -42,11 +41,12 @@ trait GuiStateMachine {
     * @param from The state the action is executed from
     * @param a The action which is executed by the user.
     * @param to The state which the execution leads to.
+    * @param actionType The corresponding action type of a.
     * @return The number of times the action has been executed.
     */
-  def executeAction(from: State, a: ActionIdentifier, to: State, isUnexploredActionType: Boolean): Int = from.addTransition(a, to, isUnexploredActionType)
-  def executeAction(from: State, a: Action, to: State, isUnexploredActionType: Boolean): Int =
-    executeAction(from, new ActionIdentifier(a), to, isUnexploredActionType)
+  def executeAction(from: State, a: ActionIdentifier, to: State, actionType: ActionType): Int = from.addTransition(a, to, actionType)
+  def executeAction(from: State, a: Action, to: State): Int =
+    executeAction(from, new ActionIdentifier(a), to, ActionType.fromAction(a))
 
   def getAllStates: Map[SutStateIdentifier, State]
 
