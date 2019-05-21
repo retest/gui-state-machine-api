@@ -3,8 +3,7 @@ package de.retest.guistatemachine.api.impl.serialization
 import java.io.File
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
-import de.retest.guistatemachine.api.{AbstractApiSpec, ActionIdentifier, GuiStateMachineSerializer, SutStateIdentifier}
-import de.retest.surili.commons.actions.NavigateToAction
+import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer, SutStateIdentifier}
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with BeforeAndAfterEach {
