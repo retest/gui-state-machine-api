@@ -45,6 +45,7 @@ Otherwise, the build will fail!
 * `sbt scalafmt` to format the Scala source files with scalafmt.
 * `sbt 'release cross with-defaults'` to create a release with a new version number which is added as tag. This command does also publish the artifacts.
 * `sbt publish` publishes the artifacts in ReTest's Nexus. This command can be useful to publish SNAPSHOT versions.
+* `sbt publishM2` publishes the artifacts in the local Maven repository.
 
 ## NFA for the Representation of GUI Behavior
 
