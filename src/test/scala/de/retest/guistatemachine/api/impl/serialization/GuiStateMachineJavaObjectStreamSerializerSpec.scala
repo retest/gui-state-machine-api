@@ -3,8 +3,7 @@ package de.retest.guistatemachine.api.impl.serialization
 import java.io.File
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
-import de.retest.guistatemachine.api.{AbstractApiSpec, ActionIdentifier, GuiStateMachineSerializer, SutStateIdentifier}
-import de.retest.surili.commons.actions.NavigateToAction
+import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer, SutStateIdentifier}
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with BeforeAndAfterEach {
@@ -21,21 +20,15 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
 
       if (oldFile.exists()) { oldFile.delete() } shouldEqual true
 
-      val rootElementA = getRootElement("a", 0)
-      val rootElementB = getRootElement("b", 0)
-      val rootElementC = getRootElement("c", 0)
-      val action0 = new NavigateToAction("http://google.com")
-      val action0Identifier = new ActionIdentifier(action0)
-      val action1 = new NavigateToAction("http://wikipedia.org")
-      val action1Identifier = new ActionIdentifier(action1)
-
       val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
       val initialSutStateIdentifier = new SutStateIdentifier(initialSutState)
       val finalSutState = createSutState(rootElementC)
       val finalSutStateIdentifier = new SutStateIdentifier(finalSutState)
 
       // Create the whole state machine:
-      guiStateMachine.executeAction(initialSutState, action0, finalSutState)
+      val initialState = guiStateMachine.createState(initialSutStateIdentifier, unexploredActionTypes)
+      val finalState = guiStateMachine.createState(finalSutStateIdentifier, unexploredActionTypes)
+      guiStateMachine.executeAction(initialState, action0, finalState)
 
       // Save the state machine:
       GuiStateMachineSerializer.javaObjectStream(guiStateMachine).save(filePath)
@@ -54,12 +47,14 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
       loadedInitialState.getSutStateIdentifier shouldEqual initialSutStateIdentifier
       loadedInitialState.getOutgoingActionTransitions.size shouldEqual 1
       loadedInitialState.getOutgoingActionTransitions.contains(action0Identifier) shouldEqual true
+      loadedInitialState.getUnexploredActionTypes shouldEqual unexploredActionTypes - actionType0
       val loadedTransition = loadedInitialState.getOutgoingActionTransitions(action0Identifier)
       loadedTransition.executionCounter shouldEqual 1
       loadedTransition.states.size shouldEqual 1
       loadedTransition.states.head shouldEqual loadedFinalState
       loadedFinalState.getSutStateIdentifier shouldEqual finalSutStateIdentifier
       loadedFinalState.getOutgoingActionTransitions.isEmpty shouldEqual true
+      loadedFinalState.getUnexploredActionTypes shouldEqual unexploredActionTypes
     }
   }
 }

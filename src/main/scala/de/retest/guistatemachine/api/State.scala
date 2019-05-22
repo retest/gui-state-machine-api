@@ -1,5 +1,7 @@
 package de.retest.guistatemachine.api
 
+import de.retest.surili.commons.actions.ActionType
+
 /**
   * A state should be identified by its corresponding SutState.
   * It consists of actions which have not been explored yet and transitions to states which build up the state machine.
@@ -24,6 +26,13 @@ trait State {
   def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions]
 
   /**
+    * The set of possible actions has to be restricted for certain action types like ChangeValueAction. The set should always be the same for the same elements per state. It can be used for exploration strategies.
+    *
+    * @return The set of unexplored action types in this state.
+    */
+  def getUnexploredActionTypes: Set[ActionType]
+
+  /**
     * Overriding this method is required to allow the usage of a set of states.
     * Comparing the descriptors should check for the equality of all root elements which compares the identifying attributes and the contained components
     * for each root element.
@@ -39,14 +48,15 @@ trait State {
 
   override def hashCode(): Int = this.getSutStateIdentifier.hashCode()
 
-  override def toString: String = s"State[sutStateIdentifier=$getSutStateIdentifier]"
+  override def toString: String = s"State[sutStateIdentifier=$getSutStateIdentifier,unexploredActionTypes=$getUnexploredActionTypes]"
 
   /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].
     *
     * @param a The action which represents the transition's consumed symbol.
-    * @param to The state which the transition leads t o.
+    * @param to The state which the transition leads to.
+    * @param actionType The corresponding action type of a.
     * @return The number of times the action has been executed from this state. The target state does not matter for this number.
     */
-  private[api] def addTransition(a: ActionIdentifier, to: State): Int
+  private[api] def addTransition(a: ActionIdentifier, to: State, actionType: ActionType): Int
 }

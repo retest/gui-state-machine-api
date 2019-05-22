@@ -4,7 +4,6 @@ import java.io.File
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer}
-import de.retest.surili.commons.actions.NavigateToAction
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAfterEach {
@@ -16,20 +15,16 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
 
   "GuiStateMachineGMLSerializer" should {
     "save GML " in {
-      val rootElementA = getRootElement("a", 0)
-      val rootElementB = getRootElement("b", 0)
-      val rootElementC = getRootElement("c", 0)
-      val action0 = new NavigateToAction("http://google.com")
-      val action1 = new NavigateToAction("http://wikipedia.org")
-
       val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
       val finalSutState = createSutState(rootElementC)
 
       // Create the whole state machine:
-      guiStateMachine.executeAction(initialSutState, action0, finalSutState)
-      guiStateMachine.executeAction(initialSutState, action1, finalSutState)
-      guiStateMachine.executeAction(finalSutState, action0, initialSutState)
-      guiStateMachine.executeAction(finalSutState, action1, initialSutState)
+      val initialState = guiStateMachine.createState(initialSutState, unexploredActionTypes)
+      val finalState = guiStateMachine.createState(finalSutState, unexploredActionTypes)
+      guiStateMachine.executeAction(initialState, action0, finalState)
+      guiStateMachine.executeAction(initialState, action1, finalState)
+      guiStateMachine.executeAction(finalState, action0, initialState)
+      guiStateMachine.executeAction(finalState, action1, initialState)
 
       val filePath = "./target/test_state_machine.gml"
       val oldFile = new File(filePath)
@@ -160,7 +155,9 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
     }
 
     "load GML " in {
-      the[UnsupportedOperationException] thrownBy GuiStateMachineSerializer.gml(guiStateMachine).load("bla") should have message "Loading GML is not supported."
+      the[UnsupportedOperationException] thrownBy GuiStateMachineSerializer
+        .gml(guiStateMachine)
+        .load("bla") should have message "Loading GML is not supported."
     }
   }
 }

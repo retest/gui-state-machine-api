@@ -1,11 +1,12 @@
 package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{ActionIdentifier, ActionTransitions, State, SutStateIdentifier}
+import de.retest.surili.commons.actions.ActionType
 
 import scala.collection.immutable.HashMap
 
 @SerialVersionUID(1L)
-case class StateImpl(sutState: SutStateIdentifier) extends State with Serializable {
+case class StateImpl(sutState: SutStateIdentifier, var unexploredActionTypes: Set[ActionType]) extends State with Serializable {
 
   /**
     * Currently, there is no MultiMap trait for immutable maps in the Scala standard library.
@@ -19,11 +20,18 @@ case class StateImpl(sutState: SutStateIdentifier) extends State with Serializab
   private var incomingActionTransitions = HashMap[ActionIdentifier, ActionTransitions]()
 
   override def getSutStateIdentifier: SutStateIdentifier = this.synchronized { sutState }
-  override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { outgoingActionTransitions }
-  override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized { incomingActionTransitions }
+  override def getOutgoingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized {
+    outgoingActionTransitions
+  }
+  override def getIncomingActionTransitions: Map[ActionIdentifier, ActionTransitions] = this.synchronized {
+    incomingActionTransitions
+  }
+  override def getUnexploredActionTypes: Set[ActionType] = this.synchronized { unexploredActionTypes }
 
-  private[api] override def addTransition(a: ActionIdentifier, to: State): Int = {
+  private[api] override def addTransition(a: ActionIdentifier, to: State, actionType: ActionType): Int = {
     val executionCounter = this.synchronized {
+      unexploredActionTypes = unexploredActionTypes - actionType
+
       outgoingActionTransitions.get(a) match {
         case Some(oldTransitions) =>
           val updatedTransitions = ActionTransitions(oldTransitions.states + to, oldTransitions.executionCounter + 1)

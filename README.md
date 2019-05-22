@@ -13,11 +13,19 @@ import de.retest.guistatemachine.api.GuiStateMachineApi
 import de.retest.guistatemachine.api.GuiStateMachineSerializer
 import de.retest.recheck.ui.descriptors.SutState
 import de.retest.surili.commons.actions.NavigateToAction
+import de.retest.surili.commons.actions.ActionType
+
+val action = new NavigateToAction("http://google.com")
+val unexploredActionTypes = Set(ActionType.fromAction(action))
 
 val stateMachine = GuiStateMachineApi().createStateMachine("test")
-val currentState = new SutState(currentDescriptors)
-val action = new NavigateToAction("http://google.com")
-val nextState = new SutState(nextDescriptors)
+
+val currentSutState = new SutState(currentDescriptors)
+val currentState = stateMachine.createState(currentSutState, unexploredActionTypes)
+
+val nextSutState = new SutState(nextDescriptors)
+val nextState = stateMachine.createState(nextSutState, unexploredActionTypes)
+
 stateMachine.executeAction(currentState, action, nextState)
 
 GuiStateMachineSerializer.javaObjectStream(stateMachine).save("mystatemachine.ser")
