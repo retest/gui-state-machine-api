@@ -2,6 +2,7 @@ package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.AbstractApiSpec
 import de.retest.surili.commons.actions.ActionType
+import de.retest.surili.commons.test.TestUtil
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
@@ -13,9 +14,9 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
 
   "GuiStateMachine" should {
     "not create a new state when using the same root elements" in {
-      val s0 = createSutState(getRootElement("a", 1))
-      val s0Equal = createSutState(getRootElement("a", 1))
-      val differentState = createSutState(getRootElement("a", 2))
+      val s0 = TestUtil.createSutState(TestUtil.getRootElement("a", 1))
+      val s0Equal = TestUtil.createSutState(TestUtil.getRootElement("a", 1))
+      val differentState = TestUtil.createSutState(TestUtil.getRootElement("a", 2))
       s0.equals(s0Equal) shouldBe true
       s0.hashCode() shouldEqual s0Equal.hashCode()
       differentState.equals(s0) shouldBe false
@@ -30,12 +31,12 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
     }
 
     "add two transitions to two new states for the same action and two transitions for the same action to another state" in {
-      val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
+      val initialSutState = TestUtil.createSutState(rootElementA, rootElementB, rootElementC)
       val initial = sut.createState(initialSutState, unexploredActionTypes)
       initial.getUnexploredActionTypes shouldEqual unexploredActionTypes
 
       // execute action0 for the first time
-      val s0SutState = createSutState(rootElementA)
+      val s0SutState = TestUtil.createSutState(rootElementA)
       val s0 = sut.createState(s0SutState, unexploredActionTypes)
       sut.executeAction(initial, action0, s0) shouldEqual 1
       initial.getOutgoingActionTransitions.size shouldEqual 1
@@ -50,7 +51,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       s0.getUnexploredActionTypes shouldEqual unexploredActionTypes
 
       // execute action0 for the second time
-      val s1SutState = createSutState(rootElementB)
+      val s1SutState = TestUtil.createSutState(rootElementB)
       val s1 = sut.createState(s1SutState, unexploredActionTypes)
       sut.executeAction(initial, action0, s1) shouldEqual 2
       initial.getOutgoingActionTransitions.size shouldEqual 1
@@ -65,7 +66,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
       s1.getUnexploredActionTypes shouldEqual unexploredActionTypes
 
       // execute action1 for the first time
-      val s2SutState = createSutState(rootElementC)
+      val s2SutState = TestUtil.createSutState(rootElementC)
       val s2 = sut.createState(s2SutState, unexploredActionTypes)
       sut.executeAction(initial, action1, s2) shouldEqual 1
       initial.getOutgoingActionTransitions.size shouldEqual 2
@@ -96,7 +97,7 @@ class GuiStateMachineImplSpec extends AbstractApiSpec with BeforeAndAfterEach {
     }
 
     "store a state for the second access" in {
-      val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
+      val initialSutState = TestUtil.createSutState(rootElementA, rootElementB, rootElementC)
       val initialFromAccess0 = sut.getState(initialSutState)
       val initialFromAccess1 = sut.getState(initialSutState)
       initialFromAccess0 shouldEqual initialFromAccess1

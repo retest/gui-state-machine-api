@@ -2,11 +2,12 @@ package de.retest.guistatemachine.api.impl
 
 import de.retest.guistatemachine.api.{AbstractApiSpec, SutStateIdentifier}
 import de.retest.surili.commons.actions.ActionType
+import de.retest.surili.commons.test.TestUtil
 
 class StateImplSpec extends AbstractApiSpec {
-  private val sutStateA = createSutState(rootElementA)
+  private val sutStateA = TestUtil.createSutState(rootElementA)
   private val sutStateAIdentifier = new SutStateIdentifier(sutStateA)
-  private val sutStateB = createSutState(rootElementB)
+  private val sutStateB = TestUtil.createSutState(rootElementB)
   private val sutStateBIdentifier = new SutStateIdentifier(sutStateB)
 
   "StateImpl" should {
@@ -27,7 +28,7 @@ class StateImplSpec extends AbstractApiSpec {
 
     "be converted into a string" in {
       val s0 = StateImpl(sutStateAIdentifier, unexploredActionTypes)
-      s0.toString shouldEqual "State[sutStateIdentifier=SutStateIdentifier[sutState=State[descriptor=[]], hash=0e4fd44f14d365fae3a7f3579b7ef013e1167e0f4ef6de418367b81edc63450d],unexploredActionTypes=Set(ActionType(elementPath=, type=de.retest.surili.commons.actions.NavigateToAction))]"
+      s0.toString shouldEqual "State[sutStateIdentifier=SutStateIdentifier[sutState=State[descriptor=[]], hash=d1e3b29868f11134c56c491a3f0daeea01d552baef56407fa5e05d88ff3d3ef9],unexploredActionTypes=Set(ActionType(elementPath=, type=de.retest.surili.commons.actions.NavigateToAction))]"
     }
   }
 }
