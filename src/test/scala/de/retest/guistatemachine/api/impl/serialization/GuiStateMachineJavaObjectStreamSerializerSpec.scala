@@ -4,6 +4,7 @@ import java.io.File
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer, SutStateIdentifier}
+import de.retest.surili.commons.test.TestUtil
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with BeforeAndAfterEach {
@@ -20,9 +21,9 @@ class GuiStateMachineJavaObjectStreamSerializerSpec extends AbstractApiSpec with
 
       if (oldFile.exists()) { oldFile.delete() } shouldEqual true
 
-      val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
+      val initialSutState = TestUtil.createSutState(rootElementA, rootElementB, rootElementC)
       val initialSutStateIdentifier = new SutStateIdentifier(initialSutState)
-      val finalSutState = createSutState(rootElementC)
+      val finalSutState = TestUtil.createSutState(rootElementC)
       val finalSutStateIdentifier = new SutStateIdentifier(finalSutState)
 
       // Create the whole state machine:

@@ -4,6 +4,7 @@ import java.io.File
 
 import de.retest.guistatemachine.api.impl.GuiStateMachineImpl
 import de.retest.guistatemachine.api.{AbstractApiSpec, GuiStateMachineSerializer}
+import de.retest.surili.commons.test.TestUtil
 import org.scalatest.BeforeAndAfterEach
 
 class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAfterEach {
@@ -15,8 +16,8 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
 
   "GuiStateMachineGMLSerializer" should {
     "save GML " in {
-      val initialSutState = createSutState(rootElementA, rootElementB, rootElementC)
-      val finalSutState = createSutState(rootElementC)
+      val initialSutState = TestUtil.createSutState(rootElementA, rootElementB, rootElementC)
+      val finalSutState = TestUtil.createSutState(rootElementC)
 
       // Create the whole state machine:
       val initialState = guiStateMachine.createState(initialSutState, unexploredActionTypes)
@@ -49,7 +50,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 1
-          |		label "SutStateIdentifier[sutState=State[descriptor=[]], hash=acd05dfba59670825451169c470d430727226dd0dec48c64961305a0c5ab1ecb]"
+          |		label "SutStateIdentifier[sutState=State[descriptor=[, , ]], hash=d62af47d9844707082c557def0362d02483340412bd42465409a7773931eec29]"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -64,7 +65,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 2
-          |		label "SutStateIdentifier[sutState=State[descriptor=[, , ]], hash=c44472d3d18e4f62b073a232e3119de9d94d3c6242b65125f454d62aced7f84e]"
+          |		label "SutStateIdentifier[sutState=State[descriptor=[]], hash=c2b196629be15132ef89911058499b7f8153ede93355974d693f125240bdbe3e]"
           |		graphics
           |		[
           |			type	"rectangle"
