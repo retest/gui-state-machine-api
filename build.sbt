@@ -19,7 +19,11 @@ fork := true
 resolvers += "nexus-retest-maven-all" at "https://nexus.retest.org/repository/all/"
 
 // Dependencies to represent states and actions:
-libraryDependencies += "de.retest" % "surili-commons" % "0.2.0" % "provided" withSources () withJavadoc () changing ()
+libraryDependencies += "de.retest" % "surili-commons" % "0.10.0" % "provided" withSources () withJavadoc () changing () excludeAll (
+  // See https://stackoverflow.com/q/48771768
+  ExclusionRule("org.keycloak",
+                "keycloak-installed-adapter")
+)
 
 // Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
