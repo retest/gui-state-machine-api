@@ -50,7 +50,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 1
-          |		label "SutStateIdentifier[sutState=State[descriptor=[, , ]], hash=d62af47d9844707082c557def0362d02483340412bd42465409a7773931eec29]"
+          |		label "SutStateIdentifier[sutState=State[descriptor=[, , ]], hash=ea16d447f5e02b308179218468222acf346638288847d34818ab901f08fe708f]"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -65,7 +65,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 2
-          |		label "SutStateIdentifier[sutState=State[descriptor=[]], hash=c2b196629be15132ef89911058499b7f8153ede93355974d693f125240bdbe3e]"
+          |		label "SutStateIdentifier[sutState=State[descriptor=[]], hash=3dd36162398e38dad085f796928643f0be77742932e12069f76afa7082e582be]"
           |		graphics
           |		[
           |			type	"rectangle"

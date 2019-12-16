@@ -16,10 +16,15 @@ crossPaths := false
 // Fixes serialization issues:
 fork := true
 
-resolvers += "nexus-retest-maven-all" at "https://nexus.retest.org/repository/all/"
+// Resolve dependencies from ReTest Nexus:
+resolvers += "ReTest Nexus" at "https://nexus.retest.org/repository/all/"
 
 // Dependencies to represent states and actions:
-libraryDependencies += "de.retest" % "surili-commons" % "0.2.0" % "provided" withSources () withJavadoc () changing ()
+libraryDependencies += "de.retest" % "surili-commons" % "0.10.0" % "provided" withSources () withJavadoc () changing () excludeAll (
+  // See https://stackoverflow.com/q/48771768
+  ExclusionRule("org.keycloak",
+                "keycloak-installed-adapter")
+)
 
 // Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
@@ -31,10 +36,10 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 // Test frameworks:
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
-// format the code
+// Format the code:
 scalafmtOnCompile := true
 
-// ReTest's Nexus:
+// Publish to ReTest Nexus:
 publishTo := {
   val nexus = "https://nexus.retest.org/repository/"
   if (isSnapshot.value) {
@@ -44,9 +49,10 @@ publishTo := {
   }
 }
 
-sys.env.get("TRAVIS_NEXUS_PW") match {
+// Get ReTest Nexus password from environment:
+sys.env.get("RETEST_NEXUS_PASSWORD") match {
   case Some(password) =>
     credentials += Credentials("ReTest Nexus", "nexus.retest.org", "retest", password)
   case _ =>
-    throw new IllegalStateException("PASSWORD is missing!")
+    throw new IllegalStateException("Please provide the password for retest-nexus.")
 }
