@@ -20,7 +20,7 @@ fork := true
 resolvers += "ReTest Nexus" at "https://nexus.retest.org/repository/all/"
 
 // Dependencies to represent states and actions:
-libraryDependencies += "de.retest" % "surili-commons" % "0.11.0" % "provided" withSources () withJavadoc () changing () excludeAll (
+libraryDependencies += "de.retest" % "surili-commons" % "0.12.0" % "provided" withSources () withJavadoc () changing () excludeAll (
   // See https://stackoverflow.com/q/48771768
   ExclusionRule("org.keycloak",
                 "keycloak-installed-adapter")
