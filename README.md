@@ -37,7 +37,7 @@ Besides, they can be saved as [GML](https://en.wikipedia.org/wiki/Graph_Modellin
 
 ## Build Credentials
 
-Define the Nexus password in the environment variable `TRAVIS_NEXUS_PW`.
+Define the Nexus password in the environment variable `RETEST_NEXUS_PASSWORD`.
 Otherwise, the build will fail!
 
 ## SBT Commands
