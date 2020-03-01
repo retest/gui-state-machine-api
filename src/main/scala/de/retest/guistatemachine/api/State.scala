@@ -48,7 +48,7 @@ trait State {
 
   override def hashCode(): Int = this.getSutStateIdentifier.hashCode()
 
-  override def toString: String = s"State[sutStateIdentifier=$getSutStateIdentifier,unexploredActionTypes=$getUnexploredActionTypes]"
+  override def toString: String = s"$getSutStateIdentifier"
 
   /**
     * Adds a new transition to the state which is only allowed by calling the methods of [[GuiStateMachine]].

@@ -28,7 +28,7 @@ class StateImplSpec extends AbstractApiSpec {
 
     "be converted into a string" in {
       val s0 = StateImpl(sutStateAIdentifier, unexploredActionTypes)
-      s0.toString shouldEqual "State[sutStateIdentifier=SutStateIdentifier[sutState=State[descriptor=[]], hash=1d09863cbd7824c20fa234e23b5ac3e23632cbb24f862cf8a8542f5341ad9bd2],unexploredActionTypes=Set(ActionType(elementPath=, type=de.retest.surili.commons.actions.NavigateToAction))]"
+      s0.toString shouldEqual "[sutState=State[descriptor=[]], hash=1d09863c]"
     }
   }
 }

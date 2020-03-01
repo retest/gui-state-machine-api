@@ -20,7 +20,7 @@ class HashIdentifierSpec extends AbstractApiSpec {
     }
 
     "be converted into a string" in {
-      action0Identifier.toString shouldEqual "ActionIdentifier[action=NavigateToAction(url=http://google.com), hash=fd00ea22cb50efd96c3ff59d8900685d0d64f2cee1e77873133e7e186afd2e7f]"
+      action0Identifier.toString shouldEqual "NavigateToAction(url=http://google.com)"
     }
   }
 }
