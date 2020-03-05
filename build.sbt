@@ -24,7 +24,7 @@ libraryDependencies += "de.retest" % "surili-commons" % "0.14.0" % "provided" wi
 
 // Dependencies to write GML files for yEd:
 libraryDependencies += "com.github.systemdir.gml" % "GMLWriterForYed" % "2.1.0"
-libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.4.0"
+libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.1.0"
 
 // Logging:
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
