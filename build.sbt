@@ -2,7 +2,7 @@ name := "gui-state-machine-api"
 
 organization := "de.retest"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.1"
 
 /*
  * retest-sut-api provides a package and an object with the name a etc.
