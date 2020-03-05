@@ -32,7 +32,11 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
     // write to file
     val outputFile = new File(filePath)
     val output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"))
-    try { writer.export(output, toDraw) } finally { output.close() }
+    try {
+      writer.export(output, toDraw)
+    } finally {
+      output.close()
+    }
   }
 
   override def load(filePath: String): Unit = throw new UnsupportedOperationException("Loading GML is not supported.")
@@ -42,7 +46,9 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
     val allStatesSorted = guiStateMachine.getAllStates.toSeq.sortWith(hashCodeComparisonOfTuples)
     allStatesSorted.foreach { x =>
       val vertex = x._1
-      if (!graph.addVertex(vertex)) { throw new RuntimeException(s"Failed to add vertex $vertex") }
+      if (!graph.addVertex(vertex)) {
+        throw new RuntimeException(s"Failed to add vertex $vertex")
+      }
     }
 
     allStatesSorted.foreach { x =>
@@ -56,7 +62,9 @@ class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiS
         actionTransitions.states.foreach { toState =>
           val toVertex = toState.getSutStateIdentifier
           val edge = GraphActionEdge(fromVertex, toVertex, action)
-          if (!graph.addEdge(fromVertex, toVertex, edge)) { throw new RuntimeException(s"Failed to add edge $edge") }
+          if (!graph.addEdge(fromVertex, toVertex, edge)) {
+            throw new RuntimeException(s"Failed to add edge $edge")
+          }
         }
       }
     }
