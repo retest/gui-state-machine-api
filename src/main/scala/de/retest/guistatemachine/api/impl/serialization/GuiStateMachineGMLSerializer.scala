@@ -5,7 +5,7 @@ import com.github.systemdir.gml.YedGmlWriter
 import de.retest.guistatemachine.api.{GuiStateMachine, GuiStateMachineSerializer, SutStateIdentifier}
 import org.jgrapht.graph.DirectedPseudograph
 
-class GuiStateMachinGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiStateMachineSerializer {
+class GuiStateMachineGMLSerializer(guiStateMachine: GuiStateMachine) extends GuiStateMachineSerializer {
 
   type GraphType = DirectedPseudograph[SutStateIdentifier, GraphActionEdge]
 
