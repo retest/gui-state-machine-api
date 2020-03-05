@@ -50,7 +50,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 1
-          |		label "[sutState=State[descriptor=[, , ]], hash=ea16d447]"
+          |		label "[sutState=State[My Window, My Window, My Window], hash=ea16d447]"
           |		graphics
           |		[
           |			type	"rectangle"
@@ -65,7 +65,7 @@ class GuiStateMachineGMLSerializerSpec extends AbstractApiSpec with BeforeAndAft
           |	node
           |	[
           |		id 2
-          |		label "[sutState=State[descriptor=[]], hash=3dd36162]"
+          |		label "[sutState=State[My Window], hash=3dd36162]"
           |		graphics
           |		[
           |			type	"rectangle"
